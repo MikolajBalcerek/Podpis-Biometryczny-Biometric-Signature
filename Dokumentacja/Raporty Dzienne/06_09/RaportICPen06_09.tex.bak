@@ -1,0 +1,50 @@
+\documentclass{mwrep}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+
+
+\title{Podpisy biometryczne na tablecie \\ i ich porównanie z podpisami na papierze\\ 
+Raport 2}
+\author{Mikołaj Balcerek, Bartosz Hejduk, Mieczysław Krawiarz, \and Adam Kulczycki, Mikołaj Pabiszczak, Michał Szczepanowski, \and Dawid Twardowski, Adrianna Załęska}
+\date{6 września 2017}
+
+\begin{document}
+\maketitle
+{\let\clearpage\relax 
+\chapter{Obecne osoby}}
+\begin{enumerate}
+    \item Mikołaj Balcerek
+    \item Bartosz Hejduk
+    \item Adam Kulczycki
+    \item Michał Szczepanowski
+    \item Dawid Twardowski
+    \item Adrianna Załęska
+\end{enumerate}
+
+
+{\let\clearpage\relax 
+\chapter{Zadania zaplanowane na dziś}}
+\begin{enumerate}
+	\item Budowa prostej aplikacji przechwytujacej pismo odreczne za pomocą \\ Windows
+Universal Apps.
+	\item Zbieranie informacji na temat podpisu biometrycznego.
+\end{enumerate}
+
+
+{\let\clearpage\relax 
+\chapter{Zrealizowane zadania}}
+\begin{enumerate}
+	\item Prototyp aplikacji przechwytującej pismo odręczne.
+	\item Praca nad zapisem współrzędnych oraz siły nacisku urządzenia Surface Pen.
+	\item Szkolenie dotyczące platformy GitHub. Zapoznanie grupy z modelami pracy zespołowej 	na tej platformie.
+
+\end{enumerate}
+
+{\let\clearpage\relax \chapter{Zadania na najbliższe dni}}
+\begin{enumerate}
+    \item Konstrukcja systemu zbierania danych dotyczących podpisów.
+    \item Przygotowanie modelu pozwalającego na sprawdzenie autentyczności podpisu.
+    \item Zbudowanie przykładowej bazy danych podpisów.
+\end{enumerate}
+\end{document}
+
