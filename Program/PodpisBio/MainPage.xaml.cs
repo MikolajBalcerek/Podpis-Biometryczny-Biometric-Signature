@@ -35,6 +35,8 @@ namespace PodpisBio
             core.PointerPressing += Core_PointerPressing;
             core.PointerReleasing += Core_PointerReleasing;
             core.PointerMoving += Core_PointerMoving;
+
+            inkCanvas1.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen;
         }
 
         private void Core_PointerMoving(CoreInkIndependentInputSource sender, PointerEventArgs args)
