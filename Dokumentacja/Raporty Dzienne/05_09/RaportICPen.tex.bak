@@ -1,0 +1,42 @@
+\documentclass{mwrep}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+
+
+\title{Podpisy biometryczne na tablecie \\ i ich porównanie z podpisami na papierze\\ 
+Raport 1}
+\author{Mikołaj Balcerek, Bartosz Hejduk, Mieczysław Krawiarz, \and Adam Kulczycki, Mikołaj Pabiszczak, Michał Szczepanowski, \and Dawid Twardowski, Adrianna Załęska}
+\date{5 września 2017}
+
+\begin{document}
+\maketitle
+{\let\clearpage\relax 
+\chapter{Obecne osoby}}
+\begin{enumerate}
+    \item Mikołaj Balcerek
+    \item Bartosz Hejduk
+    \item Mieczysław Krawiarz
+    \item Adam Kulczycki
+    \item Mikołaj Pabiszczak
+    \item Michał Szczepanowski
+    \item Dawid Twardowski
+    \item Adrianna Załęska
+\end{enumerate}
+
+{\let\clearpage\relax 
+\chapter{Zrealizowane zadania}}
+\begin{enumerate}
+	\item Spotkanie z przedstawicielem firmy IC Solutions.
+    \item Odebranie urządzeń Microsoft Surface oraz zapoznanie ze specyfikacją urządzeń.
+    \item Rozpoczecie testowania urządzenia Surface Pen.
+    \item Instalacja środowiska Windows Universal Apps oraz Visual Studio.
+    \item Znalezienie normy ISO/IEC 19794-7:2008 określającej format zapisu danych biometrycznych.
+\end{enumerate}
+
+{\let\clearpage\relax \chapter{Zadania na najbliższe dni}}
+\begin{enumerate}
+    \item Budowa prostej aplikacji przechwytującej pismo odręczne za pomocą Windows Universal Apps.
+    \item Zbieranie informacji na temat podpisu biometrycznego.
+\end{enumerate}
+\end{document}
+
