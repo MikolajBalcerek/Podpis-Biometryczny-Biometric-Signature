@@ -7,7 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <InkCanvas HorizontalAlignment="Left" Height="960" VerticalAlignment="Top" Width="1440"/>
+        <InkCanvas x:Name="inkCanvas1" HorizontalAlignment="Left" Height="960" VerticalAlignment="Top" Width="1440" FocusVisualPrimaryBrush="Black"/>
+        <TextBlock x:Name="label1" HorizontalAlignment="Left" Margin="87,51,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="166" Width="1170"/>
 
     </Grid>
 </Page>
