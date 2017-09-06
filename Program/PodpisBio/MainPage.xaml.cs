@@ -28,9 +28,11 @@ namespace PodpisBio
         public MainPage()
         {
             this.InitializeComponent();
+            this.initializePenHandlers();
+        }
 
-            //inkCanvas1.PointerMoved += canvasUpdate;
-
+        private void initializePenHandlers()
+        {
             CoreInkIndependentInputSource core = CoreInkIndependentInputSource.Create(inkCanvas1.InkPresenter);
             core.PointerPressing += Core_PointerPressing;
             core.PointerReleasing += Core_PointerReleasing;
@@ -38,6 +40,7 @@ namespace PodpisBio
 
             inkCanvas1.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen;
         }
+
 
         private void Core_PointerMoving(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
@@ -72,6 +75,22 @@ namespace PodpisBio
             });
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var strokes = inkCanvas1.InkPresenter.StrokeContainer.GetStrokes();
 
+            Debug.WriteLine(strokes.Count);
+            foreach (var stroke in strokes)
+            {
+                Debug.WriteLine("Stroke: "+stroke.Id+", point count: "+stroke.GetInkPoints().Count + ", duration: " + stroke.StrokeDuration.Value.Seconds+" s "+stroke.StrokeDuration.Value.Milliseconds+" ms");
+                foreach( var point in stroke.GetInkPoints())
+                {
+                    Debug.WriteLine("x: " + point.Position.X + ", y: " + point.Position.Y + ", pressure: " + point.Pressure + ", timestamp: " + point.Timestamp);
+                    
+                }
+            }
+
+            inkCanvas1.InkPresenter.StrokeContainer.Clear();   
+        }
     }
 }

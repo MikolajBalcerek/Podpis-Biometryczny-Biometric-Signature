@@ -99,5 +99,9 @@ ENV/
 
 # mypy
 .mypy_cache/
-/Program/PodpisBio/bin/x64/Debug
-/Program/PodpisBio/obj
+/Program/PodpisBio/bin/
+/Program/PodpisBio/obj/
+/Program/.vs/
+*.suo
+Program/.vs/PodpisBio/v15/
+*.sqlite
