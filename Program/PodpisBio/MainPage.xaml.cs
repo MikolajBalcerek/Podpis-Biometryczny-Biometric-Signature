@@ -27,9 +27,14 @@ namespace PodpisBio
     {
 
         public int strokesCount; //Liczba przyciśnięć
+        public Stopwatch timer; //Obiekt zajmujący się czasem ogólnoaplikacji
 
         public MainPage()
         {
+            //Start the clock!
+            timer = new Stopwatch();
+            timer.Start();
+
             strokesCount = 0; //Liczba przyciśnięć na 0
             this.InitializeComponent();
             this.initializePenHandlers();
@@ -68,8 +73,10 @@ namespace PodpisBio
         private void Core_PointerPressing(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
             strokesCount = strokesCount + 1;
-            updateInfoInLabel(strokesCountLabel, "Ilość naciśnięć " + strokesCount);
-            Debug.WriteLine("Adam wcisnął " + strokesCount + "razy");
+            updateInfoInLabel(strokesCountLabel, "Ilość naciśnięć: " + strokesCount);
+            updateInfoInLabel(timeLastPressedLabel, "Czas ostatniego naciśnięcia w ms:  " + timer.ElapsedMilliseconds);
+            Debug.WriteLine("Adam wcisnął " + strokesCount + " razy" + "ostatni raz " + timer.ElapsedMilliseconds);
+
         }
 
         //Funkcja aktualizacji tekstu Label, podaj nazwę obiektu, tekst
