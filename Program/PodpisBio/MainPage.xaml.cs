@@ -30,14 +30,33 @@ namespace PodpisBio
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        public int strokesCount; //Liczba przyciśnięć
+        public Stopwatch timer; //Obiekt zajmujący się czasem ogólnoaplikacji
+        public List<Single> pressures; //lista sił nacisku punktów; nadmiarowe info zawarte w storke.GetInkPoints() 
+        public List<long> times; //lista czasów naciśnięć poszczególnych punktów
+
+        public List<int> pressureChanges;
+        /*lista zmian sił nacisku
+         * -1 -- nacisk maleje
+         *  0 -- nacisk się nie zmienia
+         * +1 -- nacisk rośnie
+         */
         SignatureController signatureController;
         AuthorController authorController;
-
         public MainPage()
         {
+            //Start the clock!
+            timer = new Stopwatch();
+            timer.Start();
+
+            strokesCount = 0; //Liczba przyciśnięć na 0
+
+            pressures = new List<Single>();
+            times = new List<long>();
+            pressureChanges = new List<int>();
+
             signatureController = new SignatureController();
             authorController = new AuthorController();
-
             this.InitializeComponent();
             this.initializePenHandlers();
         }
@@ -55,16 +74,26 @@ namespace PodpisBio
         //Event handler dla rysowania
         private void Core_PointerMoving(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
-            if(args.CurrentPoint.Properties.Pressure > 0.9)
+            if (args.CurrentPoint.Properties.Pressure > 0.9)
             {
                 updateInfoAsync("Adam rysuje X: " + args.CurrentPoint.Position.X + ", Y: " + args.CurrentPoint.Position.Y + ", z mocą: IT'S OVER 9000");
             }
             else
             {
-                updateInfoAsync("Adam rysuje X: " + args.CurrentPoint.Position.X + ", Y: " + args.CurrentPoint.Position.Y + ", z mocą: " + args.CurrentPoint.Properties.Pressure +", " + args.CurrentPoint.Properties.Twist);
+                updateInfoAsync("Adam rysuje X: " + args.CurrentPoint.Position.X + ", Y: " + args.CurrentPoint.Position.Y + ", z mocą: " + args.CurrentPoint.Properties.Pressure + ", " + args.CurrentPoint.Properties.Twist);
             }
 
-            
+
+        }
+
+        private int calcPressureChange(Single currentPress, Single previousPress)
+        {
+            var difference = currentPress - previousPress;
+            if (difference == 0)
+                return 0;
+            if (difference > 0)
+                return 1;
+            return -1;
         }
 
         //Event handler dla rysowania
@@ -75,7 +104,35 @@ namespace PodpisBio
 
         private void Core_PointerPressing(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
-            Debug.WriteLine("Adam wcisnął");
+            strokesCount = strokesCount + 1;
+
+            var pressure = args.CurrentPoint.Properties.Pressure;
+            Single previousPressure;
+            if (pressures.Count() > 0)
+                previousPressure = pressures[pressures.Count() - 1];
+            else
+                previousPressure = 0;
+           var pressureChange = calcPressureChange(pressure, previousPressure);
+
+           pressureChanges.Add(pressureChange);
+           pressures.Add(pressure);
+            
+            times.Add(timer.ElapsedMilliseconds);
+            updateInfoInLabel(strokesCountLabel, "Ilość naciśnięć: " + strokesCount);
+            updateInfoInLabel(timeLastPressedLabel, "Czas ostatniego naciśnięcia w ms:  " + timer.ElapsedMilliseconds);
+            updateInfoInLabel(pressureLastPressedLabel, "Siła ostatniego naciśnięcia: " + pressure);
+            updateInfoInLabel(pressureChangeLabel, "Zmiana siły nacisku: " + pressureChange);
+            Debug.WriteLine("Adam wcisnął " + strokesCount + " razy" + "ostatni raz " + timer.ElapsedMilliseconds);
+        }
+
+        //Funkcja aktualizacji tekstu Label, podaj nazwę obiektu, tekst
+        private async System.Threading.Tasks.Task updateInfoInLabel(TextBlock givenLabel, string text)
+        {
+            //Updates informations asynchronously
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                givenLabel.Text = text;
+            });
         }
 
         
@@ -112,11 +169,11 @@ namespace PodpisBio
                 foreach (var point in stroke.GetInkPoints())
                 {
                     Debug.WriteLine("x: " + point.Position.X + ", y: " + point.Position.Y + ", pressure: " + point.Pressure + ", timestamp: " + point.Timestamp);
+                    
                 }
-
             }
-        }    
-        
+        }
+
         //Add signature
         private void addSignature(IReadOnlyList<InkStroke> strokes)
         {
@@ -126,11 +183,11 @@ namespace PodpisBio
                 Stroke stroke = new Stroke();
                 foreach (var pointTemp in strokeTemp.GetInkPoints())
                 {
-                    Src.Point point = new Src.Point((float) pointTemp.Position.X, (float) pointTemp.Position.Y, pointTemp.Pressure);
+                    Src.Point point = new Src.Point((float)pointTemp.Position.X, (float)pointTemp.Position.Y, pointTemp.Pressure);
                     stroke.addPoint(point);
                     Debug.WriteLine(stroke.getPoints().Count);
                 }
-                signature.addStroke(stroke);   
+                signature.addStroke(stroke);
             }
             signatureController.addSignature(signature);
         }

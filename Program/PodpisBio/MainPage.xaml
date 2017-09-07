@@ -6,13 +6,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Page.Resources>
-        <Style x:Key="CanvasStyle1" TargetType="Canvas"/>
-    </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <InkCanvas x:Name="inkCanvas1" FocusVisualPrimaryBrush="Black" Margin="10,30,10,15" RequestedTheme="Light"/>
         <TextBlock x:Name="label1" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="TextBlock" Width="539" Height="20" VerticalAlignment="Top"/>
         <Button Content="Wyczyść" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Click="Button_Click" Width="92"/>
+        <TextBlock x:Name="strokesCountLabel" HorizontalAlignment="Left" Margin="10,30,0,0" TextWrapping="Wrap" Text="Strokes Count:" VerticalAlignment="Top" Height="35" Width="1369" SelectionChanged="TextBlock_SelectionChanged"/>
+        <TextBlock x:Name ="timeLastPressedLabel" HorizontalAlignment="Left" Margin="10,49,0,0" TextWrapping="Wrap" Text="Czas ostatniego naciśnięcia" VerticalAlignment="Top" Height="16" Width="762"/>
+        <TextBlock x:Name ="pressureLastPressedLabel" HorizontalAlignment="Left" Margin="10,69,0,0" TextWrapping="Wrap" Text="Siła ostatniego naciśnięcia" VerticalAlignment="Top" Height="16" Width="762"/>
+        <TextBlock x:Name ="pressureChangeLabel" HorizontalAlignment="Left" Margin="10,89,0,0" TextWrapping="Wrap" Text="Zmiana nacisku" VerticalAlignment="Top" Height="16" Width="762"/>
 
     </Grid>
 </Page>
