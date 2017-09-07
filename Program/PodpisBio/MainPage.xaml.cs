@@ -126,7 +126,7 @@ namespace PodpisBio
         }
 
         //Funkcja aktualizacji tekstu Label, podaj nazwę obiektu, tekst
-        private async System.Threading.Tasks.Task updateInfoInLabel(TextBlock givenLabel, string text)
+        private async void updateInfoInLabel(TextBlock givenLabel, string text)
         {
             //Updates informations asynchronously
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -137,7 +137,7 @@ namespace PodpisBio
 
         
         //Updates window text label
-        private async System.Threading.Tasks.Task updateInfoAsync(String value)
+        private async void updateInfoAsync(String value)
         {
             //Updates informations asynchronously
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -150,16 +150,12 @@ namespace PodpisBio
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var strokes = inkCanvas1.InkPresenter.StrokeContainer.GetStrokes();
-            
-
-            consoleStrokeInfo(strokes);
+            //consoleStrokeInfo(strokes);
             addSignature(strokes);
-            createCSV(strokes);
 
             inkCanvas1.InkPresenter.StrokeContainer.Clear();
-
-
         }
+
 
         private void createCSV(IReadOnlyList<InkStroke> strokes)
         {
@@ -205,14 +201,13 @@ namespace PodpisBio
                 {
                     Src.Point point = new Src.Point((float)pointTemp.Position.X, (float)pointTemp.Position.Y, pointTemp.Pressure);
                     stroke.addPoint(point);
-                    Debug.WriteLine(stroke.getPoints().Count);
                 }
                 signature.addStroke(stroke);
             }
             signatureController.addSignature(signature);
         }
 
-        private async Task writeToFileAsync(String rawCsv)
+        private async void writeToFileAsync(String rawCsv)
         {
             var savePicker = new Windows.Storage.Pickers.FileSavePicker();
             savePicker.SuggestedStartLocation =
@@ -248,6 +243,12 @@ namespace PodpisBio
             {
                 Debug.WriteLine("Cancelled");
             }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            var strokes = inkCanvas1.InkPresenter.StrokeContainer.GetStrokes();
+            createCSV(strokes);
         }
     }
 }
