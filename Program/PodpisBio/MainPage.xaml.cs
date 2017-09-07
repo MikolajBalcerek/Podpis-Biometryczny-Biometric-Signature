@@ -27,8 +27,17 @@ namespace PodpisBio
     /// </summary>
     public sealed partial class MainPage : Page
     {
+
+        public int strokesCount; //Liczba przyciśnięć
+        public Stopwatch timer; //Obiekt zajmujący się czasem ogólnoaplikacji
+
         public MainPage()
         {
+            //Start the clock!
+            timer = new Stopwatch();
+            timer.Start();
+
+            strokesCount = 0; //Liczba przyciśnięć na 0
             this.InitializeComponent();
             this.initializePenHandlers();
         }
@@ -65,7 +74,21 @@ namespace PodpisBio
 
         private void Core_PointerPressing(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
-            Debug.WriteLine("Adam wcisnął");
+            strokesCount = strokesCount + 1;
+            updateInfoInLabel(strokesCountLabel, "Ilość naciśnięć: " + strokesCount);
+            updateInfoInLabel(timeLastPressedLabel, "Czas ostatniego naciśnięcia w ms:  " + timer.ElapsedMilliseconds);
+            Debug.WriteLine("Adam wcisnął " + strokesCount + " razy" + "ostatni raz " + timer.ElapsedMilliseconds);
+
+        }
+
+        //Funkcja aktualizacji tekstu Label, podaj nazwę obiektu, tekst
+        private async System.Threading.Tasks.Task updateInfoInLabel(TextBlock givenLabel, string text)
+        {
+            //Updates informations asynchronously
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                givenLabel.Text = text;
+            });
         }
 
         private async System.Threading.Tasks.Task updateInfoAsync(String value)
