@@ -25,8 +25,12 @@ namespace PodpisBio
     /// </summary>
     public sealed partial class MainPage : Page
     {
+
+        public int strokesCount; //Liczba przyciśnięć
+
         public MainPage()
         {
+            strokesCount = 0; //Liczba przyciśnięć na 0
             this.InitializeComponent();
             this.initializePenHandlers();
         }
@@ -63,7 +67,19 @@ namespace PodpisBio
 
         private void Core_PointerPressing(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
-            Debug.WriteLine("Adam wcisnął");
+            strokesCount = strokesCount + 1;
+            updateInfoInLabel(strokesCountLabel, "Ilość naciśnięć " + strokesCount);
+            Debug.WriteLine("Adam wcisnął " + strokesCount + "razy");
+        }
+
+        //Funkcja aktualizacji tekstu Label, podaj nazwę obiektu, tekst
+        private async System.Threading.Tasks.Task updateInfoInLabel(TextBlock givenLabel, string text)
+        {
+            //Updates informations asynchronously
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                givenLabel.Text = text;
+            });
         }
 
         private async System.Threading.Tasks.Task updateInfoAsync(String value)
@@ -91,6 +107,11 @@ namespace PodpisBio
             }
 
             inkCanvas1.InkPresenter.StrokeContainer.Clear();   
+        }
+
+        private void TextBlock_SelectionChanged(System.Object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
