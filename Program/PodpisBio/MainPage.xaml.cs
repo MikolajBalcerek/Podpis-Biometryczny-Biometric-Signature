@@ -15,8 +15,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Diagnostics;
-using System.Text;
-using System.Threading.Tasks;
 
 //Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x415
 
@@ -30,6 +28,16 @@ namespace PodpisBio
 
         public int strokesCount; //Liczba przyciśnięć
         public Stopwatch timer; //Obiekt zajmujący się czasem ogólnoaplikacji
+        public List<Single> pressures; //lista sił nacisku punktów; nadmiarowe info zawarte w storke.GetInkPoints() 
+        public List<long> times; //lista czasów naciśnięć poszczególnych punktów
+
+        public List<int> pressureChanges; 
+        /*lista zmian sił nacisku
+         * -1 -- nacisk maleje
+         *  0 -- nacisk się nie zmienia
+         * +1 -- nacisk rośnie
+         */
+
 
         public MainPage()
         {
@@ -38,6 +46,11 @@ namespace PodpisBio
             timer.Start();
 
             strokesCount = 0; //Liczba przyciśnięć na 0
+
+            pressures = new List<Single>();
+            times = new List<long>();
+            pressureChanges = new List<int>();
+
             this.InitializeComponent();
             this.initializePenHandlers();
         }
@@ -55,16 +68,26 @@ namespace PodpisBio
 
         private void Core_PointerMoving(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
-            if(args.CurrentPoint.Properties.Pressure > 0.9)
+            if (args.CurrentPoint.Properties.Pressure > 0.9)
             {
                 updateInfoAsync("Adam rysuje X: " + args.CurrentPoint.Position.X + ", Y: " + args.CurrentPoint.Position.Y + ", z mocą: IT'S OVER 9000");
             }
             else
             {
-                updateInfoAsync("Adam rysuje X: " + args.CurrentPoint.Position.X + ", Y: " + args.CurrentPoint.Position.Y + ", z mocą: " + args.CurrentPoint.Properties.Pressure +", " + args.CurrentPoint.Properties.Twist);
+                updateInfoAsync("Adam rysuje X: " + args.CurrentPoint.Position.X + ", Y: " + args.CurrentPoint.Position.Y + ", z mocą: " + args.CurrentPoint.Properties.Pressure + ", " + args.CurrentPoint.Properties.Twist);
             }
 
-            
+
+        }
+
+        private int calcPressureChange(Single currentPress, Single previousPress)
+        {
+            var difference = currentPress - previousPress;
+            if (difference == 0)
+                return 0;
+            if (difference > 0)
+                return 1;
+            return -1;
         }
 
         private void Core_PointerReleasing(CoreInkIndependentInputSource sender, PointerEventArgs args)
@@ -75,10 +98,24 @@ namespace PodpisBio
         private void Core_PointerPressing(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
             strokesCount = strokesCount + 1;
+
+            var pressure = args.CurrentPoint.Properties.Pressure;
+            Single previousPressure;
+            if (pressures.Count() > 0)
+                previousPressure = pressures[pressures.Count() - 1];
+            else
+                previousPressure = 0;
+           var pressureChange = calcPressureChange(pressure, previousPressure);
+
+           pressureChanges.Add(pressureChange);
+           pressures.Add(pressure);
+            
+            times.Add(timer.ElapsedMilliseconds);
             updateInfoInLabel(strokesCountLabel, "Ilość naciśnięć: " + strokesCount);
             updateInfoInLabel(timeLastPressedLabel, "Czas ostatniego naciśnięcia w ms:  " + timer.ElapsedMilliseconds);
+            updateInfoInLabel(pressureLastPressedLabel, "Siła ostatniego naciśnięcia: " + pressure);
+            updateInfoInLabel(pressureChangeLabel, "Zmiana siły nacisku: " + pressureChange);
             Debug.WriteLine("Adam wcisnął " + strokesCount + " razy" + "ostatni raz " + timer.ElapsedMilliseconds);
-
         }
 
         //Funkcja aktualizacji tekstu Label, podaj nazwę obiektu, tekst
@@ -99,67 +136,28 @@ namespace PodpisBio
                 label1.Text = value;
             });
         }
-        
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var strokes = inkCanvas1.InkPresenter.StrokeContainer.GetStrokes();
 
-            var csv = new StringBuilder();
-            var rawCsv = "";
             Debug.WriteLine(strokes.Count);
             foreach (var stroke in strokes)
             {
-                Debug.WriteLine("Stroke: "+stroke.Id+", point count: "+stroke.GetInkPoints().Count + ", duration: " + stroke.StrokeDuration.Value.Seconds+" s "+stroke.StrokeDuration.Value.Milliseconds+" ms");
-                foreach( var point in stroke.GetInkPoints())
+                Debug.WriteLine("Stroke: " + stroke.Id + ", point count: " + stroke.GetInkPoints().Count + ", duration: " + stroke.StrokeDuration.Value.Seconds + " s " + stroke.StrokeDuration.Value.Milliseconds + " ms");
+                foreach (var point in stroke.GetInkPoints())
                 {
                     Debug.WriteLine("x: " + point.Position.X + ", y: " + point.Position.Y + ", pressure: " + point.Pressure + ", timestamp: " + point.Timestamp);
-                    var newLine = string.Format(point.Position.X.ToString() +";"+ point.Position.Y.ToString() + ";" + point.Pressure.ToString() + ";" + point.Timestamp.ToString());
-                    Debug.WriteLine(newLine);
-
-                    rawCsv = rawCsv + newLine + "\r\n";
 
                 }
             }
 
-            writeToFileAsync(rawCsv);
-            inkCanvas1.InkPresenter.StrokeContainer.Clear();   
+            inkCanvas1.InkPresenter.StrokeContainer.Clear();
         }
-        private async Task writeToFileAsync(String rawCsv)
-        {
-            var savePicker = new Windows.Storage.Pickers.FileSavePicker();
-            savePicker.SuggestedStartLocation =
-                Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary;
-            // Dropdown of file types the user can save the file as
-            savePicker.FileTypeChoices.Add("Plain Text", new List<string>() { ".csv" });
-            // Default file name if the user does not type one in or select a file to replace
-            savePicker.SuggestedFileName = "New Document";
 
-            Windows.Storage.StorageFile file = await savePicker.PickSaveFileAsync();
-            if (file != null)
-            {
-                // Prevent updates to the remote version of the file until
-                // we finish making changes and call CompleteUpdatesAsync.
-                Windows.Storage.CachedFileManager.DeferUpdates(file);
-                // write to file
-                await Windows.Storage.FileIO.WriteTextAsync(file, rawCsv);
-                // Let Windows know that we're finished changing the file so
-                // the other app can update the remote version of the file.
-                // Completing updates may require Windows to ask for user input.
-                Windows.Storage.Provider.FileUpdateStatus status =
-                    await Windows.Storage.CachedFileManager.CompleteUpdatesAsync(file);
-                if (status == Windows.Storage.Provider.FileUpdateStatus.Complete)
-                {
-                    Debug.WriteLine("File " + file.Name + " was saved.");
-                }
-                else
-                {
-                    Debug.WriteLine("File " + file.Name + " was NOT saved.");
-                }
-            }
-            else
-            {
-                Debug.WriteLine("Cancelled");
-            }
+        private void TextBlock_SelectionChanged(System.Object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
