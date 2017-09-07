@@ -6,6 +6,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <Page.Resources>
+        <Style x:Key="CanvasStyle1" TargetType="Canvas"/>
+    </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <InkCanvas x:Name="inkCanvas1" FocusVisualPrimaryBrush="Black" Margin="10,30,10,15" RequestedTheme="Light"/>
         <TextBlock x:Name="label1" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="TextBlock" Width="539" Height="20" VerticalAlignment="Top"/>
