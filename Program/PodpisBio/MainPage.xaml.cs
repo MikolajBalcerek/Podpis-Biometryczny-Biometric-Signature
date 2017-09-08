@@ -49,7 +49,6 @@ namespace PodpisBio
             timer = new Stopwatch();
             timer.Start();
 
-            strokesCount = 0; //Liczba przyciśnięć na 0
 
             pressures = new List<Single>();
             times = new List<long>();
@@ -152,7 +151,7 @@ namespace PodpisBio
             var strokes = inkCanvas1.InkPresenter.StrokeContainer.GetStrokes();
             //consoleStrokeInfo(strokes);
             addSignature(strokes);
-
+            strokesCount = 0;
             inkCanvas1.InkPresenter.StrokeContainer.Clear();
         }
 
@@ -173,6 +172,9 @@ namespace PodpisBio
 
                 rawCsv = rawCsv + Environment.NewLine;
             }
+
+            //dopisanie strokeCount
+            rawCsv = rawCsv + Environment.NewLine + "Strokescount: " + strokesCount;
             writeToFileAsync(rawCsv);
         }
 
@@ -197,12 +199,14 @@ namespace PodpisBio
             foreach (var strokeTemp in strokes)
             {
                 Stroke stroke = new Stroke();
+                signature.increaseStrokesCount();
                 foreach (var pointTemp in strokeTemp.GetInkPoints())
                 {
                     Src.Point point = new Src.Point((float)pointTemp.Position.X, (float)pointTemp.Position.Y, pointTemp.Pressure);
                     stroke.addPoint(point);
                 }
                 signature.addStroke(stroke);
+                Debug.Write(signature.getStrokesCount());
             }
             signatureController.addSignature(signature);
         }
