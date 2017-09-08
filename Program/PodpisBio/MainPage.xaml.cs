@@ -148,11 +148,18 @@ namespace PodpisBio
         //Action for button click
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
+            Clear_Screen_Add_Strokes();
+  
+        }
+
+        private void Clear_Screen_Add_Strokes()
+        {
+            strokesCount = 0; //tylko do wyświetlania, Signature class ma realcount
             var strokes = inkCanvas1.InkPresenter.StrokeContainer.GetStrokes();
             //consoleStrokeInfo(strokes);
             addSignature(strokes);
-            strokesCount = 0;
             inkCanvas1.InkPresenter.StrokeContainer.Clear();
+
         }
 
 
@@ -253,6 +260,7 @@ namespace PodpisBio
         {
             var strokes = inkCanvas1.InkPresenter.StrokeContainer.GetStrokes();
             createCSV(strokes);
+            Clear_Screen_Add_Strokes();
         }
     }
 }
