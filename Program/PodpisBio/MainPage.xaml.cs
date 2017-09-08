@@ -30,7 +30,7 @@ namespace PodpisBio
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        public int strokesCount; //Liczba przyciśnięć
+        private int strokesCount; //Liczba przyciśnięć tylko do poglądu, Signature ma swój
         public Stopwatch timer; //Obiekt zajmujący się czasem ogólnoaplikacji
         public List<Single> pressures; //lista sił nacisku punktów; nadmiarowe info zawarte w storke.GetInkPoints() 
         public List<long> times; //lista czasów naciśnięć poszczególnych punktów
