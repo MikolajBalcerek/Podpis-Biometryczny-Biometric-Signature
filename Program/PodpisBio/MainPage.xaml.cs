@@ -205,6 +205,7 @@ namespace PodpisBio
                 signature.addStroke(stroke);
             }
             signatureController.addSignature(signature);
+            signature.init();
         }
 
         private async void writeToFileAsync(String rawCsv)
