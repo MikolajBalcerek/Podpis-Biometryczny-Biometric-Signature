@@ -147,7 +147,7 @@ namespace PodpisBio
         }
 
         //Action for button click
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Clear_Click(object sender, RoutedEventArgs e)
         {
             var strokes = inkCanvas1.InkPresenter.StrokeContainer.GetStrokes();
             //consoleStrokeInfo(strokes);
@@ -245,7 +245,7 @@ namespace PodpisBio
             }
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Save_Click(object sender, RoutedEventArgs e)
         {
             var strokes = inkCanvas1.InkPresenter.StrokeContainer.GetStrokes();
             createCSV(strokes);
