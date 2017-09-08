@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +12,18 @@ namespace PodpisBio.Src
         private List<Stroke> strokes = new List<Stroke>();
         double length;
 
-        public Signature() { }
+        public void increaseStrokesCount() { this.strokesCount = this.strokesCount + 1; }
+        public int getStrokesCount() { return this.strokesCount; }
+
+
+        private int strokesCount;
+        public Signature()
+        {
+            strokesCount = 0;
+        }
         public Signature(List<Stroke> strokes)
         {
+            strokesCount = 0;
             this.strokes = strokes;
         }
 
@@ -46,6 +55,8 @@ namespace PodpisBio.Src
             return points;
         }
 
+
+
         public void calcLength()
         {
             double len = 0;
@@ -59,9 +70,9 @@ namespace PodpisBio.Src
             {
 
                 int temp = 0;
-                foreach(Point s in points)
+                foreach (Point s in points)
                 {
-                    if ( (s.getX()-1 < points[i].getX() && s.getX() +1 > points[i].getX()) && (s.getY() > points[i].getY()+2 || s.getY() < points[i].getY() - 2))
+                    if ((s.getX() - 1 < points[i].getX() && s.getX() + 1 > points[i].getX()) && (s.getY() > points[i].getY() + 2 || s.getY() < points[i].getY() - 2))
                     {
                         temp++;
                     }
