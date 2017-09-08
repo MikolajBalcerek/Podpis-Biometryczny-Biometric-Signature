@@ -46,7 +46,7 @@ namespace PodpisBio.Src
             return points;
         }
 
-        public double calcLength()
+        public void calcLength()
         {
             double len = 0;
             List<Point> points = this.getAllPoints();
@@ -89,7 +89,7 @@ namespace PodpisBio.Src
                 Debug.WriteLine("Dlugosc = 0");
             }
 
-            return len;
+            this.length = len;
         }
     }
 }
