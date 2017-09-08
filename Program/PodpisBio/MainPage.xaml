@@ -15,7 +15,7 @@
         <TextBlock x:Name ="timeLastPressedLabel" HorizontalAlignment="Left" Margin="10,49,0,0" TextWrapping="Wrap" Text="Czas ostatniego naciśnięcia" VerticalAlignment="Top"/>
         <TextBlock x:Name ="pressureLastPressedLabel" HorizontalAlignment="Left" Margin="10,69,0,0" TextWrapping="Wrap" Text="Siła ostatniego naciśnięcia" VerticalAlignment="Top"/>
         <TextBlock x:Name ="pressureChangeLabel" HorizontalAlignment="Left" Margin="10,89,0,0" TextWrapping="Wrap" Text="Zmiana nacisku" VerticalAlignment="Top"/>
-        <Button Content="Zapisz" HorizontalAlignment="Right" Margin="0,10,122,0" VerticalAlignment="Top" Click="Button_Click_1" Height="32" Width="62"/>
+        <Button Content="Zapisz" HorizontalAlignment="Right" Margin="0,10,122,0" VerticalAlignment="Top" Click="Button_Save" Height="32" Width="62"/>
 
     </Grid>
 </Page>

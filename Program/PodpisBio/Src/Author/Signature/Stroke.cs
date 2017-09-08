@@ -17,6 +17,32 @@ namespace PodpisBio.Src
         }
 
         public List<Point> getPoints() { return points; }
-        public void addPoint(Point point) { points.Add(point); }
+        public void addPoint(Point point)
+        {
+            //var velocity = this.calcVelocity(point.getX(), point.getY(), point.getTime());
+            //var pressChange = calcPressureChange(point.getPressure());
+            //point.setVelocity(velocity);
+            //point.setPressureChange(pressChange);
+            points.Add(point);
+        }
+        //private float calcVelocity(float x, float y, long time)
+        //{
+        //    if (!this.points.Any())
+        //        return 0;
+        //    var prevPoint = this.points[this.points.Count() - 1];
+        //    var deltaTime = time - prevPoint.getTime();
+        //    var deltaX = x - prevPoint.getX();
+        //    var deltaY = y - prevPoint.getY();
+        //    return (deltaX * deltaX + deltaY * deltaY) / deltaTime;
+        //}
+
+        //private int calcPressureChange(float pressure)
+        //{
+        //    if (!this.points.Any())
+        //        return 0;
+        //    var previousPress = this.points[this.points.Count() - 1].getPressure();
+        //    var difference = pressure - previousPress;
+        //    return (difference == 0) ? 0 : (difference > 0 ? 1 : -1);
+        //}
     }
 }
