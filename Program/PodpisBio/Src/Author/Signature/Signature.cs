@@ -11,6 +11,7 @@ namespace PodpisBio.Src
     {
         private List<Stroke> strokes = new List<Stroke>();
         double length;
+        double height;
 
         public void increaseStrokesCount() { this.strokesCount = this.strokesCount + 1; }
         public int getStrokesCount() { return this.strokesCount; }
@@ -20,6 +21,8 @@ namespace PodpisBio.Src
         public Signature()
         {
             strokesCount = 0;
+            length = 0;
+            height = 0;
         }
         public Signature(List<Stroke> strokes)
         {
@@ -38,6 +41,11 @@ namespace PodpisBio.Src
         public double getLentgh()
         {
             return this.length;
+        }
+
+        public double getHeight()
+        {
+            return this.height;
         }
 
         public List<Stroke> getStrokes()
@@ -101,6 +109,50 @@ namespace PodpisBio.Src
             }
 
             this.length = len;
+        }
+
+        public void calcHeight()
+        {
+            //liczy wysokoœæ 
+            double height = 0;
+            List<Point> points = this.getAllPoints();
+            List<double> p = new List<double>();
+
+            for (int i = 0; i < points.Count(); i++)
+            {
+
+                int temp = 0;
+                foreach (Point s in points)
+                {
+                    if ((s.getX() - 1 < points[i].getX() && s.getX() + 1 > points[i].getX()) && (s.getY() > points[i].getY() + 2 || s.getY() < points[i].getY() - 2))
+                    {
+                        temp++;
+                    }
+                }
+                if (temp > 0)
+                {
+                    p.Add(points[i].getY());
+                }
+            }
+            p.Distinct();
+            if (p.Count() > 0)
+            {
+                double min = p[0];
+                double max = p[0];
+                foreach (double elem in p)
+                {
+                    if (elem < min) { min = elem; }
+                    if (elem > max) { max = elem; }
+                }
+                height = max - min;
+                Debug.WriteLine("Wysokosc =" + (max - min));
+            }
+            else
+            {
+                Debug.WriteLine("Wysokosc = 0");
+            }
+
+            this.height = height;
         }
     }
 }
