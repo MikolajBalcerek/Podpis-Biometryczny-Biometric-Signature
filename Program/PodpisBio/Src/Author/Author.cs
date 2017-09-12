@@ -9,13 +9,25 @@ namespace PodpisBio.Src.Author
     class Author
     {
         private int id;
-        private List<Signature> signatures;
+        private String name;
+        private List<Signature> signatures = new List<Signature>();
 
-        public Author() {}
+        public Author(int id, String name)
+        {
+            this.id = id;
+            this.name = name;
+        }
 
         public void addSignature(Signature sign)
         {
             this.signatures.Add(sign);
+        }
+
+        public String getName() { return name; }
+
+        public Signature getSignature()
+        {
+            return signatures[0];
         }
     }
 }

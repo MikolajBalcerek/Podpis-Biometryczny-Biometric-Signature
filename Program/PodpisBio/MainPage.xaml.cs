@@ -20,6 +20,11 @@ using PodpisBio.Src.Author;
 using System.Threading.Tasks;
 using System.Text;
 using Windows.UI.Input.Inking;
+using Windows.ApplicationModel.Core;
+using Windows.UI.ViewManagement;
+using Windows.UI;
+using Windows.UI.Xaml.Shapes;
+using Windows.UI.Xaml.Media.Imaging;
 
 //Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x415
 
@@ -73,16 +78,7 @@ namespace PodpisBio
         //Event handler dla rysowania
         private void Core_PointerMoving(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
-            if (args.CurrentPoint.Properties.Pressure > 0.9)
-            {
-                updateInfoAsync("Adam rysuje X: " + args.CurrentPoint.Position.X + ", Y: " + args.CurrentPoint.Position.Y + ", z mocą: IT'S OVER 9000");
-            }
-            else
-            {
-                updateInfoAsync("Adam rysuje X: " + args.CurrentPoint.Position.X + ", Y: " + args.CurrentPoint.Position.Y + ", z mocą: " + args.CurrentPoint.Properties.Pressure + ", " + args.CurrentPoint.Properties.Twist);
-            }
-
-
+            updateInfoInLabel(label1, "Adam rysuje X: " + args.CurrentPoint.Position.X + ", Y: " + args.CurrentPoint.Position.Y + ", z mocą: " + args.CurrentPoint.Properties.Pressure + ", " + args.CurrentPoint.Properties.Twist);
         }
 
         private int calcPressureChange(Single currentPress, Single previousPress)
@@ -103,6 +99,9 @@ namespace PodpisBio
 
         private void Core_PointerPressing(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
+
+
+
             strokesCount = strokesCount + 1;
 
             var pressure = args.CurrentPoint.Properties.Pressure;
@@ -148,8 +147,9 @@ namespace PodpisBio
         //Action for button click
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
+            
+
             Clear_Screen_Add_Strokes();
-  
         }
 
         private void Clear_Screen_Add_Strokes()
@@ -159,7 +159,6 @@ namespace PodpisBio
             //consoleStrokeInfo(strokes);
             addSignature(strokes);
             inkCanvas1.InkPresenter.StrokeContainer.Clear();
-
         }
 
 
@@ -202,21 +201,8 @@ namespace PodpisBio
         //Add signature
         private void addSignature(IReadOnlyList<InkStroke> strokes)
         {
-            Signature signature = new Signature();
-            foreach (var strokeTemp in strokes)
-            {
-                Stroke stroke = new Stroke();
-                signature.increaseStrokesCount();
-                foreach (var pointTemp in strokeTemp.GetInkPoints())
-                {
-                    Src.Point point = new Src.Point((float)pointTemp.Position.X, (float)pointTemp.Position.Y, pointTemp.Pressure);
-                    stroke.addPoint(point);
-                }
-                signature.addStroke(stroke);
-                Debug.Write(signature.getStrokesCount());
-            }
-            signatureController.addSignature(signature);
-            signature.init();
+            
+            authorController.getAuthor(authorCombobox.SelectedItem.ToString()).addSignature(signatureController.addSignature(strokes));
         }
 
         private async void writeToFileAsync(String rawCsv)
@@ -262,6 +248,93 @@ namespace PodpisBio
             var strokes = inkCanvas1.InkPresenter.StrokeContainer.GetStrokes();
             createCSV(strokes);
             Clear_Screen_Add_Strokes();
+        }
+
+        private void AddAuthor_Click(object sender, RoutedEventArgs e)
+        {
+            if (authorInputBox.Text.Equals(""))
+            {
+                Debug.WriteLine("Author name cannot be empty");
+                authorInputBox.Background = new SolidColorBrush(Color.FromArgb(180, 255, 0, 0));
+            }
+            else if(authorController.contains(authorInputBox.Text))
+            {
+                Debug.WriteLine("Author exists");
+                authorInputBox.Background = new SolidColorBrush(Color.FromArgb(180, 255, 0, 0));
+            }
+            else
+            {
+                authorController.addAuthor(authorInputBox.Text);
+                authorInputBox.Text = "";
+                authorInputBox.Background = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+                updateAuthorCombobox();
+            } 
+        }
+
+        private void updateAuthorCombobox()
+        {
+            authorCombobox.Items.Clear();
+
+            foreach(var authorName in authorController.getAuthorsNames())
+            {
+                authorCombobox.Items.Add(authorName);
+            }
+            displaySignatures();
+        }
+
+        private void displaySignatures()
+        {
+            Page page = new Page();
+            
+        }
+
+        private async void Button_ClickAsync(object sender, RoutedEventArgs e)
+        {
+            //drawAuthorSignature();
+            CoreApplicationView newView = CoreApplication.CreateNewView();
+            int newViewId = 0;
+            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                Frame frame = new Frame();
+                frame.Navigate(typeof(ShowSignatures), null);
+                Window.Current.Content = frame;
+                // You have to activate the window in order to show it later.
+                Window.Current.Activate();
+
+                newViewId = ApplicationView.GetForCurrentView().Id;
+            });
+            bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
+        }
+
+        private void drawAuthorSignature()
+        {
+            var polyline1 = new Polyline();
+            polyline1.Stroke = new SolidColorBrush(Windows.UI.Colors.Black);
+            polyline1.StrokeThickness = 4;
+
+            var points = new PointCollection();
+
+            Debug.WriteLine(authorCombobox.SelectedItem);
+
+            var author = authorController.getAuthor(authorCombobox.SelectedItem.ToString());
+
+            var signature = author.getSignature();
+
+            foreach(var stroke in signature.getStrokes())
+            {
+                foreach(var point in stroke.getPoints())
+                {
+                    points.Add(new Windows.Foundation.Point(point.getX(), point.getY()));
+                }
+            }
+
+            
+            polyline1.Points = points;
+
+            canvas1.Children.Add(polyline1);
+
+
+
         }
     }
 }
