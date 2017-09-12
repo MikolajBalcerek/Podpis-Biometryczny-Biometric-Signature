@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace PodpisBio.Src.Author
 {
+    // TODO: MK dodaj obliczanie pochodnych tiltów
     class Derivatives
     {
         private float velocityX = 0;

@@ -20,6 +20,11 @@ using PodpisBio.Src.Author;
 using System.Threading.Tasks;
 using System.Text;
 using Windows.UI.Input.Inking;
+using Windows.ApplicationModel.Core;
+using Windows.UI.ViewManagement;
+using Windows.UI;
+using Windows.UI.Xaml.Shapes;
+using Windows.UI.Xaml.Media.Imaging;
 
 //Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x415
 
@@ -34,7 +39,7 @@ namespace PodpisBio
         public Stopwatch timer; //Obiekt zajmujący się czasem ogólnoaplikacji
         public List<Single> pressures; //lista sił nacisku punktów; nadmiarowe info zawarte w storke.GetInkPoints() 
         public List<long> times; //lista czasów naciśnięć poszczególnych punktów
-
+        //TODO: MK wywal stąd te niepotrzebne listy
         public List<int> pressureChanges;
         /*lista zmian sił nacisku
          * -1 -- nacisk maleje
@@ -58,6 +63,10 @@ namespace PodpisBio
             authorController = new AuthorController();
             this.InitializeComponent();
             this.initializePenHandlers();
+
+            //ściągnięcie listy autorów żeby wyświetliło default
+            updateAuthorCombobox();
+            authorCombobox.SelectedIndex = 0;
         }
 
         private void initializePenHandlers()
@@ -73,16 +82,20 @@ namespace PodpisBio
         //Event handler dla rysowania
         private void Core_PointerMoving(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
-            if (args.CurrentPoint.Properties.Pressure > 0.9)
-            {
-                updateInfoAsync("Adam rysuje X: " + args.CurrentPoint.Position.X + ", Y: " + args.CurrentPoint.Position.Y + ", z mocą: IT'S OVER 9000");
-            }
+            var pressure = args.CurrentPoint.Properties.Pressure;
+            Single previousPressure;
+            if (pressures.Count() > 0)
+                previousPressure = pressures[pressures.Count() - 1];
             else
-            {
-                updateInfoAsync("Adam rysuje X: " + args.CurrentPoint.Position.X + ", Y: " + args.CurrentPoint.Position.Y + ", z mocą: " + args.CurrentPoint.Properties.Pressure + ", " + args.CurrentPoint.Properties.Twist);
-            }
+                previousPressure = 0;
+            var pressureChange = calcPressureChange(pressure, previousPressure);
 
-
+            pressureChanges.Add(pressureChange);
+            pressures.Add(pressure);
+            //TODO: MK - wywal stąd te obliczenia, pobieraj dane z naszych klas
+            updateInfoInLabel(label1, "Adam rysuje X: " + args.CurrentPoint.Position.X + ", Y: " + args.CurrentPoint.Position.Y + ", z mocą: " + args.CurrentPoint.Properties.Pressure + ", " + args.CurrentPoint.Properties.Twist);
+            updateInfoInLabel(pressureLastPressedLabel, "Siła ostatniego naciśnięcia: " + pressure);
+            updateInfoInLabel(pressureChangeLabel, "Zmiana siły nacisku: " + pressureChange);
         }
 
         private int calcPressureChange(Single currentPress, Single previousPress)
@@ -103,24 +116,14 @@ namespace PodpisBio
 
         private void Core_PointerPressing(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
+
+
+
             strokesCount = strokesCount + 1;
-
-            var pressure = args.CurrentPoint.Properties.Pressure;
-            Single previousPressure;
-            if (pressures.Count() > 0)
-                previousPressure = pressures[pressures.Count() - 1];
-            else
-                previousPressure = 0;
-           var pressureChange = calcPressureChange(pressure, previousPressure);
-
-           pressureChanges.Add(pressureChange);
-           pressures.Add(pressure);
             
             times.Add(timer.ElapsedMilliseconds);
             updateInfoInLabel(strokesCountLabel, "Ilość naciśnięć: " + strokesCount);
             updateInfoInLabel(timeLastPressedLabel, "Czas ostatniego naciśnięcia w ms:  " + timer.ElapsedMilliseconds);
-            updateInfoInLabel(pressureLastPressedLabel, "Siła ostatniego naciśnięcia: " + pressure);
-            updateInfoInLabel(pressureChangeLabel, "Zmiana siły nacisku: " + pressureChange);
             Debug.WriteLine("Adam wcisnął " + strokesCount + " razy" + "ostatni raz " + timer.ElapsedMilliseconds);
         }
 
@@ -148,6 +151,8 @@ namespace PodpisBio
         //Action for button click
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
+            
+
             Clear_Screen_Add_Strokes();
         }
 
@@ -158,7 +163,6 @@ namespace PodpisBio
             //consoleStrokeInfo(strokes);
             addSignature(strokes);
             inkCanvas1.InkPresenter.StrokeContainer.Clear();
-
         }
 
         //Write Stroke info to debug window
@@ -178,27 +182,109 @@ namespace PodpisBio
         //Add signature
         private void addSignature(IReadOnlyList<InkStroke> strokes)
         {
-            Signature signature = new Signature();
-            foreach (var strokeTemp in strokes)
+            try
             {
-                Stroke stroke = new Stroke();
-                signature.increaseStrokesCount();
-                foreach (var pointTemp in strokeTemp.GetInkPoints())
-                {
-                    Src.Point point = new Src.Point((float)pointTemp.Position.X, (float)pointTemp.Position.Y, pointTemp.Pressure, pointTemp.Timestamp, pointTemp.TiltX, pointTemp.TiltY);
-                    stroke.addPoint(point);
-                }
-                signature.addStroke(stroke);
-                Debug.Write(signature.getStrokesCount());
+                authorController.getAuthor(authorCombobox.SelectedItem.ToString()).addSignature(signatureController.addSignature(strokes));
             }
-            signatureController.addSignature(signature);
-            signature.init();
+            catch (System.NullReferenceException)
+            {
+                authorController.getAuthor("Default").addSignature(signatureController.addSignature(strokes));
+                //nie było podanego autora, autor domyślny
+               
+            }
         }
 
-        private void Button_Save(object sender, RoutedEventArgs e)
+        private void Save_Click(object sender, RoutedEventArgs e)
         {
             FileController saver = new FileController();
             saver.save(inkCanvas1.InkPresenter.StrokeContainer);
+        }
+
+        private void AddAuthor_Click(object sender, RoutedEventArgs e)
+        {
+            if (authorInputBox.Text.Equals(""))
+            {
+                Debug.WriteLine("Author name cannot be empty");
+                authorInputBox.Background = new SolidColorBrush(Color.FromArgb(180, 255, 0, 0));
+            }
+            else if(authorController.contains(authorInputBox.Text))
+            {
+                Debug.WriteLine("Author already exists");
+                authorInputBox.Background = new SolidColorBrush(Color.FromArgb(180, 255, 0, 0));
+            }
+            else
+            {
+                authorController.addAuthor(authorInputBox.Text);
+                authorInputBox.Text = "";
+                authorInputBox.Background = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+                updateAuthorCombobox();
+            } 
+        }
+
+        private void updateAuthorCombobox()
+        {
+            authorCombobox.Items.Clear();
+
+            foreach(var authorName in authorController.getAuthorsNames())
+            {
+                authorCombobox.Items.Add(authorName);
+            }
+            displaySignatures();
+        }
+
+        private void displaySignatures()
+        {
+            Page page = new Page();
+            
+        }
+
+        private async void Button_ClickAsync(object sender, RoutedEventArgs e)
+        {
+            //drawAuthorSignature();
+            CoreApplicationView newView = CoreApplication.CreateNewView();
+            int newViewId = 0;
+            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                Frame frame = new Frame();
+                frame.Navigate(typeof(ShowSignatures), null);
+                Window.Current.Content = frame;
+                // You have to activate the window in order to show it later.
+                Window.Current.Activate();
+
+                newViewId = ApplicationView.GetForCurrentView().Id;
+            });
+            bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
+        }
+
+        private void drawAuthorSignature()
+        {
+            var polyline1 = new Polyline();
+            polyline1.Stroke = new SolidColorBrush(Windows.UI.Colors.Black);
+            polyline1.StrokeThickness = 4;
+
+            var points = new PointCollection();
+
+            Debug.WriteLine(authorCombobox.SelectedItem);
+
+            var author = authorController.getAuthor(authorCombobox.SelectedItem.ToString());
+
+            var signature = author.getSignature();
+
+            foreach(var stroke in signature.getStrokes())
+            {
+                foreach(var point in stroke.getPoints())
+                {
+                    points.Add(new Windows.Foundation.Point(point.getX(), point.getY()));
+                }
+            }
+
+            
+            polyline1.Points = points;
+
+            canvas1.Children.Add(polyline1);
+
+
+
         }
     }
 }
