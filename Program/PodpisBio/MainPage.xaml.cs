@@ -67,6 +67,8 @@ namespace PodpisBio
             //ściągnięcie listy autorów żeby wyświetliło default
             updateAuthorCombobox();
             authorCombobox.SelectedIndex = 0;
+
+            
         }
 
         private void initializePenHandlers()
@@ -159,9 +161,6 @@ namespace PodpisBio
         private void Clear_Screen_Add_Strokes()
         {
             strokesCount = 0; //tylko do wyświetlania, Signature class ma realcount
-            var strokes = inkCanvas1.InkPresenter.StrokeContainer.GetStrokes();
-            //consoleStrokeInfo(strokes);
-            addSignature(strokes);
             inkCanvas1.InkPresenter.StrokeContainer.Clear();
         }
 
@@ -205,13 +204,19 @@ namespace PodpisBio
         //Add signature
         private void addSignature(IReadOnlyList<InkStroke> strokes)
         {
+            //IsChecked zwraca typ 'bool?', może posiadać wartość null stąd dodatkowy if tutaj sprawdzający czy nie zwraca nulla
+            bool isOriginal = false;
+            if (isOriginalCheckBox.IsChecked.HasValue)
+            {
+                isOriginal = isOriginalCheckBox.IsChecked.Value;
+            }
             try
             {
-                authorController.getAuthor(authorCombobox.SelectedItem.ToString()).addSignature(signatureController.addSignature(strokes));
+                authorController.getAuthor(authorCombobox.SelectedItem.ToString()).addSignature(signatureController.addSignature(strokes, isOriginal));
             }
             catch (System.NullReferenceException)
             {
-                authorController.getAuthor("Default").addSignature(signatureController.addSignature(strokes));
+                authorController.getAuthor("Default").addSignature(signatureController.addSignature(strokes, isOriginal));
                 //nie było podanego autora, autor domyślny
                
             }
@@ -255,7 +260,7 @@ namespace PodpisBio
             }
         }
 
-        private void Save_Click(object sender, RoutedEventArgs e)
+        private void SaveToFile_Click(object sender, RoutedEventArgs e)
         {
             var strokes = inkCanvas1.InkPresenter.StrokeContainer.GetStrokes();
             createCSV(strokes);
@@ -345,8 +350,13 @@ namespace PodpisBio
 
             canvas1.Children.Add(polyline1);
 
+        }
 
-
+        private void saveButton_Click(object sender, RoutedEventArgs e)
+        {
+            var strokes = inkCanvas1.InkPresenter.StrokeContainer.GetStrokes();
+            addSignature(strokes);
+            Clear_Screen_Add_Strokes();
         }
     }
 }
