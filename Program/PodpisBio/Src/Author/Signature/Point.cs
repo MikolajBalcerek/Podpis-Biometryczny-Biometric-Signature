@@ -20,8 +20,6 @@ namespace PodpisBio.Src
             this.time = time;
             this.tiltX = tiltX;
             this.tiltY = tiltY;
-
-            Debug.WriteLine("Point: "+ x+", "+y+", "+ pressure);
         }
 
         public void moveCordinates(float a, float b)

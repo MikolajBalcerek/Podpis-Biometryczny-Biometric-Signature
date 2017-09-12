@@ -66,7 +66,7 @@ namespace PodpisBio
 
             //ściągnięcie listy autorów żeby wyświetliło default
             updateAuthorCombobox();
-            authorCombobox.SelectedIndex = 0;
+            authorCombobox.SelectedIndex = 0;       
         }
 
         private void initializePenHandlers()
@@ -137,64 +137,41 @@ namespace PodpisBio
             });
         }
 
-        
-        //Updates window text label
-        private async void updateInfoAsync(String value)
-        {
-            //Updates informations asynchronously
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                label1.Text = value;
-            });
-        }
-
         //Action for button click
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
-            
-
             Clear_Screen_Add_Strokes();
         }
 
         private void Clear_Screen_Add_Strokes()
         {
             strokesCount = 0; //tylko do wyświetlania, Signature class ma realcount
-            var strokes = inkCanvas1.InkPresenter.StrokeContainer.GetStrokes();
-            //consoleStrokeInfo(strokes);
-            addSignature(strokes);
             inkCanvas1.InkPresenter.StrokeContainer.Clear();
-        }
-
-        //Write Stroke info to debug window
-        private void consoleStrokeInfo(IReadOnlyList<InkStroke> strokes)
-        {
-            foreach (var stroke in strokes)
-            {
-                Debug.WriteLine("Stroke: " + stroke.Id + ", point count: " + stroke.GetInkPoints().Count + ", duration: " + stroke.StrokeDuration.Value.Seconds + " s " + stroke.StrokeDuration.Value.Milliseconds + " ms");
-                foreach (var point in stroke.GetInkPoints())
-                {
-                    Debug.WriteLine("x: " + point.Position.X + ", y: " + point.Position.Y + ", pressure: " + point.Pressure + ", timestamp: " + point.Timestamp);
-                    
-                }
-            }
         }
 
         //Add signature
         private void addSignature(IReadOnlyList<InkStroke> strokes)
         {
+            bool isOriginal = false;
+            //IsChecked zwraca typ 'bool?', może posiadać wartość null stąd dodatkowy if tutaj sprawdzający czy nie zwraca nulla
+            if (isOriginalCheckBox.IsChecked.HasValue)
+            {
+                isOriginal = isOriginalCheckBox.IsChecked.Value;
+            }
             try
             {
-                authorController.getAuthor(authorCombobox.SelectedItem.ToString()).addSignature(signatureController.addSignature(strokes));
+                authorController.getAuthor(authorCombobox.SelectedItem.ToString()).addSignature(signatureController.addSignature(strokes, isOriginal));
             }
             catch (System.NullReferenceException)
             {
-                authorController.getAuthor("Default").addSignature(signatureController.addSignature(strokes));
+                authorController.getAuthor("Default").addSignature(signatureController.addSignature(strokes, isOriginal));
                 //nie było podanego autora, autor domyślny
-               
             }
         }
 
-        private void Save_Click(object sender, RoutedEventArgs e)
+
+
+        private void SaveToFile_Click(object sender, RoutedEventArgs e)
         {
             FileController saver = new FileController();
             saver.save(inkCanvas1.InkPresenter.StrokeContainer);
@@ -207,7 +184,7 @@ namespace PodpisBio
                 Debug.WriteLine("Author name cannot be empty");
                 authorInputBox.Background = new SolidColorBrush(Color.FromArgb(180, 255, 0, 0));
             }
-            else if(authorController.contains(authorInputBox.Text))
+            else if(authorController.isContaining(authorInputBox.Text))
             {
                 Debug.WriteLine("Author already exists");
                 authorInputBox.Background = new SolidColorBrush(Color.FromArgb(180, 255, 0, 0));
@@ -229,18 +206,13 @@ namespace PodpisBio
             {
                 authorCombobox.Items.Add(authorName);
             }
-            displaySignatures();
-        }
 
-        private void displaySignatures()
-        {
-            Page page = new Page();
-            
+            authorCombobox.SelectedIndex = authorCombobox.Items.Count - 1;
         }
 
         private async void Button_ClickAsync(object sender, RoutedEventArgs e)
         {
-            //drawAuthorSignature();
+            drawAuthorSignature(authorController.getAuthor(authorCombobox.Items[1].ToString()).getSignature(),canvas1);
             CoreApplicationView newView = CoreApplication.CreateNewView();
             int newViewId = 0;
             await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -256,35 +228,39 @@ namespace PodpisBio
             bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
         }
 
-        private void drawAuthorSignature()
+        private void drawAuthorSignature(Signature signature, Canvas canvas)
         {
-            var polyline1 = new Polyline();
-            polyline1.Stroke = new SolidColorBrush(Windows.UI.Colors.Black);
-            polyline1.StrokeThickness = 4;
-
-            var points = new PointCollection();
-
-            Debug.WriteLine(authorCombobox.SelectedItem);
-
-            var author = authorController.getAuthor(authorCombobox.SelectedItem.ToString());
-
-            var signature = author.getSignature();
+            double thickness = 1;
+            Color color = Colors.Black;
 
             foreach(var stroke in signature.getStrokes())
             {
-                foreach(var point in stroke.getPoints())
+                var polyline = new Polyline();
+                polyline.Stroke = new SolidColorBrush(color);
+                polyline.StrokeThickness = thickness;
+                var points = new PointCollection();
+
+                foreach (var point in stroke.getPoints())
                 {
                     points.Add(new Windows.Foundation.Point(point.getX(), point.getY()));
                 }
+                polyline.Points = points;
+                canvas.Children.Add(polyline);
             }
 
+
+        }
+
+        private void saveButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var strokes = inkCanvas1.InkPresenter.StrokeContainer.GetStrokes();
+                addSignature(strokes);
+                Clear_Screen_Add_Strokes();
+            }
+            catch(ArgumentOutOfRangeException){ Debug.WriteLine("Nie można zapisać pustego podpisu!"); }
             
-            polyline1.Points = points;
-
-            canvas1.Children.Add(polyline1);
-
-
-
         }
     }
 }

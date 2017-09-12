@@ -41,7 +41,7 @@ namespace PodpisBio.Src.Author
             return null;
         }
 
-        public bool contains(String name)
+        public bool isContaining(String name)
         {
             foreach(var author in authors)
             {

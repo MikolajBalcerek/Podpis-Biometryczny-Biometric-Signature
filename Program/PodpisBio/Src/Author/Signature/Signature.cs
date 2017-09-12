@@ -11,17 +11,14 @@ namespace PodpisBio.Src.Author
     {
         private List<Stroke> strokes = new List<Stroke>();
         double length;
+        bool isOriginal;
+
+
         private int strokesCount;
-
-        public Signature()
+        public Signature(bool isOriginal)
         {
             strokesCount = 0;
-        }
-
-        public Signature(List<Stroke> strokes)
-        {
-            strokesCount = 0;
-            this.strokes = strokes;
+            this.isOriginal = isOriginal;
         }
 
         public void init()

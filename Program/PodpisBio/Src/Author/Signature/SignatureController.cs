@@ -17,9 +17,9 @@ namespace PodpisBio.Src.Author
         public void addSignature(Signature signature) { signatures.Add(signature); }
 
         //Add signature
-        public Signature addSignature(IReadOnlyList<InkStroke> strokes)
+        public Signature addSignature(IReadOnlyList<InkStroke> strokes, bool isOriginal)
         {
-            Signature signature = new Signature();
+            Signature signature = new Signature(isOriginal);
             foreach (var strokeTemp in strokes)
             {
                 Stroke stroke = new Stroke();
