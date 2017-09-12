@@ -11,16 +11,13 @@ namespace PodpisBio.Src
     {
         private List<Stroke> strokes = new List<Stroke>();
         double length;
-
-        public void increaseStrokesCount() { this.strokesCount = this.strokesCount + 1; }
-        public int getStrokesCount() { return this.strokesCount; }
-
-
         private int strokesCount;
+
         public Signature()
         {
             strokesCount = 0;
         }
+
         public Signature(List<Stroke> strokes)
         {
             strokesCount = 0;
@@ -29,11 +26,29 @@ namespace PodpisBio.Src
 
         public void init()
         {
+            fit();
             calcLength();
         }
 
-        public void addStroke(Stroke stroke) { strokes.Add(stroke); }
-        public void addStrokes(List<Stroke> strokes) { this.strokes = strokes; }
+        public void addStroke(Stroke stroke)
+        {
+            strokes.Add(stroke);
+        }
+
+        public void addStrokes(List<Stroke> strokes)
+        {
+            this.strokes = strokes;
+        }
+        
+        public void increaseStrokesCount()
+        {
+            this.strokesCount = this.strokesCount + 1;
+        }
+
+        public int getStrokesCount()
+        {
+            return this.strokesCount;
+        }
 
         public double getLentgh()
         {
@@ -55,7 +70,27 @@ namespace PodpisBio.Src
             return points;
         }
 
+        public void fit()
+        {
+            List<Point> points = this.getAllPoints();
 
+            float x_min = points[0].getX();
+            float y_min = points[0].getY();
+
+            foreach (Point x in points)
+            {
+                if (x.getX() < x_min) { x_min = x.getX(); }
+                if (x.getY() < y_min) { y_min = x.getY(); }
+            }
+            
+            foreach (Stroke st in strokes)
+            {
+                foreach(Point x in st.getPoints())
+                {
+                    x.moveCordinates(x_min, y_min);
+                }
+            }
+        }
 
         public void calcLength()
         {
@@ -82,7 +117,7 @@ namespace PodpisBio.Src
                     p.Add(points[i].getX());
                 }
             }
-            p.Distinct();
+            p=p.Distinct().ToList();
             if (p.Count() > 0)
             {
                 double min = p[0];

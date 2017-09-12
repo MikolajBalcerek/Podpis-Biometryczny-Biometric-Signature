@@ -20,6 +20,11 @@ namespace PodpisBio.Src
             Debug.WriteLine("Point: "+ x+", "+y+", "+ pressure);
         }
 
+        public void moveCordinates(float a, float b)
+        {
+            this.x = this.x - a;
+            this.y = this.y - b;
+        }
 
         public float getX() { return x; }
         public float getY() { return y; }
