@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace PodpisBio.Src.Author
 {
@@ -25,12 +26,17 @@ namespace PodpisBio.Src.Author
                 this.points.Add(point);
                 this.derivatives.Add(new Derivatives());
             }
-            Dynamics calculator = new Dynamics();
-            var prevPoint = this.points[this.points.Count - 1];
-            var prevDerivatives = this.derivatives[this.derivatives.Count() - 1];
-            var derivatives = calculator.calcDerivatives(prevPoint, point, prevDerivatives);
-            this.points.Add(point);
-            this.derivatives.Add(derivatives);
+            else
+            {
+                Dynamics calculator = new Dynamics();
+                var prevPoint = this.points[this.points.Count - 1];
+                var prevDerivatives = this.derivatives[this.derivatives.Count() - 1];
+                var derivatives = calculator.calcDerivatives(prevPoint, point, prevDerivatives);
+                this.points.Add(point);
+                this.derivatives.Add(derivatives);
+                Debug.WriteLine("Adam oblicza pochodne v = " + derivatives.Velocity + " i acc = " + derivatives.Acc);
+            }
+
         }
 
         public float getWidth() { return points.Max(pt => pt.getX()) - points.Min(pt => pt.getX()); }
