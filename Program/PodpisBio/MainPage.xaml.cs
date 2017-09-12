@@ -149,7 +149,6 @@ namespace PodpisBio
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
             Clear_Screen_Add_Strokes();
-  
         }
 
         private void Clear_Screen_Add_Strokes()
@@ -186,7 +185,7 @@ namespace PodpisBio
                 signature.increaseStrokesCount();
                 foreach (var pointTemp in strokeTemp.GetInkPoints())
                 {
-                    Src.Point point = new Src.Point((float)pointTemp.Position.X, (float)pointTemp.Position.Y, pointTemp.Pressure);
+                    Src.Point point = new Src.Point((float)pointTemp.Position.X, (float)pointTemp.Position.Y, pointTemp.Pressure, pointTemp.Timestamp, pointTemp.TiltX, pointTemp.TiltY);
                     stroke.addPoint(point);
                 }
                 signature.addStroke(stroke);
