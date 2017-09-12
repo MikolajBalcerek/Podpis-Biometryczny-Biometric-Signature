@@ -9,20 +9,33 @@ namespace PodpisBio.Src
 {
     class Point
     {
-        private float x, y, pressure;
+        private float x, y, pressure, tiltX, tiltY;
+        private ulong time;
 
-        public Point(float x, float y, float pressure)
+        public Point(float x, float y, float pressure, ulong time, float tiltX, float tiltY)
         {
             this.x = x;
             this.y = y;
             this.pressure = pressure;
+            this.time = time;
+            this.tiltX = tiltX;
+            this.tiltY = tiltY;
 
             Debug.WriteLine("Point: "+ x+", "+y+", "+ pressure);
         }
 
+        public void moveCordinates(float a, float b)
+        {
+            this.x = this.x - a;
+            this.y = this.y - b;
+        }
 
         public float getX() { return x; }
         public float getY() { return y; }
-        public float getPressure() { return pressure; }
+        public float getPressure() { return this.pressure; }
+        public float getTiltX() { return this.tiltX; }
+        public float getTiltY() { return this.tiltY; }
+        public ulong getTime() { return this.time; }
+
     }
 }

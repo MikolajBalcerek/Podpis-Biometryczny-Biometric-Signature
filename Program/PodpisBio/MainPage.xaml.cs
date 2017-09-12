@@ -39,7 +39,7 @@ namespace PodpisBio
         public Stopwatch timer; //Obiekt zajmujący się czasem ogólnoaplikacji
         public List<Single> pressures; //lista sił nacisku punktów; nadmiarowe info zawarte w storke.GetInkPoints() 
         public List<long> times; //lista czasów naciśnięć poszczególnych punktów
-
+        //TODO: MK wywal stąd te niepotrzebne listy
         public List<int> pressureChanges;
         /*lista zmian sił nacisku
          * -1 -- nacisk maleje
@@ -84,7 +84,20 @@ namespace PodpisBio
         //Event handler dla rysowania
         private void Core_PointerMoving(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
+            var pressure = args.CurrentPoint.Properties.Pressure;
+            Single previousPressure;
+            if (pressures.Count() > 0)
+                previousPressure = pressures[pressures.Count() - 1];
+            else
+                previousPressure = 0;
+            var pressureChange = calcPressureChange(pressure, previousPressure);
+
+            pressureChanges.Add(pressureChange);
+            pressures.Add(pressure);
+            //TODO: MK - wywal stąd te obliczenia, pobieraj dane z naszych klas
             updateInfoInLabel(label1, "Adam rysuje X: " + args.CurrentPoint.Position.X + ", Y: " + args.CurrentPoint.Position.Y + ", z mocą: " + args.CurrentPoint.Properties.Pressure + ", " + args.CurrentPoint.Properties.Twist);
+            updateInfoInLabel(pressureLastPressedLabel, "Siła ostatniego naciśnięcia: " + pressure);
+            updateInfoInLabel(pressureChangeLabel, "Zmiana siły nacisku: " + pressureChange);
         }
 
         private int calcPressureChange(Single currentPress, Single previousPress)
@@ -109,23 +122,10 @@ namespace PodpisBio
 
 
             strokesCount = strokesCount + 1;
-
-            var pressure = args.CurrentPoint.Properties.Pressure;
-            Single previousPressure;
-            if (pressures.Count() > 0)
-                previousPressure = pressures[pressures.Count() - 1];
-            else
-                previousPressure = 0;
-           var pressureChange = calcPressureChange(pressure, previousPressure);
-
-           pressureChanges.Add(pressureChange);
-           pressures.Add(pressure);
             
             times.Add(timer.ElapsedMilliseconds);
             updateInfoInLabel(strokesCountLabel, "Ilość naciśnięć: " + strokesCount);
             updateInfoInLabel(timeLastPressedLabel, "Czas ostatniego naciśnięcia w ms:  " + timer.ElapsedMilliseconds);
-            updateInfoInLabel(pressureLastPressedLabel, "Siła ostatniego naciśnięcia: " + pressure);
-            updateInfoInLabel(pressureChangeLabel, "Zmiana siły nacisku: " + pressureChange);
             Debug.WriteLine("Adam wcisnął " + strokesCount + " razy" + "ostatni raz " + timer.ElapsedMilliseconds);
         }
 
@@ -164,29 +164,6 @@ namespace PodpisBio
             inkCanvas1.InkPresenter.StrokeContainer.Clear();
         }
 
-
-        private void createCSV(IReadOnlyList<InkStroke> strokes)
-        {
-            var csv = new StringBuilder();
-            var rawCsv = "";
-            foreach (var stroke in strokes)
-            {
-                foreach (var point in stroke.GetInkPoints())
-                {
-                    var newLine = string.Format(point.Position.X.ToString() + ";" + point.Position.Y.ToString() + ";" + point.Pressure.ToString() + ";" + point.Timestamp.ToString());
-
-                    rawCsv = rawCsv + newLine + Environment.NewLine;
-
-                }
-
-                rawCsv = rawCsv + Environment.NewLine;
-            }
-
-            //dopisanie strokeCount
-            rawCsv = rawCsv + Environment.NewLine + "Strokescount: " + strokesCount;
-            writeToFileAsync(rawCsv);
-        }
-
         //Write Stroke info to debug window
         private void consoleStrokeInfo(IReadOnlyList<InkStroke> strokes)
         {
@@ -222,49 +199,12 @@ namespace PodpisBio
             }
         }
 
-        private async void writeToFileAsync(String rawCsv)
-        {
-            var savePicker = new Windows.Storage.Pickers.FileSavePicker();
-            savePicker.SuggestedStartLocation =
-                Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary;
-            // Dropdown of file types the user can save the file as
-            savePicker.FileTypeChoices.Add("Plain Text", new List<string>() { ".csv" });
-            // Default file name if the user does not type one in or select a file to replace
-            savePicker.SuggestedFileName = "New Document";
 
-            Windows.Storage.StorageFile file = await savePicker.PickSaveFileAsync();
-            if (file != null)
-            {
-                // Prevent updates to the remote version of the file until
-                // we finish making changes and call CompleteUpdatesAsync.
-                Windows.Storage.CachedFileManager.DeferUpdates(file);
-                // write to file
-                await Windows.Storage.FileIO.WriteTextAsync(file, rawCsv);
-                // Let Windows know that we're finished changing the file so
-                // the other app can update the remote version of the file.
-                // Completing updates may require Windows to ask for user input.
-                Windows.Storage.Provider.FileUpdateStatus status =
-                    await Windows.Storage.CachedFileManager.CompleteUpdatesAsync(file);
-                if (status == Windows.Storage.Provider.FileUpdateStatus.Complete)
-                {
-                    Debug.WriteLine("File " + file.Name + " was saved.");
-                }
-                else
-                {
-                    Debug.WriteLine("File " + file.Name + " was NOT saved.");
-                }
-            }
-            else
-            {
-                Debug.WriteLine("Cancelled");
-            }
-        }
 
-        private void SaveToFile_Click(object sender, RoutedEventArgs e)
+        private void Save_Click(object sender, RoutedEventArgs e)
         {
-            var strokes = inkCanvas1.InkPresenter.StrokeContainer.GetStrokes();
-            createCSV(strokes);
-            Clear_Screen_Add_Strokes();
+            FileController saver = new FileController();
+            saver.save(inkCanvas1.InkPresenter.StrokeContainer);
         }
 
         private void AddAuthor_Click(object sender, RoutedEventArgs e)

@@ -26,7 +26,7 @@ namespace PodpisBio.Src.Author
                 signature.increaseStrokesCount();
                 foreach (var pointTemp in strokeTemp.GetInkPoints())
                 {
-                    Src.Point point = new Src.Point((float)pointTemp.Position.X, (float)pointTemp.Position.Y, pointTemp.Pressure);
+                    Src.Point point = new Src.Point((float)pointTemp.Position.X, (float)pointTemp.Position.Y, pointTemp.Pressure, pointTemp.Timestamp, pointTemp.TiltX, pointTemp.TiltY);
                     stroke.addPoint(point);
                 }
                 signature.addStroke(stroke);

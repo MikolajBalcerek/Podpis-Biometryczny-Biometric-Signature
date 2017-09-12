@@ -104,11 +104,12 @@
     </Compile>
     <Compile Include="Src\Author\Author.cs" />
     <Compile Include="Src\Author\AuthorController.cs" />
+    <Compile Include="Src\Author\Signature\Dynamics.cs" />
     <Compile Include="Src\Author\Signature\SignatureController.cs" />
-    <Compile Include="Src\CSVwriter.cs" />
     <Compile Include="Src\Author\Signature\Point.cs" />
     <Compile Include="Src\Author\Signature\Signature.cs" />
     <Compile Include="Src\Author\Signature\Stroke.cs" />
+    <Compile Include="Src\FileController.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
