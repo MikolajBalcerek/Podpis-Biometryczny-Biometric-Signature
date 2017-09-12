@@ -4,10 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:PodpisBio"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" MinWidth="800" VerticalContentAlignment="Stretch">
+    
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Rectangle Fill="#FFF4F4F5" Stroke="Black" Margin="10,110,10,10" RequestedTheme="Dark" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-
         <InkCanvas x:Name="inkCanvas1" FocusVisualPrimaryBrush="Black" RequestedTheme="Light" Margin="10,110,10,10" />
         <TextBlock x:Name="label1" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
         <Button Content="Wyczyść" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Click="Clear_Click"/>
@@ -16,6 +16,12 @@
         <TextBlock x:Name ="pressureLastPressedLabel" HorizontalAlignment="Left" Margin="10,69,0,0" TextWrapping="Wrap" Text="Siła ostatniego naciśnięcia" VerticalAlignment="Top"/>
         <TextBlock x:Name ="pressureChangeLabel" HorizontalAlignment="Left" Margin="10,89,0,0" TextWrapping="Wrap" Text="Zmiana nacisku" VerticalAlignment="Top"/>
         <Button Content="Zapisz" HorizontalAlignment="Right" Margin="0,10,122,0" VerticalAlignment="Top" Click="Save_Click" Height="32" Width="62"/>
+        <Button x:Name="AddAuthor" Content="Dodaj osobę" HorizontalAlignment="Right" Margin="0,57,228,0" VerticalAlignment="Top" Click="AddAuthor_Click" Width="120"/>
+        <ComboBox x:Name="authorCombobox" HorizontalAlignment="Right" Margin="0,10,228,200" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="authorInputBox" HorizontalAlignment="Right" Margin="0,57,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="174" PlaceholderText="Autor"/>
+        <Button x:Name="graphs" Content="Wykresy" HorizontalAlignment="Right" Margin="0,10,382,0" VerticalAlignment="Top" Click="Button_ClickAsync"/>
+        <Canvas x:Name="canvas1" HorizontalAlignment="Left" Height="100" Margin="197,89,0,0" VerticalAlignment="Top" Width="100"/>
+        
 
     </Grid>
 </Page>

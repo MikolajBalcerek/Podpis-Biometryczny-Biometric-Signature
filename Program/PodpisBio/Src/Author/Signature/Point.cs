@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,8 @@ namespace PodpisBio.Src
             this.x = x;
             this.y = y;
             this.pressure = pressure;
+
+            Debug.WriteLine("Point: "+ x+", "+y+", "+ pressure);
         }
 
 
