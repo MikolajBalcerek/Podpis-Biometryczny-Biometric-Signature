@@ -10,7 +10,11 @@ namespace PodpisBio.Src.Author
     {
         public List<Author> authors = new List<Author>();
 
-        public AuthorController() { }
+        public AuthorController()
+        {
+            //domyślny autor pusty
+            this.authors.Add(new Author(authors.Count, "Default"));
+        }
 
         public void addAuthor(String name)
         {

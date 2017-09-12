@@ -63,6 +63,10 @@ namespace PodpisBio
             authorController = new AuthorController();
             this.InitializeComponent();
             this.initializePenHandlers();
+
+            //ściągnięcie listy autorów żeby wyświetliło default
+            updateAuthorCombobox();
+            authorCombobox.SelectedIndex = 0;
         }
 
         private void initializePenHandlers()
@@ -201,8 +205,16 @@ namespace PodpisBio
         //Add signature
         private void addSignature(IReadOnlyList<InkStroke> strokes)
         {
-            
-            authorController.getAuthor(authorCombobox.SelectedItem.ToString()).addSignature(signatureController.addSignature(strokes));
+            try
+            {
+                authorController.getAuthor(authorCombobox.SelectedItem.ToString()).addSignature(signatureController.addSignature(strokes));
+            }
+            catch (System.NullReferenceException)
+            {
+                authorController.getAuthor("Default").addSignature(signatureController.addSignature(strokes));
+                //nie było podanego autora, autor domyślny
+               
+            }
         }
 
         private async void writeToFileAsync(String rawCsv)
@@ -259,7 +271,7 @@ namespace PodpisBio
             }
             else if(authorController.contains(authorInputBox.Text))
             {
-                Debug.WriteLine("Author exists");
+                Debug.WriteLine("Author already exists");
                 authorInputBox.Background = new SolidColorBrush(Color.FromArgb(180, 255, 0, 0));
             }
             else
