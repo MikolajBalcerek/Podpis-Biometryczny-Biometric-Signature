@@ -42,16 +42,17 @@ Raport 6}
     \item Tymczasowa rezygnacja z graficznej analizy sygnatur. 
     Po rozmowie z przedstawicielami firmy IC Solutions stwierdziliśmy, że analiza pozagraficzna powinna być głównym celem naszego projektu. Implementacja analizy obrazów byłaby wyjątkowo czasochłonna i wymagająca. Rozpatrzymy skorzystanie z gotowych zewnętrznych bibliotek opartych na niewirusowych licencjach na późniejszym etapie projektu.
     \item Przypisywanie autora do podpisu. W programie możliwe jest teraz określenie do kogo należy złożony podpisów. Ta funkcjonalność została zintegrowana i przetestowana.
-	\item Zapisywanie poglądu podpisów graficznie do .gif
+	\item Zapisywanie poglądu podpisów graficznie do .gif.
 	\item Klasa derivatives licząca pochodne (szybkość i przyspieszenia w kierunku X, Y, sumaryczna)
-	\item Zapis bogatszych informacji o pociągnięciach - czas oraz grubość
+	\item Zapis bogatszych informacji o pociągnięciach - czas oraz grubość.
 	\end{enumerate}
 
 {\let\clearpage\relax \chapter{Zadania na najbliższe dni}}
 \begin{enumerate} 
+	\item Zapoznanie się z dostarczonymi przez firmę IC Solutions materiałami(Łańcuchy Markowa, ... ).
     \item Ponowna próba zapisywania danych o kącie nachylenia długopisu względem ekranu. Za pierwszą próbą API firmy Microsoft zwracał stały kąt 0, co zniechęciło nas do pracy nad tym czynnikiem. Przedstawiciele IC Solutions wskazują, że może być to ważna funkcjonalność.
     \item Wprowadzenie stałej wielkości pola podpisu (90 x 27 mm). W trakcie spotkania został nam przedstawiony najczęstszy use-case dla podpisu na przykładzie formularza. Dzięki temu możemy uprościć nasze podejście i założyć, że sygnatura zmieści się w polu 90 x 27 mm.
-    \item Algorytm skalujący podpis z użyciem średniej i odchyleń standardowych. Waga tego zadania zmniejszyła się ze względu na nieskalowalny charakter naszego pola do podpis (patrz punkt poprzedni)
+    \item Algorytm skalujący podpis z użyciem średniej i odchyleń standardowych. Waga tego zadania zmniejszyła się ze względu na nieskalowalny charakter naszego pola do podpis (patrz punkt poprzedni).
     \item Dalsza praca nad: normalizacją początków sygnatur, wykresami i prędkościami pociągnięć.
     \item Wyłączenie gumki (możliwe jest zmazanie pociągnięć za pomocą końca rysika Surface Pen)
     \item Połączenie metod weryfikacji w celu utworzenia tzw. Trustworthiness score. Będzie to wynik przybierający wartości 1-100 określający naszą pewność w autentyczność podpisu. Należy również wziąć uwagę sztucznie idealne podpisy (idealnie skopiowane lub prawie) i je odrzucać.

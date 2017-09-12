@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.9.5)  12 SEP 2017 14:48
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.9.5)  12 SEP 2017 14:53
 entering extended mode
 **"./Raport12_09 (2).tex"
 ("Raport12_09 (2).tex"
@@ -501,6 +501,12 @@ Rozdzia\PlPrIeC {\l } 2.
 Rozdzia\PlPrIeC {\l } 3.
 [1]
 Rozdzia\PlPrIeC {\l } 4.
+
+Overfull \hbox (10.16621pt too wide) in paragraph at lines 52--53
+[]\OT4/cmr/m/n/10 Zapoznanie si¦ z do-star-czo-ny-mi przez fir-m¦ IC So-lu-tion
+s ma-te-ria-ªa-mi(Ša«cuchy
+ []
+
 [2] ("Raport12_09 (2).aux") ) 
 Here is how much of TeX's memory you used:
  1539 strings out of 493323
@@ -514,7 +520,7 @@ Here is how much of TeX's memory you used:
 c}<C:/Users/Mikolaj/LaTeX/fonts/type1/public/pl/plbx12.pfb><C:/Users/Mikolaj/La
 TeX/fonts/type1/public/pl/plr10.pfb><C:/Users/Mikolaj/LaTeX/fonts/type1/public/
 pl/plr12.pfb><C:/Users/Mikolaj/LaTeX/fonts/type1/public/pl/plr17.pfb>
-Output written on "Raport12_09 (2).pdf" (3 pages, 48128 bytes).
+Output written on "Raport12_09 (2).pdf" (3 pages, 48378 bytes).
 PDF statistics:
  29 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
