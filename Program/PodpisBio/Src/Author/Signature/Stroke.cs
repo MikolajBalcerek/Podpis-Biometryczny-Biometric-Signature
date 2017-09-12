@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PodpisBio.Src
+namespace PodpisBio.Src.Author
 {
     class Stroke
     {
         List<Point> points = new List<Point>();
-
+        List<Derivatives> derivatives = new List<Derivatives>();
         public Stroke() { }
         public Stroke(List<Point> points)
         {
@@ -17,32 +17,24 @@ namespace PodpisBio.Src
         }
 
         public List<Point> getPoints() { return points; }
+        public List<Derivatives> getDerivatives() { return this.derivatives; }
         public void addPoint(Point point)
         {
-            //var velocity = this.calcVelocity(point.getX(), point.getY(), point.getTime());
-            //var pressChange = calcPressureChange(point.getPressure());
-            //point.setVelocity(velocity);
-            //point.setPressureChange(pressChange);
-            points.Add(point);
+            if (!this.points.Any())
+            {
+                this.points.Add(point);
+                this.derivatives.Add(new Derivatives());
+            }
+            Dynamics calculator = new Dynamics();
+            var prevPoint = this.points[this.points.Count - 1];
+            var prevDerivatives = this.derivatives[this.derivatives.Count() - 1];
+            var derivatives = calculator.calcDerivatives(prevPoint, point, prevDerivatives);
+            this.points.Add(point);
+            this.derivatives.Add(derivatives);
         }
-        //private float calcVelocity(float x, float y, long time)
-        //{
-        //    if (!this.points.Any())
-        //        return 0;
-        //    var prevPoint = this.points[this.points.Count() - 1];
-        //    var deltaTime = time - prevPoint.getTime();
-        //    var deltaX = x - prevPoint.getX();
-        //    var deltaY = y - prevPoint.getY();
-        //    return (deltaX * deltaX + deltaY * deltaY) / deltaTime;
-        //}
 
-        //private int calcPressureChange(float pressure)
-        //{
-        //    if (!this.points.Any())
-        //        return 0;
-        //    var previousPress = this.points[this.points.Count() - 1].getPressure();
-        //    var difference = pressure - previousPress;
-        //    return (difference == 0) ? 0 : (difference > 0 ? 1 : -1);
-        //}
+        public float getWidth() { return points.Max(pt => pt.getX()) - points.Min(pt => pt.getX()); }
+        public float getHeight() { return points.Max(pt => pt.getY()) - points.Min(pt => pt.getY()); }
+        public ulong getTime() { return points[points.Count - 1].getTime() - points[0].getTime(); }
     }
 }

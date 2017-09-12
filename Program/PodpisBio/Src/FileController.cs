@@ -9,6 +9,7 @@ using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using System.Diagnostics;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace PodpisBio.Src
 {

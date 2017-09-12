@@ -8,29 +8,26 @@ namespace PodpisBio.Src
 {
     class Point
     {
-        private float x, y, pressure;
-        //private float velocity;
-        //private long time; // czas, zarejestrowania punktu w ms
-        //private int pressurechange; // -1/0/+1 w zależności od poprzedniego nacisku punktu
+        private float x, y, pressure, tiltX, tiltY;
+        private ulong time;
 
-        public Point(float x, float y, float pressure)//, float velocity, long time, int pressChange)
+        public Point(float x, float y, float pressure, ulong time, float tiltX, float tiltY)
         {
             this.x = x;
             this.y = y;
             this.pressure = pressure;
-            //this.velocity = velocity;
-            //this.time = time;
-            //this.pressureChange = pressChange;
+            this.time = time;
+            this.tiltX = tiltX;
+            this.tiltY = tiltY;
         }
 
 
         public float getX() { return x; }
         public float getY() { return y; }
-        public float getPressure() { return pressure; }
-        //public float getVelocity() { return velocity; }
-        //public long getTime() { return time; }
-        //public int getPressureChange() { return pressureChange; }
-        //public void setVelocity(float v) { this.velocity = v; }
-        //public void setPressureChange(int p) { this.pressureChange = p; }
+        public float getPressure() { return this.pressure; }
+        public float getTiltX() { return this.tiltX; }
+        public float getTiltY() { return this.tiltY; }
+        public ulong getTime() { return this.time; }
+
     }
 }

@@ -30,7 +30,7 @@ namespace PodpisBio
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        public int strokesCount; //Liczba przyciśnięć
+        private int strokesCount; //Liczba przyciśnięć tylko do poglądu, Signature ma swój
         public Stopwatch timer; //Obiekt zajmujący się czasem ogólnoaplikacji
         public List<Single> pressures; //lista sił nacisku punktów; nadmiarowe info zawarte w storke.GetInkPoints() 
         public List<long> times; //lista czasów naciśnięć poszczególnych punktów
@@ -49,7 +49,6 @@ namespace PodpisBio
             timer = new Stopwatch();
             timer.Start();
 
-            strokesCount = 0; //Liczba przyciśnięć na 0
 
             pressures = new List<Single>();
             times = new List<long>();
@@ -147,13 +146,20 @@ namespace PodpisBio
         }
 
         //Action for button click
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Clear_Click(object sender, RoutedEventArgs e)
         {
+            Clear_Screen_Add_Strokes();
+  
+        }
+
+        private void Clear_Screen_Add_Strokes()
+        {
+            strokesCount = 0; //tylko do wyświetlania, Signature class ma realcount
             var strokes = inkCanvas1.InkPresenter.StrokeContainer.GetStrokes();
             //consoleStrokeInfo(strokes);
             addSignature(strokes);
-
             inkCanvas1.InkPresenter.StrokeContainer.Clear();
+
         }
 
         //Write Stroke info to debug window
@@ -177,14 +183,17 @@ namespace PodpisBio
             foreach (var strokeTemp in strokes)
             {
                 Stroke stroke = new Stroke();
+                signature.increaseStrokesCount();
                 foreach (var pointTemp in strokeTemp.GetInkPoints())
                 {
                     Src.Point point = new Src.Point((float)pointTemp.Position.X, (float)pointTemp.Position.Y, pointTemp.Pressure);
                     stroke.addPoint(point);
                 }
                 signature.addStroke(stroke);
+                Debug.Write(signature.getStrokesCount());
             }
             signatureController.addSignature(signature);
+            signature.init();
         }
 
         private void Button_Save(object sender, RoutedEventArgs e)
