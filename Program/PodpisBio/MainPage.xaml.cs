@@ -201,7 +201,7 @@ namespace PodpisBio
 
 
 
-        private void Save_Click(object sender, RoutedEventArgs e)
+        private void SaveToFile_Click(object sender, RoutedEventArgs e)
         {
             FileController saver = new FileController();
             saver.save(inkCanvas1.InkPresenter.StrokeContainer);

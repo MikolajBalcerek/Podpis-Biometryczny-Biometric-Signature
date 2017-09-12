@@ -15,6 +15,7 @@ namespace PodpisBio.Src
 {
     class FileController
     {
+        public FileController() { }
         private async void writeToFileAsync(String rawCsv)
         {
             var savePicker = new Windows.Storage.Pickers.FileSavePicker();
