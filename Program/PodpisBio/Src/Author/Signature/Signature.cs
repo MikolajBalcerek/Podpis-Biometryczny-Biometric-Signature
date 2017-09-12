@@ -16,6 +16,8 @@ namespace PodpisBio.Src
         public void increaseStrokesCount() { this.strokesCount = this.strokesCount + 1; }
         public int getStrokesCount() { return this.strokesCount; }
 
+        private Author.TimeSize_Probe ownTimeSizeProbe; //klasa badaj¹ca w³asnoœci czasu i rozmiaru podpisu
+
 
         private int strokesCount;
         public Signature()
@@ -27,12 +29,17 @@ namespace PodpisBio.Src
         public Signature(List<Stroke> strokes)
         {
             strokesCount = 0;
+            length = 0;
+            height = 0;
             this.strokes = strokes;
+            ownTimeSizeProbe = new Author.TimeSize_Probe(this);
+
         }
 
         public void init()
         {
             calcLength();
+            calcHeight();
         }
 
         public void addStroke(Stroke stroke) { strokes.Add(stroke); }
