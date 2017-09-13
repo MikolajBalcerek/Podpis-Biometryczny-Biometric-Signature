@@ -19,11 +19,22 @@ namespace PodpisBio.Src.Author
             givenSignature.calcHeight();
             heightY = givenSignature.getHeight();
 
-            foreach (Stroke stroke in givenSignature.getStrokes())
+            /*foreach (Stroke stroke in givenSignature.getStrokes())
             {
-                foreach (var point in stroke.getPoints())
-                { 
-                    
+               z
+                        foreach (var stroke in strokes)
+                        {
+                            Debug.WriteLine("Stroke: " + stroke.Id + ", point count: " + stroke.GetInkPoints().Count + ", duration: " + stroke.StrokeDuration.Value.Seconds + " s " + stroke.StrokeDuration.Value.Milliseconds + " ms");
+                            foreach (var point in stroke.GetInkPoints())
+                            {
+                                Debug.WriteLine("x: " + point.Position.X + ", y: " + point.Position.Y + ", pressure: " + point.Pressure + ", timestamp: " + point.Timestamp);
+
+                            }
+                        }
+                    }
+
+
+
                 }
             }
 
@@ -88,7 +99,7 @@ namespace PodpisBio.Src.Author
 
         }
 
-
+    */
 
     }
 }

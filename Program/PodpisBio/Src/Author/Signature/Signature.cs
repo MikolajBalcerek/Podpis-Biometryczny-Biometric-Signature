@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using Windows.UI.Input.Inking;
 
 namespace PodpisBio.Src
 {
@@ -13,6 +14,8 @@ namespace PodpisBio.Src
         double length;
         double height;
 
+        private IReadOnlyList<InkStroke> richInkStrokes; //stroke z timestampami od microsoftu
+
         public void increaseStrokesCount() { this.strokesCount = this.strokesCount + 1; }
         public int getStrokesCount() { return this.strokesCount; }
 
@@ -20,11 +23,13 @@ namespace PodpisBio.Src
 
 
         private int strokesCount;
-        public Signature()
+        public Signature(IReadOnlyList<InkStroke> richInkStrokes)
         {
             strokesCount = 0;
             length = 0;
             height = 0;
+            ownTimeSizeProbe = new Author.TimeSize_Probe(this);
+            this.richInkStrokes = richInkStrokes;
         }
         public Signature(List<Stroke> strokes)
         {
@@ -33,7 +38,17 @@ namespace PodpisBio.Src
             height = 0;
             this.strokes = strokes;
             ownTimeSizeProbe = new Author.TimeSize_Probe(this);
+            this.richInkStrokes = new List<InkStroke>();
 
+        }
+        public Signature(List<Stroke> strokes, IReadOnlyList<InkStroke> richInkStrokes)
+        {
+            strokesCount = 0;
+            length = 0;
+            height = 0;
+            this.strokes = strokes;
+            ownTimeSizeProbe = new Author.TimeSize_Probe(this);
+            this.richInkStrokes = richInkStrokes;
         }
 
         public void init()
