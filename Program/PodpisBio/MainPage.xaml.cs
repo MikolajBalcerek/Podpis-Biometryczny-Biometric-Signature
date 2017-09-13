@@ -212,13 +212,15 @@ namespace PodpisBio
 
         private async void Button_ClickAsync(object sender, RoutedEventArgs e)
         {
-            drawAuthorSignature(authorController.getAuthor(authorCombobox.Items[1].ToString()).getSignature(),canvas1);
+            //drawAuthorSignature(authorController.getAuthor(authorCombobox.Items[1].ToString()).getSignature(),canvas1);
+            saveButton_Click(sender, e);
             CoreApplicationView newView = CoreApplication.CreateNewView();
             int newViewId = 0;
             await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 Frame frame = new Frame();
-                frame.Navigate(typeof(ShowSignatures), null);
+                var signatures = this.signatureController.signatures;
+                frame.Navigate(typeof(ShowSignatures), signatures[signatures.Count - 1]);
                 Window.Current.Content = frame;
                 // You have to activate the window in order to show it later.
                 Window.Current.Activate();
@@ -226,29 +228,6 @@ namespace PodpisBio
                 newViewId = ApplicationView.GetForCurrentView().Id;
             });
             bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
-        }
-
-        private void drawAuthorSignature(Signature signature, Canvas canvas)
-        {
-            double thickness = 1;
-            Color color = Colors.Black;
-
-            foreach(var stroke in signature.getStrokes())
-            {
-                var polyline = new Polyline();
-                polyline.Stroke = new SolidColorBrush(color);
-                polyline.StrokeThickness = thickness;
-                var points = new PointCollection();
-
-                foreach (var point in stroke.getPoints())
-                {
-                    points.Add(new Windows.Foundation.Point(point.getX(), point.getY()));
-                }
-                polyline.Points = points;
-                canvas.Children.Add(polyline);
-            }
-
-
         }
 
         private void saveButton_Click(object sender, RoutedEventArgs e)
