@@ -43,7 +43,7 @@ namespace PodpisBio
         {
             this.InitializeComponent();
 
-            String[] options = { "Podpis", "X", "Y", "Pressure", "Szybkość", "Szybkość_X", "Szybkość_Y",
+            String[] options = { "Podpis", "Oś X", "Oś Y", "Siła", "Szybkość", "Szybkość_X", "Szybkość_Y",
                 "Przyspieszenie", "Przyspieszenie_X", "Przyspieszenie_Y" };
             foreach (var x in options)
                 plotOptions.Add(x);
@@ -60,11 +60,6 @@ namespace PodpisBio
             //}
         }
 
-        private void clearCanvas()
-        {
-            canvas1.Children.Clear();
-        }
-
 
         private void drawPoints(PointCollection points)
         {
@@ -75,20 +70,68 @@ namespace PodpisBio
             canvas1.Children.Add(polyline);
         }
 
+
+
         private void ShowPlot_Click(object sender, RoutedEventArgs e)
         {
+            canvas1.Children.Clear();
             Debug.WriteLine("Wartość comboboxa to " + plotCombobox.SelectedItem.ToString());
-            clearCanvas();
-            Debug.WriteLine("Adam rysuje podpis.");
-            double thickness = 1;
-            Color color = Colors.Black;
+            var option = plotCombobox.SelectedItem.ToString();
+            if (option == "Podpis" || option == "")
+                drawSignature();
+            else
+            {
+                switch (option)
+                {
+                    case "Oś X": drawX(); break;
+                }
+            }
+            
+        }
 
+        private List<double> getNormalisedTimes()
+        {
+            var times = from x in this.signature.getAllPoints() select x.getTime();
+            var normalised = new List<double>();
+            var width = canvas1.ActualWidth;
+            foreach (var time in times)
+                normalised.Add(width * (time - times.First()) / (times.Last() - times.First()));
+            //0 division?
+            return normalised;
+        }
+
+        private List<double> normaliseFeature(IEnumerable<float> samples)
+        {
+            var normalised = new List<double>();
+            var height = canvas1.ActualHeight;
+            foreach (var sample in samples)
+                normalised.Add(height * (sample - samples.First()) / (samples.Max() - samples.Min()) + height/2);
+            //is 0 division possible here
+            return normalised;
+        }
+        private void drawX()
+        {
+            var ptsToDraw = new PointCollection();
+            var times = getNormalisedTimes();
+            var xs = from x in this.signature.getAllPoints() select x.getX();
+            var normalised = normaliseFeature(xs);
+            for(int i=0; i < normalised.Count; i++)
+            {
+                ptsToDraw.Add(new Windows.Foundation.Point(times[i], normalised[i]));
+                Debug.WriteLine("X Adama:  " + times[i] + " " + normalised[i]);
+            }
+            drawPoints(ptsToDraw);
+        }
+        private void drawSignature()
+        {
+            Debug.WriteLine("Adam rysuje podpis.");
             foreach (var stroke in signature.getStrokes())
             {
                 var points = new PointCollection();
                 foreach (var point in stroke.getPoints())
                 {
                     points.Add(new Windows.Foundation.Point(point.getX(), point.getY()));
+                    Debug.WriteLine("Punkt Adama: " + point.getX() + " " + point.getY());
                 }
                 drawPoints(points);
             }
