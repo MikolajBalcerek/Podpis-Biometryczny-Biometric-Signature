@@ -22,6 +22,16 @@ namespace PodpisBio.Src
             this.tiltY = tiltY;
         }
 
+        public Point(Point point)
+        {
+            this.x = point.getX();
+            this.y = point.getY();
+            this.pressure = point.getPressure();
+            this.time = point.getTime();
+            this.tiltX = point.getTiltX();
+            this.tiltY = point.getTiltY();
+        }
+
         public void moveCordinates(float a, float b)
         {
             this.x = this.x - a;
@@ -29,10 +39,15 @@ namespace PodpisBio.Src
         }
 
         public float getX() { return x; }
+
         public float getY() { return y; }
+
         public float getPressure() { return this.pressure; }
+
         public float getTiltX() { return this.tiltX; }
+
         public float getTiltY() { return this.tiltY; }
+
         public ulong getTime() { return this.time; }
 
     }
