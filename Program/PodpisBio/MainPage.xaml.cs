@@ -39,7 +39,6 @@ namespace PodpisBio
         public Stopwatch timer; //Obiekt zajmujący się czasem ogólnoaplikacji
         public List<Single> pressures; //lista sił nacisku punktów; nadmiarowe info zawarte w storke.GetInkPoints() 
         public List<long> times; //lista czasów naciśnięć poszczególnych punktów
-
         public List<int> pressureChanges;
         /*lista zmian sił nacisku
          * -1 -- nacisk maleje
@@ -103,9 +102,6 @@ namespace PodpisBio
 
         private void Core_PointerPressing(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
-
-
-
             strokesCount = strokesCount + 1;
 
             var pressure = args.CurrentPoint.Properties.Pressure;
