@@ -24,6 +24,14 @@ namespace PodpisBio.Src.Author
 
         public void init()
         {
+            List<Stroke> temp = new List<Stroke>();
+            foreach (Stroke st in strokesOriginal)
+            {
+                temp.Add(new Stroke(st));
+            }
+            this.strokesModified = temp;
+
+            scaleSignature();
             fit();
             calcLength();
         }
@@ -85,7 +93,7 @@ namespace PodpisBio.Src.Author
 
         public void fit()
         {
-            List<Point> points = this.getAllOriginalPoints();
+            List<Point> points = this.getAllModifiedPoints();
 
             float x_min = points[0].getX();
             float y_min = points[0].getY();
@@ -96,21 +104,52 @@ namespace PodpisBio.Src.Author
                 if (x.getY() < y_min) { y_min = x.getY(); }
             }
 
-            List<Stroke> temp = new List<Stroke>();
-            foreach(Stroke st in strokesOriginal)
+            //List<Stroke> temp = new List<Stroke>();
+            //foreach(Stroke st in strokesModified)
+            //{
+            //    temp.Add(new Stroke(st));
+            //}
+
+            foreach (Stroke st in this.strokesModified)
             {
-                temp.Add(new Stroke(st));
-            }
-            
-            foreach (Stroke st in temp)
-            {
-                foreach(Point x in st.getPoints())
+                foreach (Point x in st.getPoints())
                 {
                     x.moveCordinates(x_min, y_min);
                 }
             }
 
-            this.strokesModified = temp;
+            //this.strokesModified = temp;
+        }
+
+        public void scaleSignature()
+        {
+            List<Point> points = this.getAllModifiedPoints();
+            float[] p_y = points.Select(x => x.getY()).ToArray();
+
+            float average = p_y.Average();
+            float sumOfSquaresOfDifferences = p_y.Select(val => (val - average) * (val - average)).Sum();
+            double sd = Math.Sqrt(sumOfSquaresOfDifferences / p_y.Length);
+
+            double  dpi = Windows.Graphics.Display.DisplayProperties.LogicalDpi;
+
+            double mm = dpi / Convert.ToDouble(25.4);
+
+            double hight = mm * 30;
+
+            foreach (Stroke st in this.strokesModified)
+            {
+                foreach (Point p in st.getPoints())
+                {
+                    double temp = p.getX() * (0.5 * hight / sd);
+                    float x = Convert.ToSingle(temp) - p.getX();
+                    temp = ((Convert.ToDouble(average)- p.getY()) * (0.5 * hight / sd)) + Convert.ToDouble(average);
+                    float y = Convert.ToSingle(temp) - p.getY();
+
+                    p.moveCordinates(x, y);
+                }
+            }
+
+
         }
 
         public void calcLength()
