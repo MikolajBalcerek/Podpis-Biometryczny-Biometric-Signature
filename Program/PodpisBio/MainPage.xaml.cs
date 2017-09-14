@@ -155,6 +155,7 @@ namespace PodpisBio
         //Add signature
         private void addSignature(IReadOnlyList<InkStroke> strokes)
         {
+            Debug.WriteLine("Adam dodaje podpis.");
             bool isOriginal = false;
             //IsChecked zwraca typ 'bool?', może posiadać wartość null stąd dodatkowy if tutaj sprawdzający czy nie zwraca nulla
             if (isOriginalCheckBox.IsChecked.HasValue)
