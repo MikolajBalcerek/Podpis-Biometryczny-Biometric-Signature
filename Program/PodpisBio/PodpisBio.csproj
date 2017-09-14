@@ -110,6 +110,7 @@
     <Compile Include="Src\Author\Signature\Signature.cs" />
     <Compile Include="Src\Author\Signature\Stroke.cs" />
     <Compile Include="Src\FileController.cs" />
+    <Compile Include="Src\Service\SignatureService.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

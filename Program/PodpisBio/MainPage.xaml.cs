@@ -25,6 +25,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI;
 using Windows.UI.Xaml.Shapes;
 using Windows.UI.Xaml.Media.Imaging;
+using PodpisBio.Src.Service;
 
 //Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x415
 
@@ -50,6 +51,8 @@ namespace PodpisBio
         AuthorController authorController;
         public MainPage()
         {
+            SignatureService service = new SignatureService();
+            Debug.WriteLine(Windows.Graphics.Display.DisplayProperties.LogicalDpi);
             //Start the clock!
             timer = new Stopwatch();
             timer.Start();
@@ -260,6 +263,7 @@ namespace PodpisBio
                 Clear_Screen_Add_Strokes();
             }
             catch(ArgumentOutOfRangeException){ Debug.WriteLine("Nie można zapisać pustego podpisu!"); }
+
             
         }
     }
