@@ -236,7 +236,7 @@ namespace PodpisBio
             double thickness = 1;
             Color color = Colors.Black;
 
-            foreach(var stroke in signature.getStrokes())
+            foreach(var stroke in signature.getStrokesModified())
             {
                 var polyline = new Polyline();
                 polyline.Stroke = new SolidColorBrush(color);
