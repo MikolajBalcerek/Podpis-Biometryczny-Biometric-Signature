@@ -154,14 +154,14 @@ namespace PodpisBio.Src.Author
 
             double mm = dpi / Convert.ToDouble(25.4);
 
-            double hight = mm * 30;
+            double hight = mm * 10;
 
             foreach (Stroke st in this.strokesModified)
             {
                 foreach (Point p in st.getPoints())
                 {
                     double temp = p.getX() * (0.5 * hight / sd);
-                    float x = Convert.ToSingle(temp) - p.getX();
+                    float x = Convert.ToSingle(temp);
                     temp = ((Convert.ToDouble(average)- p.getY()) * (0.5 * hight / sd)) + Convert.ToDouble(average);
                     float y = Convert.ToSingle(temp) - p.getY();
 

@@ -75,6 +75,14 @@ namespace PodpisBio
         private void initializePenHandlers()
         {
             CoreInkIndependentInputSource core = CoreInkIndependentInputSource.Create(inkCanvas1.InkPresenter);
+
+            //InkDrawingAttributes myAttributes = core.InkPresenter.CopyDefaultDrawingAttributes();
+            //myAttributes.Color = Windows.UI.Colors.Blue;
+            //myAttributes.PenTip = PenTipShape.Rectangle;
+            //myAttributes.PenTipTransform = System.Numerics.Matrix3x2.CreateRotation((float)Math.PI / 4);
+            //myAttributes.Size = new Size(2, 5);
+            //core.InkPresenter.UpdateDefaultDrawingAttributes(myAttributes);
+
             core.PointerPressing += Core_PointerPressing;
             core.PointerReleasing += Core_PointerReleasing;
             core.PointerMoving += Core_PointerMoving;
