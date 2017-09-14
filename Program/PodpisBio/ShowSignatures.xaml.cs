@@ -43,23 +43,19 @@ namespace PodpisBio
         {
             this.InitializeComponent();
 
-            String[] options = { "Podpis", "Oś X", "Oś Y", "Siła", "TiltX", "TiltY", "Szybkość", "Szybkość_X", "Szybkość_Y",
+            String[] options = { "Podpis", "Oś X", "Oś Y", "Siła", "TiltX", "TiltY",
+                "Szybkość", "Szybkość_X", "Szybkość_Y",
                 "Przyspieszenie", "Przyspieszenie_X", "Przyspieszenie_Y" };
             foreach (var x in options)
                 plotOptions.Add(x);
-            plotCombobox.SelectedValue = "Podpis";
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             this.signature  = (Signature)e.Parameter;
-            //foreach (var point in signature.getStrokes()[0].getPoints())
-            //{
-            //    Debug.WriteLine("Adam otworzył punkt na drugiej stronie " + point.getX() + " " + point.getY());
-            //}
+            plotCombobox.SelectedValue = "Podpis";
         }
-
 
         private void drawPoints(PointCollection points)
         {
@@ -69,8 +65,6 @@ namespace PodpisBio
             polyline.Points = points;
             canvas1.Children.Add(polyline);
         }
-
-
 
         private void ShowPlot_Click(object sender, RoutedEventArgs e)
         {
@@ -83,21 +77,46 @@ namespace PodpisBio
             {
                 var ptsToDraw = new PointCollection();
                 var times = getNormalisedTimes();
+                var points = this.signature.getAllOriginalPoints();
+                var derivatives = this.signature.getOriginalDerivatives();
                 IEnumerable<float> feature;
                 switch (option)
                 {
-                    case "Oś X": feature = from x in this.signature.getAllPoints() select x.getX();
+                    case "Oś X":
+                        feature = from x in points select x.getX();
                         break;
-                    case "Oś Y": feature = from x in this.signature.getAllPoints() select x.getY();
+                    case "Oś Y":
+                        feature = from x in points select x.getY();
                         break;
-                    case "Siła": feature = from x in this.signature.getAllPoints() select x.getPressure();
+                    case "Siła":
+                        feature = from x in points select x.getPressure();
                         break;
-                    case "TiltX": feature = from x in this.signature.getAllPoints() select x.getTiltX();
+                    case "TiltX":
+                        feature = from x in points select x.getTiltX();
                         break;
-                    case "TiltY": feature = from x in this.signature.getAllPoints() select x.getTiltY();
+                    case "TiltY":
+                        feature = from x in points select x.getTiltY();
+                        break;
+                    case "Szybkość":
+                        feature = from x in derivatives select x.Velocity;
+                        break;
+                    case "Szybkość_X":
+                        feature = from x in derivatives select x.VelocityX;
+                        break;
+                    case "Szybkość_Y": 
+                        feature = from x in derivatives select x.VelocityY;
+                        break;
+                    case "Przyspieszenie":
+                        feature = from x in derivatives select x.Acc;
+                        break;
+                    case "Przyspieszenie_X":
+                        feature = from x in derivatives select x.AccX;
+                        break;
+                    case "Przyspieszenie_Y":
+                        feature = from x in derivatives select x.AccY;
                         break;
 
-                    default: feature = from x in this.signature.getAllPoints() select x.getX();
+                    default: feature = from x in this.signature.getAllModifiedPoints() select x.getX();
                         break;
                 }
                 var normalised = normaliseFeature(feature);
@@ -113,11 +132,11 @@ namespace PodpisBio
 
         private List<double> getNormalisedTimes()
         {
-            var times = from x in this.signature.getAllPoints() select x.getTime();
+            var times = from x in this.signature.getAllOriginalPoints() select x.getTime();
             var normalised = new List<double>();
             var width = canvas1.ActualWidth;
             foreach (var time in times)
-                normalised.Add(2 * width * (time - times.First()) / (times.Last() - times.First()));
+                normalised.Add(3 * width * (time - times.First()) / (times.Last() - times.First()));
             //0 division?
             return normalised;
         }
@@ -127,27 +146,15 @@ namespace PodpisBio
             var normalised = new List<double>();
             var height = canvas1.ActualHeight;
             foreach (var sample in samples)
-                normalised.Add(2 * height * (sample - samples.First()) / (samples.Max() - samples.Min()) + 1.5 * height);
+                normalised.Add(height * (sample) / (samples.Max() - samples.Min()) + height);
             //is 0 division possible here
             return normalised;
         }
-        private void drawX()
-        {
-            var ptsToDraw = new PointCollection();
-            var times = getNormalisedTimes();
-            var xs = from x in this.signature.getAllPoints() select x.getX();
-            var normalised = normaliseFeature(xs);
-            for(int i=0; i < normalised.Count; i++)
-            {
-                ptsToDraw.Add(new Windows.Foundation.Point(times[i], normalised[i]));
-                Debug.WriteLine("X Adama:  " + times[i] + " " + normalised[i]);
-            }
-            drawPoints(ptsToDraw);
-        }
+
         private void drawSignature()
         {
             Debug.WriteLine("Adam rysuje podpis.");
-            foreach (var stroke in signature.getStrokes())
+            foreach (var stroke in signature.getStrokesOriginal())
             {
                 var points = new PointCollection();
                 foreach (var point in stroke.getPoints())
