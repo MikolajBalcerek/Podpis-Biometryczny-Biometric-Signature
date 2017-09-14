@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,8 @@ namespace PodpisBio.Src.Author
         private float accX = 0;
         private float accY = 0;
         private float acc = 0;
+        private float dtiltX = 0;
+        private float dtiltY = 0;
         private float pressureChange = 0;
         /*
          * lista zmian sił nacisku
@@ -28,6 +31,8 @@ namespace PodpisBio.Src.Author
         public float AccX { get; set; }
         public float AccY { get; set; }
         public float Acc { get; set; }
+        public float DtiltX { get; set; }
+        public float DtiltY { get; set; }
         public float PressureChange { get; set; }
 
     }
@@ -53,6 +58,20 @@ namespace PodpisBio.Src.Author
             var deltaTime = currentPoint.getTime() - prevPoint.getTime();
             var deltaY = currentPoint.getY() - prevPoint.getY();
             return deltaY / deltaTime;
+        }
+
+        private float calcDtiltX(Point prevPoint, Point currentPoint)
+        {
+            var deltaTime = currentPoint.getTime() - prevPoint.getTime();
+            var deltaTilt = currentPoint.getTiltX() - prevPoint.getTiltX();
+            return deltaTilt / deltaTime;
+        }
+
+        private float calcDtiltY(Point prevPoint, Point currentPoint)
+        {
+            var deltaTime = currentPoint.getTime() - prevPoint.getTime();
+            var deltaTilt = currentPoint.getTiltY() - prevPoint.getTiltY();
+            return deltaTilt / deltaTime;
         }
 
         private int calcPressureChange(Point prevPoint, Point currentPoint)
@@ -84,6 +103,7 @@ namespace PodpisBio.Src.Author
 
         public Derivatives calcDerivatives(Point prev, Point current, Derivatives prevDerivative)
         {
+            Debug.WriteLine("Adam liczy pochodne.");
             Derivatives derivative = new Derivatives();
             derivative.VelocityX = this.calcVelocityX(prev, current);
             derivative.VelocityY = this.calcVelocityY(prev, current);
@@ -92,6 +112,9 @@ namespace PodpisBio.Src.Author
             derivative.AccX = this.calcAccX(derivative, prevDerivative, current, prev);
             derivative.AccY = this.calcAccY(derivative, prevDerivative, current, prev);
             derivative.Acc = this.calcAcc(derivative, prevDerivative, current, prev);
+            derivative.DtiltX = this.calcDtiltX(prev, current);
+            derivative.DtiltY = this.calcDtiltY(prev, current);
+            Debug.WriteLine("Adam policzył pochodne");
             return derivative;
         }
 
