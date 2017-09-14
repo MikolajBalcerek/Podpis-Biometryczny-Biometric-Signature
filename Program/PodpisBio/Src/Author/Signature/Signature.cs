@@ -9,7 +9,8 @@ namespace PodpisBio.Src.Author
 {
     class Signature
     {
-        private List<Stroke> strokes = new List<Stroke>();
+        private List<Stroke> strokesOriginal = new List<Stroke>();
+        private List<Stroke> strokesModified = new List<Stroke>();
         double length;
         bool isOriginal;
 
@@ -23,18 +24,26 @@ namespace PodpisBio.Src.Author
 
         public void init()
         {
+            List<Stroke> temp = new List<Stroke>();
+            foreach (Stroke st in strokesOriginal)
+            {
+                temp.Add(new Stroke(st));
+            }
+            this.strokesModified = temp;
+
+            scaleSignature();
             fit();
             calcLength();
         }
 
         public void addStroke(Stroke stroke)
         {
-            strokes.Add(stroke);
+            strokesOriginal.Add(stroke);
         }
 
         public void addStrokes(List<Stroke> strokes)
         {
-            this.strokes = strokes;
+            this.strokesOriginal = strokes;
         }
         
         public void increaseStrokesCount()
@@ -52,15 +61,30 @@ namespace PodpisBio.Src.Author
             return this.length;
         }
 
-        public List<Stroke> getStrokes()
+        public List<Stroke> getStrokesOriginal()
         {
-            return this.strokes;
+            return this.strokesOriginal;
         }
 
-        public List<Point> getAllPoints()
+        public List<Stroke> getStrokesModified()
+        {
+            return this.strokesModified;
+        }
+
+        public List<Point> getAllOriginalPoints()
         {
             List<Point> points = new List<Point>();
-            foreach (Stroke st in strokes)
+            foreach (Stroke st in strokesOriginal)
+            {
+                points.AddRange(st.getPoints());
+            }
+            return points;
+        }
+
+        public List<Point> getAllModifiedPoints()
+        {
+            List<Point> points = new List<Point>();
+            foreach (Stroke st in strokesModified)
             {
                 points.AddRange(st.getPoints());
             }
@@ -69,7 +93,7 @@ namespace PodpisBio.Src.Author
 
         public void fit()
         {
-            List<Point> points = this.getAllPoints();
+            List<Point> points = this.getAllModifiedPoints();
 
             float x_min = points[0].getX();
             float y_min = points[0].getY();
@@ -79,23 +103,60 @@ namespace PodpisBio.Src.Author
                 if (x.getX() < x_min) { x_min = x.getX(); }
                 if (x.getY() < y_min) { y_min = x.getY(); }
             }
-            
-            foreach (Stroke st in strokes)
+
+            //List<Stroke> temp = new List<Stroke>();
+            //foreach(Stroke st in strokesModified)
+            //{
+            //    temp.Add(new Stroke(st));
+            //}
+
+            foreach (Stroke st in this.strokesModified)
             {
-                foreach(Point x in st.getPoints())
+                foreach (Point x in st.getPoints())
                 {
-                    x.moveCordinates(x_min, y_min);
+                    x.moveCordinates(-x_min, -y_min);
                 }
             }
+
+            //this.strokesModified = temp;
+        }
+
+        public void scaleSignature()
+        {
+            List<Point> points = this.getAllModifiedPoints();
+            float[] p_y = points.Select(x => x.getY()).ToArray();
+
+            float average = p_y.Average();
+            float sumOfSquaresOfDifferences = p_y.Select(val => (val - average) * (val - average)).Sum();
+            double sd = Math.Sqrt(sumOfSquaresOfDifferences / p_y.Length);
+
+            double  dpi = Windows.Graphics.Display.DisplayProperties.LogicalDpi;
+
+            double mm = dpi / Convert.ToDouble(25.4);
+
+            double hight = mm * 30;
+
+            foreach (Stroke st in this.strokesModified)
+            {
+                foreach (Point p in st.getPoints())
+                {
+                    double temp = p.getX() * (0.5 * hight / sd);
+                    float x = Convert.ToSingle(temp) - p.getX();
+                    temp = ((Convert.ToDouble(average)- p.getY()) * (0.5 * hight / sd)) + Convert.ToDouble(average);
+                    float y = Convert.ToSingle(temp) - p.getY();
+
+                    p.moveCordinates(x, -y);
+                }
+            }
+
+
         }
 
         public void calcLength()
         {
             double len = 0;
-            List<Point> points = this.getAllPoints();
-
-            Debug.WriteLine("Adam liczy");
-
+            List<Point> points = this.getAllModifiedPoints();
+            
             List<double> p = new List<double>();
 
             for (int i = 0; i < points.Count(); i++)
