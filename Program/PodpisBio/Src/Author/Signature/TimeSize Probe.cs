@@ -1,106 +1,138 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Input.Inking;
 
 namespace PodpisBio.Src.Author
 {
     class TimeSize_Probe
     {
+        //ZMIENNE
         private double heightY; //wysokość podpisu
         private double lengthX; //długość podpisu
+        private TimeSpan totalDrawingTime; //totalDrawingTime całego podpisu tylko czas aktualnych pociągnięć
+        private List<TimeSpan> TimeStampsForEachStroke;
+        Signature testedSignature; //dana sygnatura dla TimeSize_Probe do badania
+        private double totalRatioAreaToTime; //całkowity stosunek pola do czasu
+        private List<Tuple<double, double, double>> StrokesDimensionsForEachStroke; //szerokość, długość, pole dla każdego ze Stroków
+        private List<double> ratioAreaToTimeForEachStroke; //lista z ratio dla każdego pociągnięcia
 
+        //KONSTRUKTOR
         public TimeSize_Probe(Signature givenSignature)
         {
+            //Ustawianie początkowych wartości klasy TimeSize_Probe
+            totalDrawingTime = new TimeSpan(0);
+            TimeStampsForEachStroke = new List<TimeSpan>();
+            ratioAreaToTimeForEachStroke = new List<double>();
+            this.StrokesDimensionsForEachStroke = new List<Tuple<double, double, double>>();
+
+            this.testedSignature = givenSignature;
             //get aktualne rozmiary podpisu
-            givenSignature.calcLength();
-            lengthX = givenSignature.getLentgh();
-            givenSignature.calcHeight();
-            heightY = givenSignature.getHeight();
+            testedSignature.calcLength();
+            lengthX = testedSignature.getLentgh();
+            testedSignature.calcHeight();
+            heightY = testedSignature.getHeight();
+            
+            //Operacje Badania czasu/rozmiar
+            calculateTimeForStrokes(); //policz czas sumaryczny i osobny pisania pociągnięć
+            calculateTotalAreaToTimeRatio(); //policz stosunek przestrzeń podpisu do całkowitego czasu
+            calculateSizeForEachStroke();
+            calculateTotalAreaToTimeRatioForEachStroke();
 
-            /*foreach (Stroke stroke in givenSignature.getStrokes())
+
+        }
+
+        //FUNKCJE POMOCNICZE
+
+
+        private void calculateTimeForStrokes()
+        //funkcja licząca sumaryczną i osobny czas pisania dla pociągnięć
+        // funkcja wewnętrzna dla konstruktora
+        {
+            //dla każdego pociągnięcia
+            foreach (InkStroke stroke in testedSignature.getRichStrokes())
             {
-               z
-                        foreach (var stroke in strokes)
-                        {
-                            Debug.WriteLine("Stroke: " + stroke.Id + ", point count: " + stroke.GetInkPoints().Count + ", duration: " + stroke.StrokeDuration.Value.Seconds + " s " + stroke.StrokeDuration.Value.Milliseconds + " ms");
-                            foreach (var point in stroke.GetInkPoints())
-                            {
-                                Debug.WriteLine("x: " + point.Position.X + ", y: " + point.Position.Y + ", pressure: " + point.Pressure + ", timestamp: " + point.Timestamp);
+                //weź początek pisania w pociągnięciu i koniec pisania
+                /*
+                ulong starting_time = stroke.GetInkPoints().First().Timestamp;
+                ulong ending_time = stroke.GetInkPoints().Last().Timestamp;
 
-                            }
-                        }
-                    }
+                //delta to czas pisania pociągnięcia 
+                ulong delta = ending_time - starting_time;
 
-
-
-                }
+               */
+                TimeStampsForEachStroke.Add(stroke.StrokeDuration.Value);
+                /*
+                //totalDrawingTime całego podpisu tylko czas aktualnych pociągnięć
+                totalDrawingTime = totalDrawingTime + delta;
+                */
+                totalDrawingTime = stroke.StrokeDuration.Value + totalDrawingTime;
             }
-
-        ~SizeProbe()  // destructor
-        {
-            exportData();
-
+            Debug.WriteLine("Total Drawing Time dla tego podpisu to: " + totalDrawingTime);
         }
 
-        public void estimateSize(int currentPointX, int currentPointY)
+        private void calculateSizeForEachStroke()
+        //funkcja licząca rozmiar każdego osobnego pociągnięcia
+        // funkcja wewnętrzna dla konstruktora
         {
-            if (currentPointX > farthestXs[1])
+            //dla każdego pociągnięcia
+            foreach (InkStroke stroke in this.testedSignature.getRichStrokes())
             {
-                farthestXs[1] = currentPointX;
+                double strokeHeight = stroke.BoundingRect.Height;
+                double strokeWidth = stroke.BoundingRect.Width;
+                this.StrokesDimensionsForEachStroke.Add(new Tuple<double, double, double>(strokeHeight, strokeWidth, strokeHeight * strokeWidth));
+                Debug.WriteLine("Wymiary pociągnięcia to: " + strokeHeight + " " + strokeWidth);
             }
-            else if (currentPointX < farthestXs[0])
+        }
+
+        private void calculateTotalAreaToTimeRatio()
+        //funkcja wewnętrzna licząca stosunek pola podpisu/czas całkowity podpisu
+        {
+            
+            //NIE DZIAŁA, DŁUGOŚĆ Z JAKIEGOŚ POWODU JEST ZAWSZE 0
+            Debug.WriteLine(" TUTAJ" + testedSignature.getHeight() + " " + testedSignature.length);
+            Debug.WriteLine("Liczba:     " + testedSignature.getHeight() * lengthX);
+            totalRatioAreaToTime = (testedSignature.getHeight() * lengthX) / this.totalDrawingTime.TotalMilliseconds;
+            Debug.WriteLine("Total Area to Time Ratio: " + TotalRatioAreaToTime);
+            
+        }
+
+        private void calculateTotalAreaToTimeRatioForEachStroke()
+        //funkcja wewnętrzna licząca stosunek pola podpisu/czas dla każdego pociagnięcia
+        {
+            int __counter__ = 0;
+            foreach (Tuple<double, double, double> stroke in StrokesDimensionsForEachStroke)
             {
-                farthestXs[0] = currentPointX;
-            }
-
-
-            if (currentPointY > farthestYs[1])
-            {
-                farthestYs[1] = currentPointY;
-            }
-            else if (currentPointY < farthestYs[0])
-            {
-                farthestYs[0] = currentPointY;
-            }
-            calculateSize();
-
-
+                //liczy ratio pole do czasu z listy czasów i dodaje do listy ratio
+                double __ratio__ = stroke.Item3 / TimeStampsForEachStroke[__counter__].TotalMilliseconds;
+                this.ratioAreaToTimeForEachStroke.Add(__ratio__);
+                Debug.WriteLine("Stroke numer " + __counter__ + "ma ratio rozmiar/czas" + __ratio__);
+                __counter__++;
+             }
 
         }
 
-        private void calculateSize()
+        public TimeSpan getTotalDrawingTime()
+           {
+                return this.totalDrawingTime;
+           }
+
+        public double getTotalRatioAreaToTime()
+            //zwraca stosunek pole podpisu do całkowitego czasu
         {
-            sizeX = farthestXs[1] - farthestXs[0];
-            sizeY = farthestYs[1] - farthestYs[0];
-
+            return this.TotalRatioAreaToTime;
         }
 
-        public int getArea()
+        public List<TimeSpan> getTimeStampsForEachStroke()
         {
-            return sizeX * sizeY;
+            return this.TimeStampsForEachStroke;
         }
 
-        public int getLengthX()
-        {
-            return lengthX;
-
-        }
-
-        public int getLengthY()
-        {
-            return lengthY;
-        }
-
-        public void exportData()
-        { //TODO jak dostanę klasę podpis
-          //Zwraca dane o podpisie do klasy podpis
-
-        }
-
-    */
-
+        public List<double> RatioAreaToTimeForEachStroke { get => ratioAreaToTimeForEachStroke; }
+        public List<Tuple<double, double, double>> StrokesDimensionsForEachStroke1 { get => StrokesDimensionsForEachStroke; }
+        public double TotalRatioAreaToTime { get => totalRatioAreaToTime; }
     }
-}
 }

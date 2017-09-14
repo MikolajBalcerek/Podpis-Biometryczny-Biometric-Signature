@@ -14,47 +14,54 @@ namespace PodpisBio.Src
         double length;
         double height;
 
-        private IReadOnlyList<InkStroke> richInkStrokes; //stroke z timestampami od microsoftu
+        private List<InkStroke> richInkStrokes; //stroke z timestampami od microsoftu
 
         public void increaseStrokesCount() { this.strokesCount = this.strokesCount + 1; }
         public int getStrokesCount() { return this.strokesCount; }
 
         private Author.TimeSize_Probe ownTimeSizeProbe; //klasa badaj¹ca w³asnoœci czasu i rozmiaru podpisu
 
-
         private int strokesCount;
-        public Signature(IReadOnlyList<InkStroke> richInkStrokes)
+        public Signature(List<InkStroke> richInkStrokesGiven)
         {
             strokesCount = 0;
             length = 0;
             height = 0;
-            ownTimeSizeProbe = new Author.TimeSize_Probe(this);
-            this.richInkStrokes = richInkStrokes;
+            this.richInkStrokes = richInkStrokesGiven;
+            //this.init();
+            //ownTimeSizeProbe = new Author.TimeSize_Probe(this);
         }
+        
         public Signature(List<Stroke> strokes)
         {
             strokesCount = 0;
             length = 0;
             height = 0;
             this.strokes = strokes;
-            ownTimeSizeProbe = new Author.TimeSize_Probe(this);
             this.richInkStrokes = new List<InkStroke>();
+            //this.init();
+            //ownTimeSizeProbe = new Author.TimeSize_Probe(this);
 
         }
-        public Signature(List<Stroke> strokes, IReadOnlyList<InkStroke> richInkStrokes)
+        
+        public Signature(List<Stroke> strokes, List<InkStroke> richInkStrokes)
         {
             strokesCount = 0;
             length = 0;
             height = 0;
             this.strokes = strokes;
-            ownTimeSizeProbe = new Author.TimeSize_Probe(this);
             this.richInkStrokes = richInkStrokes;
+            //this.init();
+            //ownTimeSizeProbe = new Author.TimeSize_Probe(this);
         }
 
         public void init()
         {
             calcLength();
             calcHeight();
+
+            //badanie rozmiaru/czas za pomoc¹ TimeSize klasy
+            ownTimeSizeProbe = new Author.TimeSize_Probe(this);
         }
 
         public void addStroke(Stroke stroke) { strokes.Add(stroke); }
@@ -73,6 +80,11 @@ namespace PodpisBio.Src
         public List<Stroke> getStrokes()
         {
             return this.strokes;
+        }
+
+        public List<InkStroke> getRichStrokes()
+        {
+            return this.richInkStrokes;
         }
 
         public List<Point> getAllPoints()

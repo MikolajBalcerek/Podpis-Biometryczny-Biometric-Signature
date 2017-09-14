@@ -155,7 +155,7 @@ namespace PodpisBio
         private void Clear_Screen_Add_Strokes()
         {
             strokesCount = 0; //tylko do wyświetlania, Signature class ma realcount
-            var strokes = inkCanvas1.InkPresenter.StrokeContainer.GetStrokes();
+            List<InkStroke> strokes = new List<InkStroke>(inkCanvas1.InkPresenter.StrokeContainer.GetStrokes());
             //consoleStrokeInfo(strokes);
             addSignature(strokes);
             inkCanvas1.InkPresenter.StrokeContainer.Clear();
@@ -199,7 +199,7 @@ namespace PodpisBio
         }
 
         //Add signature
-        private void addSignature(IReadOnlyList<InkStroke> strokes)
+        private void addSignature(List<InkStroke> strokes)
         {
             try
             {
