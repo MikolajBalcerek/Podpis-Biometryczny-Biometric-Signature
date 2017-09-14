@@ -114,7 +114,7 @@ namespace PodpisBio.Src.Author
             {
                 foreach (Point x in st.getPoints())
                 {
-                    x.moveCordinates(x_min, y_min);
+                    x.moveCordinates(-x_min, -y_min);
                 }
             }
 
@@ -145,7 +145,7 @@ namespace PodpisBio.Src.Author
                     temp = ((Convert.ToDouble(average)- p.getY()) * (0.5 * hight / sd)) + Convert.ToDouble(average);
                     float y = Convert.ToSingle(temp) - p.getY();
 
-                    p.moveCordinates(x, y);
+                    p.moveCordinates(x, -y);
                 }
             }
 
@@ -156,9 +156,7 @@ namespace PodpisBio.Src.Author
         {
             double len = 0;
             List<Point> points = this.getAllModifiedPoints();
-
-            Debug.WriteLine("Adam liczy");
-
+            
             List<double> p = new List<double>();
 
             for (int i = 0; i < points.Count(); i++)

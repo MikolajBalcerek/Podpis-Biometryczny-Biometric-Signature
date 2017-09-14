@@ -34,8 +34,8 @@ namespace PodpisBio.Src
 
         public void moveCordinates(float a, float b)
         {
-            this.x = this.x - a;
-            this.y = this.y - b;
+            this.x = this.x + a;
+            this.y = this.y + b;
         }
 
         public float getX() { return x; }
