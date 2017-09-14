@@ -91,6 +91,26 @@ namespace PodpisBio.Src.Author
             return points;
         }
 
+        public List<Derivatives> getOriginalDerivatives()
+        {
+            List<Derivatives> d = new List<Derivatives>();
+            foreach (Stroke stroke in strokesOriginal)
+            {
+                d.AddRange(stroke.getDerivatives());
+            }
+            return d;
+        }
+
+        public List<Derivatives> getModifiedDerivatives()
+        {
+            List<Derivatives> d = new List<Derivatives>();
+            foreach (Stroke stroke in strokesModified)
+            {
+                d.AddRange(stroke.getDerivatives());
+            }
+            return d;
+        }
+
         public void fit()
         {
             List<Point> points = this.getAllModifiedPoints();
