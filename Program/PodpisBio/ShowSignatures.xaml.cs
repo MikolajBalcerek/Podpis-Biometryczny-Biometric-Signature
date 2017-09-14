@@ -43,7 +43,7 @@ namespace PodpisBio
         {
             this.InitializeComponent();
 
-            String[] options = { "Podpis", "Oś X", "Oś Y", "Siła", "Szybkość", "Szybkość_X", "Szybkość_Y",
+            String[] options = { "Podpis", "Oś X", "Oś Y", "Siła", "TiltX", "TiltY", "Szybkość", "Szybkość_X", "Szybkość_Y",
                 "Przyspieszenie", "Przyspieszenie_X", "Przyspieszenie_Y" };
             foreach (var x in options)
                 plotOptions.Add(x);
@@ -81,10 +81,32 @@ namespace PodpisBio
                 drawSignature();
             else
             {
+                var ptsToDraw = new PointCollection();
+                var times = getNormalisedTimes();
+                IEnumerable<float> feature;
                 switch (option)
                 {
-                    case "Oś X": drawX(); break;
+                    case "Oś X": feature = from x in this.signature.getAllPoints() select x.getX();
+                        break;
+                    case "Oś Y": feature = from x in this.signature.getAllPoints() select x.getY();
+                        break;
+                    case "Siła": feature = from x in this.signature.getAllPoints() select x.getPressure();
+                        break;
+                    case "TiltX": feature = from x in this.signature.getAllPoints() select x.getTiltX();
+                        break;
+                    case "TiltY": feature = from x in this.signature.getAllPoints() select x.getTiltY();
+                        break;
+
+                    default: feature = from x in this.signature.getAllPoints() select x.getX();
+                        break;
                 }
+                var normalised = normaliseFeature(feature);
+                for (int i = 0; i < normalised.Count; i++)
+                {
+                    ptsToDraw.Add(new Windows.Foundation.Point(times[i], normalised[i]));
+                    Debug.WriteLine("Adam rysuje ficzera " + option + " " + times[i] + " " + normalised[i]);
+                }
+                drawPoints(ptsToDraw);
             }
             
         }
@@ -95,7 +117,7 @@ namespace PodpisBio
             var normalised = new List<double>();
             var width = canvas1.ActualWidth;
             foreach (var time in times)
-                normalised.Add(width * (time - times.First()) / (times.Last() - times.First()));
+                normalised.Add(2 * width * (time - times.First()) / (times.Last() - times.First()));
             //0 division?
             return normalised;
         }
@@ -105,7 +127,7 @@ namespace PodpisBio
             var normalised = new List<double>();
             var height = canvas1.ActualHeight;
             foreach (var sample in samples)
-                normalised.Add(height * (sample - samples.First()) / (samples.Max() - samples.Min()) + height/2);
+                normalised.Add(2 * height * (sample - samples.First()) / (samples.Max() - samples.Min()) + 1.5 * height);
             //is 0 division possible here
             return normalised;
         }
