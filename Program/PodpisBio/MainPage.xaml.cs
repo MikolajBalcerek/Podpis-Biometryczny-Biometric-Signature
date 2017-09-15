@@ -25,6 +25,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI;
 using Windows.UI.Xaml.Shapes;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.Graphics.Display;
 using PodpisBio.Src.Service;
 
 //Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x415
@@ -52,7 +53,6 @@ namespace PodpisBio
         public MainPage()
         {
             SignatureService service = new SignatureService();
-            Debug.WriteLine(Windows.Graphics.Display.DisplayProperties.LogicalDpi);
             //Start the clock!
             timer = new Stopwatch();
             timer.Start();
@@ -67,9 +67,24 @@ namespace PodpisBio
             this.InitializeComponent();
             this.initializePenHandlers();
 
+            //inicjalizacja wielkości pola do rysowania
+            initRealSizeInkCanvas(110, 40);
+
             //ściągnięcie listy autorów żeby wyświetliło default
             updateAuthorCombobox();
             authorCombobox.SelectedIndex = 0;       
+        }
+
+        private void initRealSizeInkCanvas(double mmWidth, double mmHeight)
+        {
+            RealScreenSizeCalculator calc = new RealScreenSizeCalculator();
+            int width = (int) calc.toPixels(mmWidth);
+            int height = (int)calc.toPixels(mmHeight);
+            inkCanvas1.Height = height;
+            inkCanvas1.Width = width;
+            background.Height = height;
+            background.Width = width;
+
         }
 
         private void initializePenHandlers()
