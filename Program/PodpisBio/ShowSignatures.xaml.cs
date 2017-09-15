@@ -25,6 +25,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI;
 using Windows.UI.Xaml.Shapes;
 using Windows.UI.Xaml.Media.Imaging;
+using System.Collections.ObjectModel;
 
 //Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x415
 
@@ -35,60 +36,134 @@ namespace PodpisBio
     /// </summary>
     public sealed partial class ShowSignatures : Page
     {
+        private Signature signature;
+        ObservableCollection<String> plotOptions = new ObservableCollection<String>();
 
         public ShowSignatures()
         {
             this.InitializeComponent();
-            DrawSomething();
+
+            String[] options = { "Podpis", "Oś X", "Oś Y", "Siła", "TiltX", "TiltY",
+                "Szybkość", "Szybkość_X", "Szybkość_Y",
+                "Przyspieszenie", "Przyspieszenie_X", "Przyspieszenie_Y" };
+            foreach (var x in options)
+                plotOptions.Add(x);
         }
 
-        private void DrawSomething()
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            var path1 = new Windows.UI.Xaml.Shapes.Path();
-            path1.Fill = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 204, 204, 255));
-            path1.Stroke = new SolidColorBrush(Windows.UI.Colors.Black);
-            path1.StrokeThickness = 1;
+            base.OnNavigatedTo(e);
+            this.signature  = (Signature)e.Parameter;
+            plotCombobox.SelectedValue = "Podpis";
+        }
 
-            var geometryGroup1 = new GeometryGroup();
-            var rectangleGeometry1 = new RectangleGeometry();
-            rectangleGeometry1.Rect = new Rect(50, 5, 100, 10);
-            var rectangleGeometry2 = new RectangleGeometry();
-            rectangleGeometry2.Rect = new Rect(5, 5, 95, 180);
-            geometryGroup1.Children.Add(rectangleGeometry1);
-            geometryGroup1.Children.Add(rectangleGeometry2);
+        private void drawPoints(PointCollection points)
+        {
+            var polyline = new Polyline();
+            polyline.Stroke = new SolidColorBrush(Windows.UI.Colors.Black);
+            polyline.StrokeThickness = 1;
+            polyline.Points = points;
+            canvas1.Children.Add(polyline);
+        }
 
-            var ellipseGeometry1 = new EllipseGeometry();
-            ellipseGeometry1.Center = new Windows.Foundation.Point(100, 100);
-            ellipseGeometry1.RadiusX = 20;
-            ellipseGeometry1.RadiusY = 30;
-            geometryGroup1.Children.Add(ellipseGeometry1);
+        private void ShowPlot_Click(object sender, RoutedEventArgs e)
+        {
+            canvas1.Children.Clear();
+            Debug.WriteLine("Wartość comboboxa to " + plotCombobox.SelectedItem.ToString());
+            var option = plotCombobox.SelectedItem.ToString();
+            if (option == "Podpis" || option == "")
+                drawSignature();
+            else
+            {
+                var ptsToDraw = new PointCollection();
+                var times = getNormalisedTimes();
+                var points = this.signature.getAllOriginalPoints();
+                var derivatives = this.signature.getOriginalDerivatives();
+                IEnumerable<float> feature;
+                switch (option)
+                {
+                    case "Oś X":
+                        feature = from x in points select x.getX();
+                        break;
+                    case "Oś Y":
+                        feature = from x in points select x.getY();
+                        break;
+                    case "Siła":
+                        feature = from x in points select x.getPressure();
+                        break;
+                    case "TiltX":
+                        feature = from x in points select x.getTiltX();
+                        break;
+                    case "TiltY":
+                        feature = from x in points select x.getTiltY();
+                        break;
+                    case "Szybkość":
+                        feature = from x in derivatives select x.Velocity;
+                        break;
+                    case "Szybkość_X":
+                        feature = from x in derivatives select x.VelocityX;
+                        break;
+                    case "Szybkość_Y": 
+                        feature = from x in derivatives select x.VelocityY;
+                        break;
+                    case "Przyspieszenie":
+                        feature = from x in derivatives select x.Acc;
+                        break;
+                    case "Przyspieszenie_X":
+                        feature = from x in derivatives select x.AccX;
+                        break;
+                    case "Przyspieszenie_Y":
+                        feature = from x in derivatives select x.AccY;
+                        break;
 
-            var pathGeometry1 = new PathGeometry();
-            var pathFigureCollection1 = new PathFigureCollection();
-            var pathFigure1 = new PathFigure();
-            pathFigure1.IsClosed = true;
-            pathFigure1.StartPoint = new Windows.Foundation.Point(50, 50);
-            pathFigureCollection1.Add(pathFigure1);
-            pathGeometry1.Figures = pathFigureCollection1;
+                    default: feature = from x in this.signature.getAllModifiedPoints() select x.getX();
+                        break;
+                }
+                var normalised = normaliseFeature(feature);
+                for (int i = 0; i < normalised.Count; i++)
+                {
+                    ptsToDraw.Add(new Windows.Foundation.Point(times[i], normalised[i]));
+                    Debug.WriteLine("Adam rysuje ficzera " + option + " " + times[i] + " " + normalised[i]);
+                }
+                drawPoints(ptsToDraw);
+            }
+            
+        }
 
-            var pathSegmentCollection1 = new PathSegmentCollection();
-            var pathSegment1 = new BezierSegment();
-            pathSegment1.Point1 = new Windows.Foundation.Point(75, 300);
-            pathSegment1.Point2 = new Windows.Foundation.Point(125, 100);
-            pathSegment1.Point3 = new Windows.Foundation.Point(150, 50);
-            pathSegmentCollection1.Add(pathSegment1);
+        private List<double> getNormalisedTimes()
+        {
+            var times = from x in this.signature.getAllOriginalPoints() select x.getTime();
+            var normalised = new List<double>();
+            var width = canvas1.ActualWidth;
+            foreach (var time in times)
+                normalised.Add(3 * width * (time - times.First()) / (times.Last() - times.First()));
+            //0 division?
+            return normalised;
+        }
 
-            var pathSegment2 = new BezierSegment();
-            pathSegment2.Point1 = new Windows.Foundation.Point(125, 300);
-            pathSegment2.Point2 = new Windows.Foundation.Point(75, 100);
-            pathSegment2.Point3 = new Windows.Foundation.Point(50, 50);
-            pathSegmentCollection1.Add(pathSegment2);
-            pathFigure1.Segments = pathSegmentCollection1;
+        private List<double> normaliseFeature(IEnumerable<float> samples)
+        {
+            var normalised = new List<double>();
+            var height = canvas1.ActualHeight;
+            foreach (var sample in samples)
+                normalised.Add(height * (sample) / (samples.Max() - samples.Min()) + height);
+            //is 0 division possible here
+            return normalised;
+        }
 
-            geometryGroup1.Children.Add(pathGeometry1);
-            path1.Data = geometryGroup1;
-
-            canvas1.Children.Add(path1);
+        private void drawSignature()
+        {
+            Debug.WriteLine("Adam rysuje podpis.");
+            foreach (var stroke in signature.getStrokesOriginal())
+            {
+                var points = new PointCollection();
+                foreach (var point in stroke.getPoints())
+                {
+                    points.Add(new Windows.Foundation.Point(point.getX(), point.getY()));
+                    Debug.WriteLine("Punkt Adama: " + point.getX() + " " + point.getY());
+                }
+                drawPoints(points);
+            }
         }
     }
 }

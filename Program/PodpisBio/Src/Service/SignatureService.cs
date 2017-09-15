@@ -12,7 +12,7 @@ namespace PodpisBio.Src.Service
     {
         public SignatureService()
         {
-            FetchAsync("http://localhost:61817/Api/Authors");
+            //FetchAsync("http://localhost:61817/Api/Authors");
         }
 
         public async void FetchAsync(string url)

@@ -30,10 +30,12 @@ namespace PodpisBio.Src.Author
                 temp.Add(new Stroke(st));
             }
             this.strokesModified = temp;
-
-            scaleSignature();
-            fit();
-            calcLength();
+            if (getAllModifiedPoints().Count > 0)
+            {
+                scaleSignature();
+                fit();
+                calcLength();
+            }
         }
 
         public void addStroke(Stroke stroke)
@@ -145,8 +147,9 @@ namespace PodpisBio.Src.Author
         {
             List<Point> points = this.getAllModifiedPoints();
             float[] p_y = points.Select(x => x.getY()).ToArray();
-
+            
             float average = p_y.Average();
+
             float sumOfSquaresOfDifferences = p_y.Select(val => (val - average) * (val - average)).Sum();
             double sd = Math.Sqrt(sumOfSquaresOfDifferences / p_y.Length);
 
@@ -154,14 +157,14 @@ namespace PodpisBio.Src.Author
 
             double mm = dpi / Convert.ToDouble(25.4);
 
-            double hight = mm * 30;
+            double hight = mm * 10;
 
             foreach (Stroke st in this.strokesModified)
             {
                 foreach (Point p in st.getPoints())
                 {
                     double temp = p.getX() * (0.5 * hight / sd);
-                    float x = Convert.ToSingle(temp) - p.getX();
+                    float x = Convert.ToSingle(temp);
                     temp = ((Convert.ToDouble(average)- p.getY()) * (0.5 * hight / sd)) + Convert.ToDouble(average);
                     float y = Convert.ToSingle(temp) - p.getY();
 
