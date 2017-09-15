@@ -127,13 +127,10 @@ namespace PodpisBio
 
         private void Core_PointerPressing(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
-
-
-
             strokesCount = strokesCount + 1;
             
             times.Add(timer.ElapsedMilliseconds);
-            updateInfoInLabel(strokesCountLabel, "Ilość naciśnięć: " + strokesCount);
+            //updateInfoInLabel(strokesCountLabel, "Ilość naciśnięć: " + strokesCount);
             updateInfoInLabel(timeLastPressedLabel, "Czas ostatniego naciśnięcia w ms:  " + timer.ElapsedMilliseconds);
             Debug.WriteLine("Adam wcisnął " + strokesCount + " razy" + "ostatni raz " + timer.ElapsedMilliseconds);
         }
@@ -157,11 +154,14 @@ namespace PodpisBio
         private void Clear_Screen_Add_Strokes()
         {
             strokesCount = 0; //tylko do wyświetlania, Signature class ma realcount
+            List<InkStroke> strokes = new List<InkStroke>(inkCanvas1.InkPresenter.StrokeContainer.GetStrokes());
+            //consoleStrokeInfo(strokes);
+            addSignature(strokes);
             inkCanvas1.InkPresenter.StrokeContainer.Clear();
         }
 
         //Add signature
-        private void addSignature(IReadOnlyList<InkStroke> strokes)
+        private void addSignature(List<InkStroke> strokes)
         {
             Debug.WriteLine("Adam dodaje podpis.");
             bool isOriginal = false;
@@ -246,7 +246,7 @@ namespace PodpisBio
         {
             try
             {
-                var strokes = inkCanvas1.InkPresenter.StrokeContainer.GetStrokes();
+                List<InkStroke> strokes = new List<InkStroke>(inkCanvas1.InkPresenter.StrokeContainer.GetStrokes());
                 addSignature(strokes);
                 Clear_Screen_Add_Strokes();
             }
