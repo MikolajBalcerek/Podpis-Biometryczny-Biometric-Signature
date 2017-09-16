@@ -198,9 +198,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201709152358305_Initial.cs" />
-    <Compile Include="Migrations\201709152358305_Initial.Designer.cs">
-      <DependentUpon>201709152358305_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201709161324208_Initial.cs" />
+    <Compile Include="Migrations\201709161324208_Initial.Designer.cs">
+      <DependentUpon>201709161324208_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Author.cs" />
@@ -286,8 +286,8 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201709152358305_Initial.resx">
-      <DependentUpon>201709152358305_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201709161324208_Initial.resx">
+      <DependentUpon>201709161324208_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

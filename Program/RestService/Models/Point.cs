@@ -12,5 +12,6 @@ namespace RestService.Models
         public float Y { get; set; }
         public float Pressure { get; set; }
         public long Timestamp { get; set; }
+        public int StrokeId { get; set; }
     }
 }
