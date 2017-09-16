@@ -3,7 +3,7 @@ namespace RestService.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class test : DbMigration
+    public partial class Initial : DbMigration
     {
         public override void Up()
         {
@@ -25,7 +25,7 @@ namespace RestService.Migrations
                         Author_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Authors", t => t.Author_Id, cascadeDelete: true)
+                .ForeignKey("dbo.Authors", t => t.Author_Id)
                 .Index(t => t.Author_Id);
             
             CreateTable(
@@ -37,7 +37,7 @@ namespace RestService.Migrations
                         Signature_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Signatures", t => t.Signature_Id, cascadeDelete: true)
+                .ForeignKey("dbo.Signatures", t => t.Signature_Id)
                 .Index(t => t.Signature_Id);
             
             CreateTable(
@@ -48,11 +48,11 @@ namespace RestService.Migrations
                         X = c.Single(nullable: false),
                         Y = c.Single(nullable: false),
                         Pressure = c.Single(nullable: false),
-                        Timestamp = c.Int(nullable: false),
+                        Timestamp = c.Long(nullable: false),
                         Stroke_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Strokes", t => t.Stroke_Id, cascadeDelete: true)
+                .ForeignKey("dbo.Strokes", t => t.Stroke_Id)
                 .Index(t => t.Stroke_Id);
             
         }
