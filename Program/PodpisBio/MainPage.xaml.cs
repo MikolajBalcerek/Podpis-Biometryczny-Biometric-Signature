@@ -39,15 +39,7 @@ namespace PodpisBio
     {
         private int strokesCount; //Liczba przyciśnięć tylko do poglądu, Signature ma swój
         public Stopwatch timer; //Obiekt zajmujący się czasem ogólnoaplikacji
-        public List<Single> pressures; //lista sił nacisku punktów; nadmiarowe info zawarte w storke.GetInkPoints() 
-        public List<long> times; //lista czasów naciśnięć poszczególnych punktów
-        //TODO: MK wywal stąd te niepotrzebne listy
-        public List<int> pressureChanges;
-        /*lista zmian sił nacisku
-         * -1 -- nacisk maleje
-         *  0 -- nacisk się nie zmienia
-         * +1 -- nacisk rośnie
-         */
+
         SignatureController signatureController;
         AuthorController authorController;
         public MainPage()
@@ -56,11 +48,6 @@ namespace PodpisBio
             //Start the clock!
             timer = new Stopwatch();
             timer.Start();
-
-
-            pressures = new List<Single>();
-            times = new List<long>();
-            pressureChanges = new List<int>();
 
             signatureController = new SignatureController();
             authorController = new AuthorController();
@@ -108,30 +95,7 @@ namespace PodpisBio
         //Event handler dla rysowania
         private void Core_PointerMoving(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
-            var pressure = args.CurrentPoint.Properties.Pressure;
-            Single previousPressure;
-            if (pressures.Count() > 0)
-                previousPressure = pressures[pressures.Count() - 1];
-            else
-                previousPressure = 0;
-            var pressureChange = calcPressureChange(pressure, previousPressure);
-
-            pressureChanges.Add(pressureChange);
-            pressures.Add(pressure);
-            //TODO: MK - wywal stąd te obliczenia, pobieraj dane z naszych klas
             updateInfoInLabel(label1, "Adam rysuje X: " + args.CurrentPoint.Position.X + ", Y: " + args.CurrentPoint.Position.Y + ", z mocą: " + args.CurrentPoint.Properties.Pressure + ", " + args.CurrentPoint.Properties.Twist);
-            updateInfoInLabel(pressureLastPressedLabel, "Siła ostatniego naciśnięcia: " + pressure);
-            updateInfoInLabel(pressureChangeLabel, "Zmiana siły nacisku: " + pressureChange);
-        }
-
-        private int calcPressureChange(Single currentPress, Single previousPress)
-        {
-            var difference = currentPress - previousPress;
-            if (difference == 0)
-                return 0;
-            if (difference > 0)
-                return 1;
-            return -1;
         }
 
         //Event handler dla rysowania
@@ -144,8 +108,7 @@ namespace PodpisBio
         {
             strokesCount = strokesCount + 1;
             
-            times.Add(timer.ElapsedMilliseconds);
-            //updateInfoInLabel(strokesCountLabel, "Ilość naciśnięć: " + strokesCount);
+            updateInfoInLabel(strokesCountLabel, "Ilość naciśnięć: " + strokesCount);
             updateInfoInLabel(timeLastPressedLabel, "Czas ostatniego naciśnięcia w ms:  " + timer.ElapsedMilliseconds);
             Debug.WriteLine("Adam wcisnął " + strokesCount + " razy" + "ostatni raz " + timer.ElapsedMilliseconds);
         }
@@ -175,9 +138,15 @@ namespace PodpisBio
             inkCanvas1.InkPresenter.StrokeContainer.Clear();
         }
 
+
         //Add signature
         private void addSignature(List<InkStroke> strokes)
         {
+            if (strokes.Count == 0)
+            {
+                DisplayNoSignaturesDialog();
+                return;
+            }
             Debug.WriteLine("Adam dodaje podpis.");
             bool isOriginal = false;
             //IsChecked zwraca typ 'bool?', może posiadać wartość null stąd dodatkowy if tutaj sprawdzający czy nie zwraca nulla
@@ -264,8 +233,8 @@ namespace PodpisBio
         {
             ContentDialog dialog = new ContentDialog
             {
-                Title = "Nie ma żadnych zapisanych autorów lub autorzy nie posiadają podpisów",
-                Content = "Aby prześć do okna rysowania, musisz dodać autorów i ich podpisy.",
+                Title = "Brak podpisu.",
+                Content = "By wykonać akcję dodaj podpis.",
                 CloseButtonText = "Zamknij",
                 DefaultButton = ContentDialogButton.Close
             };
