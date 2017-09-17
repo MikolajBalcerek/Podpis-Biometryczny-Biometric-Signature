@@ -49,5 +49,16 @@ namespace PodpisBio.Src.Author
             }
             return false;
         }
+
+        public bool Empty()
+        {
+            if (authors.Count == 0)
+                return true;
+            bool allAuthorsEmpty = true;
+            foreach (var autor in authors)
+                if (!autor.EmptySignatures())
+                    allAuthorsEmpty = false;
+            return allAuthorsEmpty;
+        }
     }
 }

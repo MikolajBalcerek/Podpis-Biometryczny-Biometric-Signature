@@ -239,15 +239,18 @@ namespace PodpisBio
 
         private async void Button_ClickAsync(object sender, RoutedEventArgs e)
         {
-            //drawAuthorSignature(authorController.getAuthor(authorCombobox.Items[1].ToString()).getSignature(),canvas1);
-            saveButton_Click(sender, e);
+            if (authorController.Empty())
+            {
+                DisplayNoSignaturesDialog();
+                return;
+            }
             CoreApplicationView newView = CoreApplication.CreateNewView();
             int newViewId = 0;
             await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 Frame frame = new Frame();
                 var signatures = this.signatureController.signatures;
-                frame.Navigate(typeof(ShowSignatures), signatures[signatures.Count - 1]);
+                frame.Navigate(typeof(ShowSignatures), authorController);
                 Window.Current.Content = frame;
                 // You have to activate the window in order to show it later.
                 Window.Current.Activate();
@@ -257,12 +260,26 @@ namespace PodpisBio
             bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
         }
 
+        private async void DisplayNoSignaturesDialog()
+        {
+            ContentDialog dialog = new ContentDialog
+            {
+                Title = "Nie ma żadnych zapisanych autorów lub autorzy nie posiadają podpisów",
+                Content = "Aby prześć do okna rysowania, musisz dodać autorów i ich podpisy.",
+                CloseButtonText = "Zamknij",
+                DefaultButton = ContentDialogButton.Close
+            };
+
+            ContentDialogResult result = await dialog.ShowAsync();
+        }
+
         private void saveButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 List<InkStroke> strokes = new List<InkStroke>(inkCanvas1.InkPresenter.StrokeContainer.GetStrokes());
-                addSignature(strokes);
+                //addSignature(strokes);
+                //metoda poniżej już dodaje podpis, przed chwilą mieliśmy podpisy x2
                 Clear_Screen_Add_Strokes();
             }
             catch(ArgumentOutOfRangeException){ Debug.WriteLine("Nie można zapisać pustego podpisu!"); }
