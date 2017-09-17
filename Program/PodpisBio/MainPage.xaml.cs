@@ -175,9 +175,15 @@ namespace PodpisBio
             inkCanvas1.InkPresenter.StrokeContainer.Clear();
         }
 
+
         //Add signature
         private void addSignature(List<InkStroke> strokes)
         {
+            if (strokes.Count == 0)
+            {
+                DisplayNoSignaturesDialog();
+                return;
+            }
             Debug.WriteLine("Adam dodaje podpis.");
             bool isOriginal = false;
             //IsChecked zwraca typ 'bool?', może posiadać wartość null stąd dodatkowy if tutaj sprawdzający czy nie zwraca nulla
@@ -264,8 +270,8 @@ namespace PodpisBio
         {
             ContentDialog dialog = new ContentDialog
             {
-                Title = "Nie ma żadnych zapisanych autorów lub autorzy nie posiadają podpisów",
-                Content = "Aby prześć do okna rysowania, musisz dodać autorów i ich podpisy.",
+                Title = "Brak podpisu.",
+                Content = "By wykonać akcję dodaj podpis.",
                 CloseButtonText = "Zamknij",
                 DefaultButton = ContentDialogButton.Close
             };
