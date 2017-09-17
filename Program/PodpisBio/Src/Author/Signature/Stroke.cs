@@ -47,7 +47,6 @@ namespace PodpisBio.Src.Author
                 var derivatives = calculator.calcDerivatives(prevPoint, point, prevDerivatives);
                 this.points.Add(point);
                 this.derivatives.Add(derivatives);
-                Debug.WriteLine("Adam oblicza pochodne v = " + derivatives.Velocity + " i acc = " + derivatives.Acc);
             }
 
         }

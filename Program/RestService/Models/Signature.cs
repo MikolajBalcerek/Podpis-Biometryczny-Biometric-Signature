@@ -12,6 +12,8 @@ namespace RestService.Models
             Strokes = new HashSet<Stroke>();
         }
         public int Id { get; set; }
+        public Boolean isOrginal { get; set; }
         public virtual ICollection<Stroke> Strokes { get; set; }
+        public int AuthorId { get; set; }
     }
 }

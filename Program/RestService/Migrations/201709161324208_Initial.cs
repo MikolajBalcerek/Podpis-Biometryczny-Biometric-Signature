@@ -21,22 +21,24 @@ namespace RestService.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Author_Id = c.Int(),
+                        isOrginal = c.Boolean(nullable: false),
+                        AuthorId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Authors", t => t.Author_Id)
-                .Index(t => t.Author_Id);
+                .ForeignKey("dbo.Authors", t => t.AuthorId, cascadeDelete: true)
+                .Index(t => t.AuthorId);
             
             CreateTable(
                 "dbo.Strokes",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Signature_Id = c.Int(),
+                        isScaled = c.Boolean(nullable: false),
+                        SignatureId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Signatures", t => t.Signature_Id)
-                .Index(t => t.Signature_Id);
+                .ForeignKey("dbo.Signatures", t => t.SignatureId, cascadeDelete: true)
+                .Index(t => t.SignatureId);
             
             CreateTable(
                 "dbo.Points",
@@ -46,23 +48,23 @@ namespace RestService.Migrations
                         X = c.Single(nullable: false),
                         Y = c.Single(nullable: false),
                         Pressure = c.Single(nullable: false),
-                        Timestamp = c.Int(nullable: false),
-                        Stroke_Id = c.Int(),
+                        Timestamp = c.Long(nullable: false),
+                        StrokeId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Strokes", t => t.Stroke_Id)
-                .Index(t => t.Stroke_Id);
+                .ForeignKey("dbo.Strokes", t => t.StrokeId, cascadeDelete: true)
+                .Index(t => t.StrokeId);
             
         }
         
         public override void Down()
         {
-            DropForeignKey("dbo.Signatures", "Author_Id", "dbo.Authors");
-            DropForeignKey("dbo.Strokes", "Signature_Id", "dbo.Signatures");
-            DropForeignKey("dbo.Points", "Stroke_Id", "dbo.Strokes");
-            DropIndex("dbo.Points", new[] { "Stroke_Id" });
-            DropIndex("dbo.Strokes", new[] { "Signature_Id" });
-            DropIndex("dbo.Signatures", new[] { "Author_Id" });
+            DropForeignKey("dbo.Signatures", "AuthorId", "dbo.Authors");
+            DropForeignKey("dbo.Strokes", "SignatureId", "dbo.Signatures");
+            DropForeignKey("dbo.Points", "StrokeId", "dbo.Strokes");
+            DropIndex("dbo.Points", new[] { "StrokeId" });
+            DropIndex("dbo.Strokes", new[] { "SignatureId" });
+            DropIndex("dbo.Signatures", new[] { "AuthorId" });
             DropTable("dbo.Points");
             DropTable("dbo.Strokes");
             DropTable("dbo.Signatures");

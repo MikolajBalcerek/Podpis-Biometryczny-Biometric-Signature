@@ -103,7 +103,7 @@ namespace PodpisBio.Src.Author
 
         public Derivatives calcDerivatives(Point prev, Point current, Derivatives prevDerivative)
         {
-            Debug.WriteLine("Adam liczy pochodne.");
+            //Debug.WriteLine("Adam liczy pochodne.");
             Derivatives derivative = new Derivatives();
             derivative.VelocityX = this.calcVelocityX(prev, current);
             derivative.VelocityY = this.calcVelocityY(prev, current);
@@ -114,7 +114,7 @@ namespace PodpisBio.Src.Author
             derivative.Acc = this.calcAcc(derivative, prevDerivative, current, prev);
             derivative.DtiltX = this.calcDtiltX(prev, current);
             derivative.DtiltY = this.calcDtiltY(prev, current);
-            Debug.WriteLine("Adam policzył pochodne");
+            //Debug.WriteLine("Adam policzyl pochodne v = " + derivative.Velocity + " i acc = " + derivative.Acc);
             return derivative;
         }
 

@@ -25,6 +25,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI;
 using Windows.UI.Xaml.Shapes;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.Graphics.Display;
 using PodpisBio.Src.Service;
 
 //Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x415
@@ -52,7 +53,6 @@ namespace PodpisBio
         public MainPage()
         {
             SignatureService service = new SignatureService();
-            Debug.WriteLine(Windows.Graphics.Display.DisplayProperties.LogicalDpi);
             //Start the clock!
             timer = new Stopwatch();
             timer.Start();
@@ -67,9 +67,24 @@ namespace PodpisBio
             this.InitializeComponent();
             this.initializePenHandlers();
 
+            //inicjalizacja wielkości pola do rysowania
+            initRealSizeInkCanvas(110, 40);
+
             //ściągnięcie listy autorów żeby wyświetliło default
             updateAuthorCombobox();
             authorCombobox.SelectedIndex = 0;       
+        }
+
+        private void initRealSizeInkCanvas(double mmWidth, double mmHeight)
+        {
+            RealScreenSizeCalculator calc = new RealScreenSizeCalculator();
+            int width = (int) calc.toPixels(mmWidth);
+            int height = (int)calc.toPixels(mmHeight);
+            inkCanvas1.Height = height;
+            inkCanvas1.Width = width;
+            background.Height = height;
+            background.Width = width;
+
         }
 
         private void initializePenHandlers()
@@ -127,13 +142,10 @@ namespace PodpisBio
 
         private void Core_PointerPressing(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
-
-
-
             strokesCount = strokesCount + 1;
             
             times.Add(timer.ElapsedMilliseconds);
-            updateInfoInLabel(strokesCountLabel, "Ilość naciśnięć: " + strokesCount);
+            //updateInfoInLabel(strokesCountLabel, "Ilość naciśnięć: " + strokesCount);
             updateInfoInLabel(timeLastPressedLabel, "Czas ostatniego naciśnięcia w ms:  " + timer.ElapsedMilliseconds);
             Debug.WriteLine("Adam wcisnął " + strokesCount + " razy" + "ostatni raz " + timer.ElapsedMilliseconds);
         }
@@ -157,11 +169,14 @@ namespace PodpisBio
         private void Clear_Screen_Add_Strokes()
         {
             strokesCount = 0; //tylko do wyświetlania, Signature class ma realcount
+            List<InkStroke> strokes = new List<InkStroke>(inkCanvas1.InkPresenter.StrokeContainer.GetStrokes());
+            //consoleStrokeInfo(strokes);
+            addSignature(strokes);
             inkCanvas1.InkPresenter.StrokeContainer.Clear();
         }
 
         //Add signature
-        private void addSignature(IReadOnlyList<InkStroke> strokes)
+        private void addSignature(List<InkStroke> strokes)
         {
             Debug.WriteLine("Adam dodaje podpis.");
             bool isOriginal = false;
@@ -262,8 +277,9 @@ namespace PodpisBio
         {
             try
             {
-                var strokes = inkCanvas1.InkPresenter.StrokeContainer.GetStrokes();
-                addSignature(strokes);
+                List<InkStroke> strokes = new List<InkStroke>(inkCanvas1.InkPresenter.StrokeContainer.GetStrokes());
+                //addSignature(strokes);
+                //metoda poniżej już dodaje podpis, przed chwilą mieliśmy podpisy x2
                 Clear_Screen_Add_Strokes();
             }
             catch(ArgumentOutOfRangeException){ Debug.WriteLine("Nie można zapisać pustego podpisu!"); }

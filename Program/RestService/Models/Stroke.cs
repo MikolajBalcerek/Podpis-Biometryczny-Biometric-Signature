@@ -12,6 +12,8 @@ namespace RestService.Models
             Points = new HashSet<Point>();
         }
         public int Id { get; set; }
+        public Boolean isScaled { get; set; }
         public virtual ICollection<Point> Points { get; set; }
+        public int SignatureId { get; set; }
     }
 }
