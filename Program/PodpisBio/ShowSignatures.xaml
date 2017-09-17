@@ -4,14 +4,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    MinWidth="800     " VerticalContentAlignment="Stretch">
+
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <!--<InkCanvas HorizontalAlignment="Left" Height="195" Margin="0,360,0,0" VerticalAlignment="Top" Width="340"/>-->
-        <Canvas x:Name="canvas1" HorizontalAlignment="Left" Width="350" Margin="10,47,0,373"/>
-        <Button Content="Wyświetl co chcesz" HorizontalAlignment="Right" Margin="0,10,196,0" VerticalAlignment="Top" Click="ShowPlot_Click"/>
-        <ComboBox x:Name="plotCombobox" ItemsSource="{x:Bind plotOptions}" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="181"/>
-
-
+        <Canvas x:Name="canvas1" HorizontalAlignment="Left" Width="350" Margin="10,84,0,373"/>
+        <Button Content="Wyświetl co chcesz" HorizontalAlignment="Right" Margin="0,63,147,0" VerticalAlignment="Top" Click="ShowPlot_Click" RenderTransformOrigin="0.479,4.558" Width="152"/>
+        <ComboBox x:Name="plotCombobox" ItemsSource="{x:Bind plotOptions}" HorizontalAlignment="Right" Margin="0,63,10,0" VerticalAlignment="Top" Width="132" Height="32"/>
+        <ComboBox x:Name="autCombobox" ItemsSource="{x:Bind authorNames}" HorizontalAlignment="Right" Margin="0,23,119,0" VerticalAlignment="Top" Width="180" Height="35" SelectionChanged="autComboBox_SelectionChanged"/>
+        <ComboBox x:Name="sigCombobox" ItemsSource="{x:Bind signatureIndexes}" HorizontalAlignment="Right" Margin="0,23,10,0" VerticalAlignment="Top" Width="104" Height="35" RenderTransformOrigin="-7.184,0.752" SelectionChanged="sigComboBox_SelectionChanged"/>
     </Grid>
 </Page>
