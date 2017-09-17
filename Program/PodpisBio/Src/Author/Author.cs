@@ -49,9 +49,9 @@ namespace PodpisBio.Src.Author
 
         public String getName() { return Name; }
 
-        public Signature getSignature()
+        public List<Signature> getSignatures()
         {
-            return Signatures[0];
+            return Signatures;
         }
 
         public Signature getSignature(int index)

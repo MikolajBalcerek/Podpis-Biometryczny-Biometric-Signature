@@ -18,6 +18,8 @@ namespace PodpisBio.Src.Author
             service = new AuthorService();
             //domyślny autor pusty
             this.authors.Add(new Author(authors.Count, "Default"));
+
+            this.authors.AddRange(service.getAuthors());
         }
 
         public void addAuthor(String name)
