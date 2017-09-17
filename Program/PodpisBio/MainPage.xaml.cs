@@ -27,6 +27,7 @@ using Windows.UI.Xaml.Shapes;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Graphics.Display;
 using PodpisBio.Src.Service;
+using Windows.Foundation.Metadata;
 
 //Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x415
 
@@ -70,6 +71,8 @@ namespace PodpisBio
             //inicjalizacja wielkości pola do rysowania
             initRealSizeInkCanvas(110, 40);
 
+            setNavbarColor();
+
             //ściągnięcie listy autorów żeby wyświetliło default
             updateAuthorCombobox();
             authorCombobox.SelectedIndex = 0;       
@@ -78,13 +81,28 @@ namespace PodpisBio
         private void initRealSizeInkCanvas(double mmWidth, double mmHeight)
         {
             RealScreenSizeCalculator calc = new RealScreenSizeCalculator();
-            int width = (int) calc.toPixels(mmWidth);
-            int height = (int)calc.toPixels(mmHeight);
+            int width = (int) calc.convertToPixels(mmWidth);
+            int height = (int)calc.convertToPixels(mmHeight);
             inkCanvas1.Height = height;
             inkCanvas1.Width = width;
             background.Height = height;
             background.Width = width;
 
+        }
+
+        private void setNavbarColor()
+        {
+            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
+            {
+                var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+                if (titleBar != null)
+                {
+                    titleBar.ButtonBackgroundColor = Color.FromArgb(255, 63, 81, 181);
+                    titleBar.ButtonForegroundColor = Colors.White;
+                    titleBar.BackgroundColor = Color.FromArgb(255, 63, 81, 181);
+                    titleBar.ForegroundColor = Colors.White;
+                }
+            }
         }
 
         private void initializePenHandlers()
@@ -137,7 +155,7 @@ namespace PodpisBio
         //Event handler dla rysowania
         private void Core_PointerReleasing(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
-            Debug.WriteLine("Adam puścił");
+            //Debug.WriteLine("Adam puścił");
         }
 
         private void Core_PointerPressing(CoreInkIndependentInputSource sender, PointerEventArgs args)
@@ -147,7 +165,7 @@ namespace PodpisBio
             times.Add(timer.ElapsedMilliseconds);
             //updateInfoInLabel(strokesCountLabel, "Ilość naciśnięć: " + strokesCount);
             updateInfoInLabel(timeLastPressedLabel, "Czas ostatniego naciśnięcia w ms:  " + timer.ElapsedMilliseconds);
-            Debug.WriteLine("Adam wcisnął " + strokesCount + " razy" + "ostatni raz " + timer.ElapsedMilliseconds);
+            //Debug.WriteLine("Adam wcisnął " + strokesCount + " razy" + "ostatni raz " + timer.ElapsedMilliseconds);
         }
 
         //Funkcja aktualizacji tekstu Label, podaj nazwę obiektu, tekst
@@ -168,11 +186,10 @@ namespace PodpisBio
 
         private void Clear_Screen_Add_Strokes()
         {
-            strokesCount = 0; //tylko do wyświetlania, Signature class ma realcount
-            List<InkStroke> strokes = new List<InkStroke>(inkCanvas1.InkPresenter.StrokeContainer.GetStrokes());
-            //consoleStrokeInfo(strokes);
-            addSignature(strokes);
+            //Clears inkCanvas
             inkCanvas1.InkPresenter.StrokeContainer.Clear();
+
+            strokesCount = 0; //tylko do wyświetlania, Signature class ma realcount
         }
 
         //Add signature
@@ -181,17 +198,14 @@ namespace PodpisBio
             Debug.WriteLine("Adam dodaje podpis.");
             bool isOriginal = false;
             //IsChecked zwraca typ 'bool?', może posiadać wartość null stąd dodatkowy if tutaj sprawdzający czy nie zwraca nulla
-            if (isOriginalCheckBox.IsChecked.HasValue)
-            {
-                isOriginal = isOriginalCheckBox.IsChecked.Value;
-            }
+            if (isOriginalCheckBox.IsChecked.HasValue) { isOriginal = isOriginalCheckBox.IsChecked.Value; }
             try
             {
                 authorController.getAuthor(authorCombobox.SelectedItem.ToString()).addSignature(signatureController.addSignature(strokes, isOriginal));
             }
             catch (System.NullReferenceException)
             {
-                authorController.getAuthor("Default").addSignature(signatureController.addSignature(strokes, isOriginal));
+                //authorController.getAuthor("Default").addSignature(signatureController.addSignature(strokes, isOriginal));
                 //nie było podanego autora, autor domyślny
             }
         }

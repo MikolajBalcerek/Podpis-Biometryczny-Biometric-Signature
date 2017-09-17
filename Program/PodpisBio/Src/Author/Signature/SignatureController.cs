@@ -30,7 +30,6 @@ namespace PodpisBio.Src.Author
                     stroke.addPoint(point);
                 }
                 signature.addStroke(stroke);
-                Debug.Write(signature.getStrokesCount());
             }
             signatures.Add(signature);
             signature.init();

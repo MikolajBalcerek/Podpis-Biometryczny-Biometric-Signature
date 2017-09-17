@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
+using PodpisBio.Src.Service;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -10,42 +12,46 @@ namespace PodpisBio.Src.Author
 {
     class Author
     {
-        private int id;
-        private String name;
-        private List<Signature> signatures = new List<Signature>();
+        public int Id { get; set; }
+        public String Name { get; set; }
+        public List<Signature> Signatures { get; set; }
 
-        public Author(int id, String name)
+        private SignatureService signatureService;
+
+        public Author()
         {
-            this.id = id;
-            this.name = name;
+            Signatures = new List<Signature>();
+            signatureService = new SignatureService();
         }
-        public Author(int id, String name, List<Signature> list)
+        public Author(String name) : this() { this.Name = name; }
+        public Author(int id, String name) : this()
         {
-            this.id = id;
-            this.name = name;
+            this.Id = id;
+            this.Name = name;
+        }
+        public Author(int id, String name, List<Signature> list) : this()
+        {
+            this.Id = id;
+            this.Name = name;
 
         }
         public void addSignature(Signature sign)
         {
-            this.signatures.Add(sign);
+            this.Signatures.Add(sign);
+
+            sign.AuthorId = this.Id;
+            
+            sign = signatureService.postSignature(sign);
+            if (sign != null) { Signatures.Add(sign); }
         }
 
-        public String getName() { return name; }
+        public int getId() { return Id; }
+
+        public String getName() { return Name; }
 
         public Signature getSignature()
         {
-            return signatures[0];
-        }
-
-        public async void DBSaveSignature()//Dodawanie podpisu do bazy danych, TODO: w ktorym miejscu to zaimplementowac
-        {
-            var author = new Author(this.id , this.name);
-            var authorJson = JsonConvert.SerializeObject(author);
-            var client = new HttpClient();
-
-            var HttpContent = new StringContent(authorJson);
-            HttpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-            await client.PostAsync("http://localhost:61817/Api/Authors", HttpContent);
+            return Signatures[0];
         }
     }
 }

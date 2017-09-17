@@ -9,14 +9,20 @@ namespace PodpisBio.Src.Author
 {
     class Signature
     {
-        private List<Stroke> strokesOriginal = new List<Stroke>();
-        private List<Stroke> strokesModified = new List<Stroke>();
-        double length;
-        bool isOriginal;
+        public int AuthorId { get; set; }
+        public List<Stroke> Strokes { get; set; }
+        public List<Stroke> StrokesModified { get; set; }
+        public bool isOriginal { get; set; }
 
-
+        public double length;
         private int strokesCount;
-        public Signature(bool isOriginal)
+
+        public Signature()
+        {
+            Strokes = new List<Stroke>();
+            StrokesModified = new List<Stroke>();
+        }
+        public Signature(bool isOriginal) : this()
         {
             strokesCount = 0;
             this.isOriginal = isOriginal;
@@ -25,11 +31,11 @@ namespace PodpisBio.Src.Author
         public void init()
         {
             List<Stroke> temp = new List<Stroke>();
-            foreach (Stroke st in strokesOriginal)
+            foreach (Stroke st in Strokes)
             {
                 temp.Add(new Stroke(st));
             }
-            this.strokesModified = temp;
+            this.StrokesModified = temp;
             if (getAllModifiedPoints().Count > 0)
             {
                 scaleSignature();
@@ -40,12 +46,12 @@ namespace PodpisBio.Src.Author
 
         public void addStroke(Stroke stroke)
         {
-            strokesOriginal.Add(stroke);
+            Strokes.Add(stroke);
         }
 
         public void addStrokes(List<Stroke> strokes)
         {
-            this.strokesOriginal = strokes;
+            this.Strokes = strokes;
         }
         
         public void increaseStrokesCount()
@@ -65,18 +71,18 @@ namespace PodpisBio.Src.Author
 
         public List<Stroke> getStrokesOriginal()
         {
-            return this.strokesOriginal;
+            return this.Strokes;
         }
 
         public List<Stroke> getStrokesModified()
         {
-            return this.strokesModified;
+            return this.StrokesModified;
         }
 
         public List<Point> getAllOriginalPoints()
         {
             List<Point> points = new List<Point>();
-            foreach (Stroke st in strokesOriginal)
+            foreach (Stroke st in Strokes)
             {
                 points.AddRange(st.getPoints());
             }
@@ -86,7 +92,7 @@ namespace PodpisBio.Src.Author
         public List<Point> getAllModifiedPoints()
         {
             List<Point> points = new List<Point>();
-            foreach (Stroke st in strokesModified)
+            foreach (Stroke st in StrokesModified)
             {
                 points.AddRange(st.getPoints());
             }
@@ -96,7 +102,7 @@ namespace PodpisBio.Src.Author
         public List<Derivatives> getOriginalDerivatives()
         {
             List<Derivatives> d = new List<Derivatives>();
-            foreach (Stroke stroke in strokesOriginal)
+            foreach (Stroke stroke in Strokes)
             {
                 d.AddRange(stroke.getDerivatives());
             }
@@ -106,7 +112,7 @@ namespace PodpisBio.Src.Author
         public List<Derivatives> getModifiedDerivatives()
         {
             List<Derivatives> d = new List<Derivatives>();
-            foreach (Stroke stroke in strokesModified)
+            foreach (Stroke stroke in StrokesModified)
             {
                 d.AddRange(stroke.getDerivatives());
             }
@@ -132,7 +138,7 @@ namespace PodpisBio.Src.Author
             //    temp.Add(new Stroke(st));
             //}
 
-            foreach (Stroke st in this.strokesModified)
+            foreach (Stroke st in this.StrokesModified)
             {
                 foreach (Point x in st.getPoints())
                 {
@@ -159,7 +165,7 @@ namespace PodpisBio.Src.Author
 
             double hight = mm * 10;
 
-            foreach (Stroke st in this.strokesModified)
+            foreach (Stroke st in this.StrokesModified)
             {
                 foreach (Point p in st.getPoints())
                 {
