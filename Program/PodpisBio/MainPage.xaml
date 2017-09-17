@@ -14,8 +14,6 @@
         <Button Content="Wyczyść" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Click="Clear_Click"/>
         <TextBlock x:Name="strokesCountLabel" HorizontalAlignment="Left" Margin="10,30,0,0" TextWrapping="Wrap" Text="Strokes Count:" VerticalAlignment="Top"/>
         <TextBlock x:Name ="timeLastPressedLabel" HorizontalAlignment="Left" Margin="10,49,0,0" TextWrapping="Wrap" Text="Czas ostatniego naciśnięcia" VerticalAlignment="Top"/>
-        <TextBlock x:Name ="pressureLastPressedLabel" HorizontalAlignment="Left" Margin="10,69,0,0" TextWrapping="Wrap" Text="Siła ostatniego naciśnięcia" VerticalAlignment="Top"/>
-        <TextBlock x:Name ="pressureChangeLabel" HorizontalAlignment="Left" Margin="10,89,0,0" TextWrapping="Wrap" Text="Zmiana nacisku" VerticalAlignment="Top"/>
         <Button x:Name="saveToFileButton" Content="Zapisz do pliku" HorizontalAlignment="Right" Margin="0,10,468,0" VerticalAlignment="Top" Click="SaveToFile_Click" Height="32"/>
         <Button x:Name="AddAuthor" Content="Dodaj osobę" HorizontalAlignment="Right" Margin="0,57,468,0" VerticalAlignment="Top" Click="AddAuthor_Click" Width="120"/>
         <ComboBox x:Name="authorCombobox" HorizontalAlignment="Right" Margin="0,10,216,0" VerticalAlignment="Top" Width="221"/>
