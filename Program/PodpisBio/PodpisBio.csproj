@@ -95,12 +95,18 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Src\Service\AuthorService.cs" />
+    <Compile Include="Src\Service\Base.cs" />
+    <Compile Include="Src\Service\RestService.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShowSignatures.xaml.cs">
       <DependentUpon>ShowSignatures.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Pages\AddNewUserPage.xaml.cs">
+      <DependentUpon>AddNewUserPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Src\Author\Author.cs" />
     <Compile Include="Src\Author\AuthorController.cs" />
@@ -140,6 +146,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="ShowSignatures.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Pages\AddNewUserPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -11,12 +11,13 @@ namespace PodpisBio.Src
 {
     class Signature
     {
-        private List<Stroke> strokesOriginal = new List<Stroke>();
-        private List<Stroke> strokesModified = new List<Stroke>();
+        public int AuthorId { get; set; }
+        public List<Stroke> Strokes { get; set; }
+        public List<Stroke> StrokesModified { get; set; }
+        public bool isOriginal { get; set; }
+
         double length;
         double height;
-        bool isOriginal;
-
         private List<InkStroke> richInkStrokes; //stroke z timestampami od microsoftu
 
         public void increaseStrokesCount() { this.strokesCount = this.strokesCount + 1; }
@@ -25,7 +26,13 @@ namespace PodpisBio.Src
         private Author.TimeSize_Probe ownTimeSizeProbe; //klasa badaj¹ca w³asnoœci czasu i rozmiaru podpisu
 
         private int strokesCount;
-        public Signature(List<InkStroke> richInkStrokesGiven, bool isOriginal)
+
+        public Signature()
+        {
+            Strokes = new List<Stroke>();
+            StrokesModified = new List<Stroke>();
+        }
+        public Signature(List<InkStroke> richInkStrokesGiven, bool isOriginal) : this()
         {
             strokesCount = 0;
             length = 0;
@@ -33,40 +40,36 @@ namespace PodpisBio.Src
             this.richInkStrokes = richInkStrokesGiven;
             this.isOriginal = isOriginal;
         }
+        public Signature(List<Stroke> strokes, bool isOriginal) : this()
+        {
+            strokesCount = 0;
+            length = 0;
+            height = 0;
+            this.Strokes = strokes;
+            this.isOriginal = isOriginal;
+        }
 
-        public Signature(List<Stroke> strokes, bool isOriginal)
+        public Signature(List<Stroke> strokes, List<InkStroke> richInkStrokes, bool isOriginal) : this()
         {
             strokesCount = 0;
             length = 0;
             height = 0;
             this.isOriginal = isOriginal;
-            this.strokesOriginal = strokes;
+            this.Strokes = strokes;
             this.richInkStrokes = new List<InkStroke>();
             //this.init();
             //ownTimeSizeProbe = new Author.TimeSize_Probe(this);
 
         }
 
-        public Signature(List<Stroke> strokes, List<InkStroke> richInkStrokes, bool isOriginal)
-        {
-            strokesCount = 0;
-            length = 0;
-            height = 0;
-            this.isOriginal = isOriginal;
-            this.strokesOriginal = strokes;
-            this.richInkStrokes = richInkStrokes;
-            //this.init();
-            //ownTimeSizeProbe = new Author.TimeSize_Probe(this);
-        }
-
         public void init()
         {
             List<Stroke> temp = new List<Stroke>();
-            foreach (Stroke st in strokesOriginal)
+            foreach (Stroke st in Strokes)
             {
                 temp.Add(new Stroke(st));
             }
-            this.strokesModified = temp;
+            this.StrokesModified = temp;
             if (getAllModifiedPoints().Count > 0)
             {
                 scaleSignature();
@@ -81,12 +84,12 @@ namespace PodpisBio.Src
 
         public void addStroke(Stroke stroke)
         {
-            strokesOriginal.Add(stroke);
+            Strokes.Add(stroke);
         }
 
         public void addStrokes(List<Stroke> strokes)
         {
-            this.strokesOriginal = strokes;
+            this.Strokes = strokes;
         }
         
 
@@ -104,12 +107,12 @@ namespace PodpisBio.Src
 
         public List<Stroke> getStrokesOriginal()
         {
-            return this.strokesOriginal;
+            return this.Strokes;
         }
 
         public List<Stroke> getStrokesModified()
         {
-            return this.strokesModified;
+            return this.StrokesModified;
         }
 
         public List<InkStroke> getRichStrokes()
@@ -120,7 +123,7 @@ namespace PodpisBio.Src
         public List<Point> getAllOriginalPoints()
         {
             List<Point> points = new List<Point>();
-            foreach (Stroke st in strokesOriginal)
+            foreach (Stroke st in Strokes)
             {
                 points.AddRange(st.getPoints());
             }
@@ -130,7 +133,7 @@ namespace PodpisBio.Src
         public List<Point> getAllModifiedPoints()
         {
             List<Point> points = new List<Point>();
-            foreach (Stroke st in strokesModified)
+            foreach (Stroke st in StrokesModified)
             {
                 points.AddRange(st.getPoints());
             }
@@ -140,7 +143,7 @@ namespace PodpisBio.Src
         public List<Derivatives> getOriginalDerivatives()
         {
             List<Derivatives> d = new List<Derivatives>();
-            foreach (Stroke stroke in strokesOriginal)
+            foreach (Stroke stroke in Strokes)
             {
                 d.AddRange(stroke.getDerivatives());
             }
@@ -150,7 +153,7 @@ namespace PodpisBio.Src
         public List<Derivatives> getModifiedDerivatives()
         {
             List<Derivatives> d = new List<Derivatives>();
-            foreach (Stroke stroke in strokesModified)
+            foreach (Stroke stroke in StrokesModified)
             {
                 d.AddRange(stroke.getDerivatives());
             }
@@ -176,7 +179,7 @@ namespace PodpisBio.Src
             //    temp.Add(new Stroke(st));
             //}
 
-            foreach (Stroke st in this.strokesModified)
+            foreach (Stroke st in this.StrokesModified)
             {
                 foreach (Point x in st.getPoints())
                 {
@@ -203,7 +206,7 @@ namespace PodpisBio.Src
 
             double hight = mm * 10;
 
-            foreach (Stroke st in this.strokesModified)
+            foreach (Stroke st in this.StrokesModified)
             {
                 foreach (Point p in st.getPoints())
                 {

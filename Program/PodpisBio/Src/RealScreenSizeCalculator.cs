@@ -9,7 +9,8 @@ namespace PodpisBio.Src
 {
     class RealScreenSizeCalculator
     {
-        double CPI;
+        //Pixels Per Centimeter
+        private double PPC;
         public RealScreenSizeCalculator(){ init(); }
 
         private void init()
@@ -20,13 +21,13 @@ namespace PodpisBio.Src
 
             double diagonalPx = Math.Sqrt(Math.Pow(widthPx, 2) + Math.Pow(heightPx, 2));
 
-            this.CPI = diagonalPx / diagonalInch / 2.54;
+            this.PPC = diagonalPx / diagonalInch / 2.54;
         }
 
-        public double getCPI() { return CPI; }
-        public double toPixels(double milimeters)
+        public double getPPC() { return PPC; }
+        public double convertToPixels(double milimeters)
         {
-            return  (CPI * milimeters / 10.00);
+            return  (PPC * milimeters / 10.00);
         }
     }
 }
