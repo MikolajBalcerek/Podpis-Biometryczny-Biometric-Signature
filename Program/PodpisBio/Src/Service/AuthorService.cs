@@ -10,7 +10,7 @@ namespace PodpisBio.Src.Service
 {
     class AuthorService : RestService
     {
-        public AuthorService() { getObjectAsync<Object>(""); }
+        public AuthorService() { }
 
         public Author.Author getAuthor(int id)
         {

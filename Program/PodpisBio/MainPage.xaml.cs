@@ -83,11 +83,11 @@ namespace PodpisBio
             RealScreenSizeCalculator calc = new RealScreenSizeCalculator();
             int width = (int) calc.convertToPixels(mmWidth);
             int height = (int)calc.convertToPixels(mmHeight);
-            inkCanvas1.Height = height;
-            inkCanvas1.Width = width;
-            background.Height = height;
-            background.Width = width;
-
+            inkCanvasHolder.Height = height;
+            inkCanvasHolder.Width = width;
+            guideLine.X1 = 0.05 * width;
+            guideLine.X2 = 0.95 * width;
+            guideLine.Y1 = guideLine.Y2 = 0.7 * height;
         }
 
         private void setNavbarColor()
@@ -195,7 +195,6 @@ namespace PodpisBio
         //Add signature
         private void addSignature(List<InkStroke> strokes)
         {
-            Debug.WriteLine("Adam dodaje podpis.");
             bool isOriginal = false;
             //IsChecked zwraca typ 'bool?', może posiadać wartość null stąd dodatkowy if tutaj sprawdzający czy nie zwraca nulla
             if (isOriginalCheckBox.IsChecked.HasValue) { isOriginal = isOriginalCheckBox.IsChecked.Value; }
