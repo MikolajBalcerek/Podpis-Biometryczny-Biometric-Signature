@@ -7,24 +7,36 @@
     x:Class="PodpisBio.MainPage"
     mc:Ignorable="d" MinWidth="1200">
 
-    <Grid Background="#ECEFF1" RequestedTheme="Light">
-
-        <Grid x:Name="inkCanvasHolder" Margin="20,150,0,0" Width="300" Height="100" VerticalAlignment="Top" HorizontalAlignment="Left" Background="SkyBlue">
+    <Grid Background="#9FA8DA" RequestedTheme="Light">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="400"/>
+            <ColumnDefinition Width="803*"/>
+        </Grid.ColumnDefinitions>
+        <Rectangle Fill="#3f51b5" HorizontalAlignment="Left" Stroke="Black" VerticalAlignment="Stretch" Margin="-5,0,0,0" Width="400"/>
+        <Grid x:Name="inkCanvasHolder" Margin="0,300,200,0" Width="300" Height="100" VerticalAlignment="Top" HorizontalAlignment="Right" Background="SkyBlue" Grid.Column="1">
             <Rectangle x:Name="background" Fill="#FFF4F4F5" Stroke="Black"/>
             <Line x:Name="guideLine" Stroke="Black" StrokeThickness="1" Opacity="0.3"/>
             <InkCanvas x:Name="inkCanvas1"/>
         </Grid>
         <TextBlock x:Name="label1" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
-        <Button Content="Wyczyść" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Click="Clear_Click"/>
+        <Button Content="Wyczyść" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Click="Clear_Click" Grid.Column="1"/>
         <TextBlock x:Name="strokesCountLabel" HorizontalAlignment="Left" Margin="10,30,0,0" TextWrapping="Wrap" Text="Strokes Count:" VerticalAlignment="Top"/>
         <TextBlock x:Name ="timeLastPressedLabel" HorizontalAlignment="Left" Margin="10,49,0,0" TextWrapping="Wrap" Text="Czas ostatniego naciśnięcia" VerticalAlignment="Top"/>
-        <Button x:Name="saveToFileButton" Content="Zapisz do pliku" HorizontalAlignment="Right" Margin="0,10,468,0" VerticalAlignment="Top" Click="SaveToFile_Click" Height="32"/>
-        <Button x:Name="AddAuthor" Content="Dodaj osobę" HorizontalAlignment="Right" Margin="0,57,468,0" VerticalAlignment="Top" Click="AddAuthor_Click" Width="120"/>
-        <ComboBox x:Name="authorCombobox" HorizontalAlignment="Right" Margin="0,10,216,0" VerticalAlignment="Top" Width="221"/>
-        <TextBox x:Name="authorInputBox" HorizontalAlignment="Right" Margin="0,57,216,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="221" PlaceholderText="Autor"/>
-        <Button Content="Wykresy" HorizontalAlignment="Right" Margin="0,8,620,0" VerticalAlignment="Top" Click="Button_ClickAsync" Width="114"/>
+        <Button x:Name="saveToFileButton" Content="Zapisz do pliku" HorizontalAlignment="Right" Margin="0,10,468,0" VerticalAlignment="Top" Click="SaveToFile_Click" Height="32" Grid.Column="1"/>
+        <Button x:Name="AddAuthor" Content="Dodaj osobę" HorizontalAlignment="Right" Margin="0,57,468,0" VerticalAlignment="Top" Click="AddAuthor_Click" Width="120" Grid.Column="1"/>
+        <ComboBox x:Name="authorCombobox" HorizontalAlignment="Right" Margin="0,10,216,0" VerticalAlignment="Top" Width="221" Grid.Column="1"/>
+        <TextBox x:Name="authorInputBox" HorizontalAlignment="Right" Margin="0,57,216,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="221" PlaceholderText="Autor" Grid.Column="1"/>
+        <Button Content="Wykresy" HorizontalAlignment="Right" Margin="0,8,620,0" VerticalAlignment="Top" Click="Button_ClickAsync" Width="114" Grid.Column="1"/>
         <Canvas x:Name="canvas1" HorizontalAlignment="Left" Height="0" Margin="12,114,0,0" VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.5,0.5"/>
-        <CheckBox x:Name="isOriginalCheckBox" Content="Oryginalny podpis" HorizontalAlignment="Right" Margin="0,57,6,0" VerticalAlignment="Top" Width="174" IsChecked="True"/>
-        <Button x:Name="saveButton" Content="Zapisz" HorizontalAlignment="Right" Margin="0,10,122,0" VerticalAlignment="Top" Width="62" Click="saveButton_Click"/>
+        <CheckBox x:Name="isOriginalCheckBox" Content="Oryginalny podpis" HorizontalAlignment="Right" Margin="0,57,6,0" VerticalAlignment="Top" Width="174" IsChecked="True" Grid.Column="1"/>
+        <Button x:Name="saveButton" Content="Zapisz" HorizontalAlignment="Right" Margin="0,10,122,0" VerticalAlignment="Top" Width="62" Click="saveButton_Click" Grid.Column="1"/>
+        <local:NewButton Margin="220.667,456,0,135" Height="49" Width="114" Grid.Column="1"/>
+        <Button Content="Button" HorizontalAlignment="Stretch" Margin="40,130,40,0" VerticalAlignment="Top" Height="50"/>
+        <Button Content="Button" HorizontalAlignment="Stretch" Margin="40,200,40,0" VerticalAlignment="Top" Height="50"/>
+        <Button Content="Button" HorizontalAlignment="Stretch" Margin="40,270,40,0" VerticalAlignment="Top" Height="50"/>
+        <Button Content="Button" HorizontalAlignment="Stretch" Margin="40,340,40,0" VerticalAlignment="Top" Height="50"/>
     </Grid>
+
+
+
 </Page>

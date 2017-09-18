@@ -45,6 +45,7 @@ namespace PodpisBio
         AuthorController authorController;
         public MainPage()
         {
+            
             //Start the clock!
             timer = new Stopwatch();
             timer.Start();
@@ -61,7 +62,7 @@ namespace PodpisBio
 
             //ściągnięcie listy autorów żeby wyświetliło default
             this.updateAuthorCombobox();
-            this.authorCombobox.SelectedIndex = 0;       
+            this.authorCombobox.SelectedIndex = 0;
         }
 
         private void initRealSizeInkCanvas(double mmWidth, double mmHeight)
