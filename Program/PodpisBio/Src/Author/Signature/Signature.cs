@@ -4,22 +4,59 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using Windows.UI.Input.Inking;
+using PodpisBio.Src.Author;
 
-namespace PodpisBio.Src.Author
+namespace PodpisBio.Src
 {
     class Signature
     {
         private List<Stroke> strokesOriginal = new List<Stroke>();
         private List<Stroke> strokesModified = new List<Stroke>();
         double length;
+        double height;
         bool isOriginal;
 
+        private List<InkStroke> richInkStrokes; //stroke z timestampami od microsoftu
+
+        public void increaseStrokesCount() { this.strokesCount = this.strokesCount + 1; }
+        public int getStrokesCount() { return this.strokesCount; }
+
+        private Author.TimeSize_Probe ownTimeSizeProbe; //klasa badaj¹ca w³asnoœci czasu i rozmiaru podpisu
 
         private int strokesCount;
-        public Signature(bool isOriginal)
+        public Signature(List<InkStroke> richInkStrokesGiven, bool isOriginal)
         {
             strokesCount = 0;
+            length = 0;
+            height = 0;
+            this.richInkStrokes = richInkStrokesGiven;
             this.isOriginal = isOriginal;
+        }
+
+        public Signature(List<Stroke> strokes, bool isOriginal)
+        {
+            strokesCount = 0;
+            length = 0;
+            height = 0;
+            this.isOriginal = isOriginal;
+            this.strokesOriginal = strokes;
+            this.richInkStrokes = new List<InkStroke>();
+            //this.init();
+            //ownTimeSizeProbe = new Author.TimeSize_Probe(this);
+
+        }
+
+        public Signature(List<Stroke> strokes, List<InkStroke> richInkStrokes, bool isOriginal)
+        {
+            strokesCount = 0;
+            length = 0;
+            height = 0;
+            this.isOriginal = isOriginal;
+            this.strokesOriginal = strokes;
+            this.richInkStrokes = richInkStrokes;
+            //this.init();
+            //ownTimeSizeProbe = new Author.TimeSize_Probe(this);
         }
 
         public void init()
@@ -35,7 +72,11 @@ namespace PodpisBio.Src.Author
                 scaleSignature();
                 fit();
                 calcLength();
+                calcHeight();
             }
+
+            //badanie rozmiaru/czas za pomoc¹ TimeSize klasy
+            ownTimeSizeProbe = new Author.TimeSize_Probe(this);
         }
 
         public void addStroke(Stroke stroke)
@@ -48,20 +89,18 @@ namespace PodpisBio.Src.Author
             this.strokesOriginal = strokes;
         }
         
-        public void increaseStrokesCount()
-        {
-            this.strokesCount = this.strokesCount + 1;
-        }
 
-        public int getStrokesCount()
-        {
-            return this.strokesCount;
-        }
 
         public double getLentgh()
         {
             return this.length;
         }
+
+        public double getHeight()
+        {
+            return this.height;
+        }
+
 
         public List<Stroke> getStrokesOriginal()
         {
@@ -71,6 +110,11 @@ namespace PodpisBio.Src.Author
         public List<Stroke> getStrokesModified()
         {
             return this.strokesModified;
+        }
+
+        public List<InkStroke> getRichStrokes()
+        {
+            return this.richInkStrokes;
         }
 
         public List<Point> getAllOriginalPoints()
@@ -217,6 +261,50 @@ namespace PodpisBio.Src.Author
             }
 
             this.length = len;
+        }
+
+        public void calcHeight()
+        {
+            //liczy wysokoœæ 
+            double height = 0;
+            List<Point> points = this.getAllOriginalPoints();
+            List<double> p = new List<double>();
+
+            for (int i = 0; i < points.Count(); i++)
+            {
+
+                int temp = 0;
+                foreach (Point s in points)
+                {
+                    if ((s.getX() - 1 < points[i].getX() && s.getX() + 1 > points[i].getX()) && (s.getY() > points[i].getY() + 2 || s.getY() < points[i].getY() - 2))
+                    {
+                        temp++;
+                    }
+                }
+                if (temp > 0)
+                {
+                    p.Add(points[i].getY());
+                }
+            }
+            p.Distinct();
+            if (p.Count() > 0)
+            {
+                double min = p[0];
+                double max = p[0];
+                foreach (double elem in p)
+                {
+                    if (elem < min) { min = elem; }
+                    if (elem > max) { max = elem; }
+                }
+                height = max - min;
+                Debug.WriteLine("Wysokosc =" + (max - min));
+            }
+            else
+            {
+                Debug.WriteLine("Wysokosc = 0");
+            }
+
+            this.height = height;
         }
     }
 }

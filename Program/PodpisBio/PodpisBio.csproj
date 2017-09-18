@@ -109,6 +109,7 @@
     <Compile Include="Src\Author\Signature\Point.cs" />
     <Compile Include="Src\Author\Signature\Signature.cs" />
     <Compile Include="Src\Author\Signature\Stroke.cs" />
+    <Compile Include="Src\Author\Signature\TimeSize Probe.cs" />
     <Compile Include="Src\FileController.cs" />
     <Compile Include="Src\RealScreenSizeCalculator.cs" />
     <Compile Include="Src\Service\SignatureService.cs" />
