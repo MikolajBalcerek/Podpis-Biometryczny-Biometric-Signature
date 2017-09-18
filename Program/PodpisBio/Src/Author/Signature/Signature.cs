@@ -31,20 +31,19 @@ namespace PodpisBio.Src
         {
             Strokes = new List<Stroke>();
             StrokesModified = new List<Stroke>();
+            richInkStrokes = new List<InkStroke>();
+            length = 0;
+            height = 0;
         }
         public Signature(List<InkStroke> richInkStrokesGiven, bool isOriginal) : this()
         {
             strokesCount = 0;
-            length = 0;
-            height = 0;
             this.richInkStrokes = richInkStrokesGiven;
             this.isOriginal = isOriginal;
         }
         public Signature(List<Stroke> strokes, bool isOriginal) : this()
         {
             strokesCount = 0;
-            length = 0;
-            height = 0;
             this.Strokes = strokes;
             this.isOriginal = isOriginal;
         }
@@ -52,11 +51,9 @@ namespace PodpisBio.Src
         public Signature(List<Stroke> strokes, List<InkStroke> richInkStrokes, bool isOriginal) : this()
         {
             strokesCount = 0;
-            length = 0;
-            height = 0;
             this.isOriginal = isOriginal;
             this.Strokes = strokes;
-            this.richInkStrokes = new List<InkStroke>();
+            this.richInkStrokes = richInkStrokes;
             //this.init();
             //ownTimeSizeProbe = new Author.TimeSize_Probe(this);
 
@@ -74,9 +71,9 @@ namespace PodpisBio.Src
             {
                 scaleSignature();
                 fit();
-                calcLength();
-                calcHeight();
             }
+            calcLength();
+            calcHeight();
 
             //badanie rozmiaru/czas za pomoc¹ TimeSize klasy
             ownTimeSizeProbe = new Author.TimeSize_Probe(this);
@@ -224,7 +221,7 @@ namespace PodpisBio.Src
 
         public void calcLength()
         {
-            double len = 0;
+            double length = 0;
             List<Point> points = this.getAllModifiedPoints();
             
             List<double> p = new List<double>();

@@ -261,7 +261,7 @@ namespace PodpisBio
             try
             {
                 List<InkStroke> strokes = new List<InkStroke>(inkCanvas1.InkPresenter.StrokeContainer.GetStrokes());
-                //addSignature(strokes);
+                addSignature(strokes);
                 //metoda poniżej już dodaje podpis, przed chwilą mieliśmy podpisy x2
                 Clear_Screen_Add_Strokes();
             }

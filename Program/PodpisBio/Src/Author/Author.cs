@@ -29,12 +29,6 @@ namespace PodpisBio.Src.Author
             this.Id = id;
             this.Name = name;
         }
-        public Author(int id, String name, List<Signature> list) : this()
-        {
-            this.Id = id;
-            this.Name = name;
-
-        }
         public void addSignature(Signature sign)
         {
             this.Signatures.Add(sign);
