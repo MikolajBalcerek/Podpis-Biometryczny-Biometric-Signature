@@ -233,11 +233,15 @@ namespace PodpisBio
             
             //wyświetla informacje o osobnych pociągnięciach
             int __counter__ = 0;
+            //List<Double> magic = this.signature.getTimeSizeProbe().
 
+            
             foreach (double ratio in this.signature.getTimeSizeProbe().getRatioAreaToTimeForEachStroke())
             {
                 __counter__++;
+                InfoBoxTimeSizeProbe.Text += "Ratio Stroke " + __counter__ + "   " + ratio.ToString() + "\n";
             }
+            
 
 
         }

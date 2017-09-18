@@ -127,6 +127,7 @@ namespace PodpisBio.Src.Author
 
         public List<double> getRatioAreaToTimeForEachStroke()
         {
+            return this.ratioAreaToTimeForEachStroke;
         }
 
         public List<TimeSpan> getTimeStampsForEachStroke()
