@@ -58,7 +58,6 @@ namespace PodpisBio.Src
             //this.init();
             //ownTimeSizeProbe = new Author.TimeSize_Probe(this);
         }
-
         public void init()
         {
             List<Stroke> temp = new List<Stroke>();
@@ -217,6 +216,11 @@ namespace PodpisBio.Src
             }
 
 
+        }
+
+        public TimeSize_Probe getTimeSizeProbe()
+        {
+            return this.ownTimeSizeProbe;
         }
 
         public void calcLength()

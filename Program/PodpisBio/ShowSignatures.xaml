@@ -15,5 +15,6 @@
         <ComboBox x:Name="plotCombobox" ItemsSource="{x:Bind plotOptions}" HorizontalAlignment="Right" Margin="0,63,10,0" VerticalAlignment="Top" Width="132" Height="32"/>
         <ComboBox x:Name="autCombobox" ItemsSource="{x:Bind authorNames}" HorizontalAlignment="Right" Margin="0,23,119,0" VerticalAlignment="Top" Width="180" Height="35" SelectionChanged="autComboBox_SelectionChanged"/>
         <ComboBox x:Name="sigCombobox" ItemsSource="{x:Bind signatureIndexes}" HorizontalAlignment="Right" Margin="0,23,10,0" VerticalAlignment="Top" Width="104" Height="35" RenderTransformOrigin="-7.184,0.752" SelectionChanged="sigComboBox_SelectionChanged"/>
+        <TextBlock x:Name="InfoBoxTimeSizeProbe" HorizontalAlignment="Left" Margin="10,23,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="61" Width="486" SelectionChanged="InfoBox_SelectionChanged"/>
     </Grid>
 </Page>

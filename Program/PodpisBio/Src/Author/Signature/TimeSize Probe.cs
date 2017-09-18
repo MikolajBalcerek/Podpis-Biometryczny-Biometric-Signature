@@ -91,7 +91,7 @@ namespace PodpisBio.Src.Author
         private void calculateTotalAreaToTimeRatio()
         //funkcja wewnętrzna licząca stosunek pola podpisu/czas całkowity podpisu
         {
-            //NIE DZIAŁA, DŁUGOŚĆ Z JAKIEGOŚ POWODU JEST ZAWSZE 0
+           
             Debug.WriteLine("TUTAJ" + testedSignature.getHeight() + " " + testedSignature.getLentgh());
             Debug.WriteLine("Liczba:     " + testedSignature.getHeight() * testedSignature.getLentgh());
             totalRatioAreaToTime = (testedSignature.getHeight() * testedSignature.getLentgh()) / this.totalDrawingTime.TotalMilliseconds;
@@ -123,6 +123,10 @@ namespace PodpisBio.Src.Author
             //zwraca stosunek pole podpisu do całkowitego czasu
         {
             return this.TotalRatioAreaToTime;
+        }
+
+        public List<double> getRatioAreaToTimeForEachStroke()
+        {
         }
 
         public List<TimeSpan> getTimeStampsForEachStroke()

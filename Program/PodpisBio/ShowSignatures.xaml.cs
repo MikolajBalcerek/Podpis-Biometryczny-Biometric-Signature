@@ -28,6 +28,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using System.Collections.ObjectModel;
 
 //Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x415
+//Szablon dla osobnego okna Wykresy
 
 namespace PodpisBio
 {
@@ -47,7 +48,7 @@ namespace PodpisBio
 
             String[] options = { "Podpis", "Oś X", "Oś Y", "Siła", "TiltX", "TiltY",
                 "Szybkość", "Szybkość_X", "Szybkość_Y",
-                "Przyspieszenie", "Przyspieszenie_X", "Przyspieszenie_Y" };
+                "Przyspieszenie", "Przyspieszenie_X", "Przyspieszenie_Y"};
             foreach (var x in options)
                 plotOptions.Add(x);
 
@@ -91,6 +92,7 @@ namespace PodpisBio
             var author = this.autController.getAuthor(authorName);
             var index = sigCombobox.SelectedIndex;
             this.signature = author.getSignature(index);
+            updateInfoBoxTimeSize(); //wyświetla informacje o TimeSizeProbe dla tego podpisu
         }
 
         private void drawPoints(PointCollection points)
@@ -213,6 +215,31 @@ namespace PodpisBio
                     points.Add(new Windows.Foundation.Point(point.getX(), point.getY()));
                 drawPoints(points);
             }
+        }
+
+
+        private void InfoBox_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            //robi absolutnie nic, wymagane dla InfoBox istnienia
+        }
+
+        private void updateInfoBoxTimeSize()
+        {
+
+            /*aktualizuje box InfoBoxTimeSizeProbe o informacje z TimeSizeProbe dla danego podpisu */
+            InfoBoxTimeSizeProbe.Text = "";
+            InfoBoxTimeSizeProbe.Text = "Total Ratio To Time: " +  this.signature.getTimeSizeProbe().getTotalRatioAreaToTime().ToString() + " \n";
+            
+            
+            //wyświetla informacje o osobnych pociągnięciach
+            int __counter__ = 0;
+
+            foreach (double ratio in this.signature.getTimeSizeProbe().getRatioAreaToTimeForEachStroke())
+            {
+                __counter__++;
+            }
+
+
         }
     }
 }
