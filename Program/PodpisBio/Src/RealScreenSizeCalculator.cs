@@ -18,10 +18,11 @@ namespace PodpisBio.Src
             double widthPx = DisplayInformation.GetForCurrentView().ScreenWidthInRawPixels;
             double heightPx = DisplayInformation.GetForCurrentView().ScreenHeightInRawPixels;
             double diagonalInch = DisplayInformation.GetForCurrentView().DiagonalSizeInInches.Value;
+            double scale = DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
 
             double diagonalPx = Math.Sqrt(Math.Pow(widthPx, 2) + Math.Pow(heightPx, 2));
 
-            this.PPC = diagonalPx / diagonalInch / 2.54;
+            this.PPC = diagonalPx / diagonalInch / 2.54 / scale;
         }
 
         public double getPPC() { return PPC; }

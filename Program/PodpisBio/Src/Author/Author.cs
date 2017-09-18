@@ -59,7 +59,7 @@ namespace PodpisBio.Src.Author
             if (this.Signatures.Count <= index)
             {
                 Debug.WriteLine("indeks większy od liczby podpisów.");
-                getSignature();
+                //getSignature();
             }
             return this.Signatures[index];
         }
