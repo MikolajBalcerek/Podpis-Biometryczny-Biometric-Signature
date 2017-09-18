@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PodpisBio.Src.Service;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,15 +11,32 @@ namespace PodpisBio.Src.Author
     {
         public List<Author> authors = new List<Author>();
 
+        private AuthorService service;
+
         public AuthorController()
         {
+            service = new AuthorService();
             //domyślny autor pusty
             this.authors.Add(new Author(authors.Count, "Default"));
+
+            this.authors.AddRange(service.getAuthors());
         }
 
         public void addAuthor(String name)
         {
-            this.authors.Add(new Author(authors.Count, name));
+            Author author = new Author(name);
+            author = service.postAuthor(author);
+            if (author != null) { authors.Add(author); }
+
+            /*
+            Author author = new Author(name);
+            var response = service.postAuthor(author);
+            if (response.IsSuccessStatusCode)
+            {
+                author = service.deserializeJson<Author>(response.Content.ReadAsStringAsync().Result);
+                this.authors.Add(author);
+            }*/
+            
         }
         public List<String> getAuthorsNames()
         {

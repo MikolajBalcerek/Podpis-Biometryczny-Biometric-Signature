@@ -5,29 +5,30 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Http;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
+using PodpisBio.Src.Author;
 
 namespace PodpisBio.Src.Service
 {
-    class SignatureService
+    class SignatureService : RestService
     {
-        public SignatureService()
+        public SignatureService() { }
+
+        public Signature getSignature(int id)
         {
-            //FetchAsync("http://localhost:61817/Api/Authors");
+            return getObjectAsync<Signature>("Signatures/" + id);
         }
 
-        public async void FetchAsync(string url)
+        public List<Signature> getSignatures()
         {
-            string jsonString;
+            return getObjectAsync<List<Signature>>("Signatures/");
+        }
 
-            using (var httpClient = new System.Net.Http.HttpClient())
-            {
-                var stream = await httpClient.GetStreamAsync(url);
-                
-
-                StreamReader reader = new StreamReader(stream);
-                jsonString = reader.ReadToEnd();
-                Debug.WriteLine(jsonString);
-            }
+        public Signature postSignature(Signature signature)
+        {
+            return postObjectAsync<Signature>("Signatures/", signature);
         }
     }
 }

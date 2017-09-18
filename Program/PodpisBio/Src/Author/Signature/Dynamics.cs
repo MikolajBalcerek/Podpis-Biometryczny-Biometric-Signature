@@ -114,7 +114,7 @@ namespace PodpisBio.Src.Author
             derivative.Acc = this.calcAcc(derivative, prevDerivative, current, prev);
             derivative.DtiltX = this.calcDtiltX(prev, current);
             derivative.DtiltY = this.calcDtiltY(prev, current);
-            //Debug.WriteLine("Adam policzyl pochodne v = " + derivative.Velocity + " i acc = " + derivative.Acc);
+            //Debug.WriteLine("Adam policzył pochodne");
             return derivative;
         }
 

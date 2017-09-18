@@ -12,7 +12,7 @@ namespace RestService.Models
             Signatures = new HashSet<Signature>();
         }
         public int Id { get; set; }
-        public String name { get; set; }
+        public String Name { get; set; }
         public virtual ICollection<Signature> Signatures { get; set; }
     }
 }

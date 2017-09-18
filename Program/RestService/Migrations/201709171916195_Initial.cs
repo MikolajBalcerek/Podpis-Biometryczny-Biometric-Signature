@@ -12,7 +12,7 @@ namespace RestService.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        name = c.String(),
+                        Name = c.String(),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -21,7 +21,7 @@ namespace RestService.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        isOrginal = c.Boolean(nullable: false),
+                        isOriginal = c.Boolean(nullable: false),
                         AuthorId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
