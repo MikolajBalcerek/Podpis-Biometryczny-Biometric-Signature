@@ -260,7 +260,7 @@ namespace PodpisBio.Src
                 Debug.WriteLine("Dlugosc = 0");
             }
 
-            this.length = len;
+            this.length = length;
         }
 
         public void calcHeight()
