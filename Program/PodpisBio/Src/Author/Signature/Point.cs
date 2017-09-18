@@ -43,7 +43,7 @@ namespace PodpisBio.Src
 
         public float getX() { return X; }
 
-        public float getY() { return X; }
+        public float getY() { return Y; }
 
         public float getPressure() { return this.Pressure; }
 
