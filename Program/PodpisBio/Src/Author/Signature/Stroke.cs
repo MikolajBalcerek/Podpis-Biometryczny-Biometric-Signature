@@ -10,8 +10,10 @@ namespace PodpisBio.Src.Author
 {
     class Stroke
     {
+        //PRAMETRY AKTUALIZOWANE Z BAZĄ DANYCH//
         public List<Point> Points { get; set; }
         public bool isScaled { get; set; }
+        //KONIEC//
 
         public List<Derivatives> derivatives { get; set; }
 

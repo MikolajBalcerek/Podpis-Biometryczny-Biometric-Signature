@@ -10,8 +10,14 @@ namespace PodpisBio.Src
 {
     class Point
     {
-        public float X, Y, Pressure, tiltX, tiltY;
-        public long Timestamp;
+        //PRAMETRY AKTUALIZOWANE Z BAZĄ DANYCH//
+        public float X { get; set; }
+        public float Y { get; set; }
+        public float Pressure { get; set; }
+        public long Timestamp { get; set; }
+        //KONIEC//
+
+        public float tiltX, tiltY;
 
         public Point(){}
 

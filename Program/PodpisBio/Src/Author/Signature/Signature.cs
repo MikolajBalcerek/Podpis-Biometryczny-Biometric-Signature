@@ -11,10 +11,12 @@ namespace PodpisBio.Src
 {
     class Signature
     {
+        //PRAMETRY AKTUALIZOWANE Z BAZ¥ DANYCH//
         public int AuthorId { get; set; }
         public List<Stroke> Strokes { get; set; }
         public List<Stroke> StrokesModified { get; set; }
         public bool isOriginal { get; set; }
+        //KONIEC//
 
         double length;
         double height;
@@ -30,34 +32,25 @@ namespace PodpisBio.Src
         public Signature()
         {
             Strokes = new List<Stroke>();
+
             StrokesModified = new List<Stroke>();
             richInkStrokes = new List<InkStroke>();
             length = 0;
             height = 0;
         }
-        public Signature(List<InkStroke> richInkStrokesGiven, bool isOriginal) : this()
+        //G³ówny konstruktor do tworzenia sygnatury
+        public Signature(List<Stroke> strokes, int authorId, bool isOriginal) : this()
         {
-            strokesCount = 0;
-            this.richInkStrokes = richInkStrokesGiven;
             this.isOriginal = isOriginal;
-        }
-        public Signature(List<Stroke> strokes, bool isOriginal) : this()
-        {
-            strokesCount = 0;
+            this.AuthorId = authorId;
             this.Strokes = strokes;
-            this.isOriginal = isOriginal;
+            this.strokesCount = strokes.Count;
+
+            //Docelowo bêdzie wykonywane z tego poziomu, jednak konstruktor nie inicjalizuje wszystkich potrzebnych zmiennych (brak w modelu bazy danych)
+            //init();
         }
 
-        public Signature(List<Stroke> strokes, List<InkStroke> richInkStrokes, bool isOriginal) : this()
-        {
-            strokesCount = 0;
-            this.isOriginal = isOriginal;
-            this.Strokes = strokes;
-            this.richInkStrokes = richInkStrokes;
-            //this.init();
-            //ownTimeSizeProbe = new Author.TimeSize_Probe(this);
-
-        }
+        //Inicjalizacja obliczeñ
         public void init()
         {
             List<Stroke> temp = new List<Stroke>();
@@ -100,7 +93,6 @@ namespace PodpisBio.Src
             return this.height;
         }
 
-
         public List<Stroke> getStrokesOriginal()
         {
             return this.Strokes;
@@ -114,6 +106,10 @@ namespace PodpisBio.Src
         public List<InkStroke> getRichStrokes()
         {
             return this.richInkStrokes;
+        }
+        public void setRichStrokes(List<InkStroke> richInkStrokes)
+        {
+            this.richInkStrokes = richInkStrokes;
         }
 
         public List<Point> getAllOriginalPoints()

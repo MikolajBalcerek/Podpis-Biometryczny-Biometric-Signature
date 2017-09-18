@@ -45,7 +45,6 @@ namespace PodpisBio
         AuthorController authorController;
         public MainPage()
         {
-            SignatureService service = new SignatureService();
             //Start the clock!
             timer = new Stopwatch();
             timer.Start();
@@ -56,13 +55,13 @@ namespace PodpisBio
             this.initializePenHandlers();
 
             //inicjalizacja wielkości pola do rysowania
-            initRealSizeInkCanvas(110, 40);
+            this.initRealSizeInkCanvas(110, 40);
 
-            setNavbarColor();
+            this.setNavbarColor();
 
             //ściągnięcie listy autorów żeby wyświetliło default
-            updateAuthorCombobox();
-            authorCombobox.SelectedIndex = 0;       
+            this.updateAuthorCombobox();
+            this.authorCombobox.SelectedIndex = 0;       
         }
 
         private void initRealSizeInkCanvas(double mmWidth, double mmHeight)
@@ -157,8 +156,10 @@ namespace PodpisBio
 
 
         //Add signature
-        private void addSignature(List<InkStroke> strokes)
+        private void addSignature()
         {
+            List<InkStroke> strokes = new List<InkStroke>(inkCanvas1.InkPresenter.StrokeContainer.GetStrokes());
+
             if (strokes.Count == 0)
             {
                 DisplayNoSignaturesDialog();
@@ -168,15 +169,20 @@ namespace PodpisBio
             bool isOriginal = false;
             //IsChecked zwraca typ 'bool?', może posiadać wartość null stąd dodatkowy if tutaj sprawdzający czy nie zwraca nulla
             if (isOriginalCheckBox.IsChecked.HasValue) { isOriginal = isOriginalCheckBox.IsChecked.Value; }
+            else { throw new Exception("isOriginal inputbox nie posiada wartości (jest wyłączony?)"); }
+
             try
             {
                 var author = authorController.getAuthor(authorCombobox.SelectedItem.ToString());
-                author.addSignature(signatureController.addSignature(strokes, isOriginal));
+                if(signatureController.addSignature(strokes, author, isOriginal) == null)
+                {
+                    DisplayWarningMessage("Błąd", "Próba dodania podpisu zakończona niepowodzeniem");
+                }
+                
             }
             catch (System.NullReferenceException)
             {
-                //authorController.getAuthor("Default").addSignature(signatureController.addSignature(strokes, isOriginal));
-                //nie było podanego autora, autor domyślny
+                DisplayWarningMessage("Błąd", "Próba dodania podpisu zakończona niepowodzeniem");
             }
         }
 
@@ -258,13 +264,24 @@ namespace PodpisBio
             ContentDialogResult result = await dialog.ShowAsync();
         }
 
+        private async void DisplayWarningMessage(String title, String content)
+        {
+            ContentDialog dialog = new ContentDialog
+            {
+                Title = title,
+                Content = content,
+                CloseButtonText = "Zamknij",
+                DefaultButton = ContentDialogButton.Close
+            };
+
+            ContentDialogResult result = await dialog.ShowAsync();
+        }
+
         private void saveButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                List<InkStroke> strokes = new List<InkStroke>(inkCanvas1.InkPresenter.StrokeContainer.GetStrokes());
-                addSignature(strokes);
-                //metoda poniżej już dodaje podpis, przed chwilą mieliśmy podpisy x2
+                addSignature();
                 Clear_Screen_Add_Strokes();
             }
             catch(ArgumentOutOfRangeException){ Debug.WriteLine("Nie można zapisać pustego podpisu!"); }

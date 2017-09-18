@@ -12,16 +12,15 @@ namespace PodpisBio.Src.Author
 {
     class Author
     {
+        //PRAMETRY AKTUALIZOWANE Z BAZĄ DANYCH//
         public int Id { get; set; }
         public String Name { get; set; }
         public List<Signature> Signatures { get; set; }
-
-        private SignatureService signatureService;
+        //KONIEC//
 
         public Author()
         {
             Signatures = new List<Signature>();
-            signatureService = new SignatureService();
         }
         public Author(String name) : this() { this.Name = name; }
         public Author(int id, String name) : this()
@@ -29,12 +28,10 @@ namespace PodpisBio.Src.Author
             this.Id = id;
             this.Name = name;
         }
-        public void addSignature(Signature sign)
+
+        public void addSignature(Signature signature)
         {
-            sign.AuthorId = this.Id;
-            
-            sign = signatureService.postSignature(sign);
-            if (sign != null) { this.Signatures.Add(sign); }
+            this.Signatures.Add(signature);
         }
 
         public int getId() { return Id; }
