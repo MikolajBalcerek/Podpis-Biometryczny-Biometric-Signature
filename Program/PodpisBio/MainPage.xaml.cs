@@ -222,6 +222,7 @@ namespace PodpisBio
         }
 
         private async void Button_ClickAsync(object sender, RoutedEventArgs e)
+         //GUZIK WYKRESY
         {
             if (authorController.Empty())
             {
