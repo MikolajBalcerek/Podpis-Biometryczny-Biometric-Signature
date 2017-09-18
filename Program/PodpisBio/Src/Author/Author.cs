@@ -31,12 +31,10 @@ namespace PodpisBio.Src.Author
         }
         public void addSignature(Signature sign)
         {
-            this.Signatures.Add(sign);
-
             sign.AuthorId = this.Id;
             
             sign = signatureService.postSignature(sign);
-            if (sign != null) { Signatures.Add(sign); }
+            if (sign != null) { this.Signatures.Add(sign); }
         }
 
         public int getId() { return Id; }

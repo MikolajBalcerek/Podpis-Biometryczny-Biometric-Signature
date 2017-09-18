@@ -170,7 +170,8 @@ namespace PodpisBio
             if (isOriginalCheckBox.IsChecked.HasValue) { isOriginal = isOriginalCheckBox.IsChecked.Value; }
             try
             {
-                authorController.getAuthor(authorCombobox.SelectedItem.ToString()).addSignature(signatureController.addSignature(strokes, isOriginal));
+                var author = authorController.getAuthor(authorCombobox.SelectedItem.ToString());
+                author.addSignature(signatureController.addSignature(strokes, isOriginal));
             }
             catch (System.NullReferenceException)
             {
