@@ -227,22 +227,29 @@ namespace PodpisBio
         {
 
             /*aktualizuje box InfoBoxTimeSizeProbe o informacje z TimeSizeProbe dla danego podpisu */
-            InfoBoxTimeSizeProbe.Text = "";
-            InfoBoxTimeSizeProbe.Text = "Total Ratio To Time: " +  this.signature.getTimeSizeProbe().getTotalRatioAreaToTime().ToString() + " \n";
-            
-            
-            //wyświetla informacje o osobnych pociągnięciach
-            int __counter__ = 0;
-            //List<Double> magic = this.signature.getTimeSizeProbe().
-
-            
-            foreach (double ratio in this.signature.getTimeSizeProbe().getRatioAreaToTimeForEachStroke())
+            try //niepotrzebne ominięcie starego problemu dla dodania bazy danych, może zostać chwilowo
             {
-                __counter__++;
-                InfoBoxTimeSizeProbe.Text += "Ratio Stroke " + __counter__ + "   " + ratio.ToString() + "\n";
+                InfoBoxTimeSizeProbe.Text = "";
+                InfoBoxTimeSizeProbe.Text = "Total Ratio To Time: " + this.signature.getTimeSizeProbe().getTotalRatioAreaToTime().ToString() + " \n";
+
+                //wyświetla informacje o osobnych pociągnięciach
+                int __counter__ = 0;
+                //List<Double> magic = this.signature.getTimeSizeProbe().
+
+
+                foreach (double ratio in this.signature.getTimeSizeProbe().getRatioAreaToTimeForEachStroke())
+                {
+                    __counter__++;
+                    InfoBoxTimeSizeProbe.Text += "Ratio Stroke " + __counter__ + "   " + ratio.ToString() + "\n";
+                }
+
+            }
+            catch (System.NullReferenceException)
+            {
+                InfoBoxTimeSizeProbe.Text = "Nie można wyświetlić informacji o TimeSizeProbe ze względu na brak TimeSizeProbe dla tego podpisu";
+
             }
             
-
 
         }
     }

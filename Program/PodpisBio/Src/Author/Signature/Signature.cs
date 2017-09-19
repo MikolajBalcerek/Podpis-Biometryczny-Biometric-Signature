@@ -20,7 +20,7 @@ namespace PodpisBio.Src
 
         double length;
         double height;
-        private List<InkStroke> richInkStrokes; //stroke z timestampami od microsoftu
+        //private List<InkStroke> richInkStrokes; //stroke z timestampami od microsoftu
 
         public void increaseStrokesCount() { this.strokesCount = this.strokesCount + 1; }
         public int getStrokesCount() { return this.strokesCount; }
@@ -34,7 +34,7 @@ namespace PodpisBio.Src
             Strokes = new List<Stroke>();
 
             StrokesModified = new List<Stroke>();
-            richInkStrokes = new List<InkStroke>();
+            //richInkStrokes = new List<InkStroke>();
             length = 0;
             height = 0;
         }
@@ -68,7 +68,10 @@ namespace PodpisBio.Src
             calcHeight();
 
             //badanie rozmiaru/czas za pomoc¹ TimeSize klasy
-            ownTimeSizeProbe = new Author.TimeSize_Probe(this);
+            if (object.ReferenceEquals(null, this.ownTimeSizeProbe))
+            {
+                this.ownTimeSizeProbe = new TimeSize_Probe(this);
+            }
         }
 
         public void addStroke(Stroke stroke)
@@ -101,15 +104,6 @@ namespace PodpisBio.Src
         public List<Stroke> getStrokesModified()
         {
             return this.StrokesModified;
-        }
-
-        public List<InkStroke> getRichStrokes()
-        {
-            return this.richInkStrokes;
-        }
-        public void setRichStrokes(List<InkStroke> richInkStrokes)
-        {
-            this.richInkStrokes = richInkStrokes;
         }
 
         public List<Point> getAllOriginalPoints()
@@ -216,13 +210,17 @@ namespace PodpisBio.Src
 
         public TimeSize_Probe getTimeSizeProbe()
         {
+            if(object.ReferenceEquals(null, this.ownTimeSizeProbe))
+            {
+                this.ownTimeSizeProbe = new TimeSize_Probe(this);
+            }
             return this.ownTimeSizeProbe;
         }
 
         public void calcLength()
         {
             double length = 0;
-            List<Point> points = this.getAllModifiedPoints();
+            List<Point> points = this.getAllOriginalPoints();
             
             List<double> p = new List<double>();
 

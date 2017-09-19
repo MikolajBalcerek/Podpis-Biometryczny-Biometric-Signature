@@ -55,7 +55,7 @@ namespace PodpisBio
             this.initializePenHandlers();
 
             //inicjalizacja wielkości pola do rysowania
-            this.initRealSizeInkCanvas(110, 40);
+            this.initRealSizeInkCanvas(130, 50);
 
             this.setNavbarColor();
 
