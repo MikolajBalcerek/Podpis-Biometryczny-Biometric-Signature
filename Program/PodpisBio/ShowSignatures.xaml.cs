@@ -227,7 +227,7 @@ namespace PodpisBio
         {
 
             /*aktualizuje box InfoBoxTimeSizeProbe o informacje z TimeSizeProbe dla danego podpisu */
-            try //po dodaniu bazy danych syfi się, działało przed bazą danych, odwołanie się do getTimeSizeProbe() zwraca error
+            try //niepotrzebne ominięcie starego problemu dla dodania bazy danych, może zostać chwilowo
             {
                 InfoBoxTimeSizeProbe.Text = "";
                 InfoBoxTimeSizeProbe.Text = "Total Ratio To Time: " + this.signature.getTimeSizeProbe().getTotalRatioAreaToTime().ToString() + " \n";
@@ -246,7 +246,7 @@ namespace PodpisBio
             }
             catch (System.NullReferenceException)
             {
-                InfoBoxTimeSizeProbe.Text = "TODO!!!!!! Nie można wyświetlić informacji o TimeSizeProbe dla starych podpisów z jakiegoś powodu";
+                InfoBoxTimeSizeProbe.Text = "Nie można wyświetlić informacji o TimeSizeProbe ze względu na brak TimeSizeProbe dla tego podpisu";
 
             }
             

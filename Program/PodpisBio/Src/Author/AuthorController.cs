@@ -31,6 +31,14 @@ namespace PodpisBio.Src.Author
                 {
                     //Jeśli pobrano autorów, dodaj do listy
                     this.authors.AddRange(service.getAuthors());
+                    foreach(var author in authors)
+                    {
+                        foreach(var sign in author.getSignatures())
+                        {
+                            sign.init();
+
+                        }
+                    }
                 }  
             }
             else { throw new Exception("Błąd pobierania autorów z bazy"); }
