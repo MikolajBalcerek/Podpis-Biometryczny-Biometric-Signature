@@ -13,8 +13,8 @@ namespace PodpisBio.Src.Author
         //ZMIENNE
         private double heightY; //wysokość podpisu
         private double lengthX; //długość podpisu
-        private TimeSpan totalDrawingTime; //totalDrawingTime całego podpisu tylko czas aktualnych pociągnięć
-        private List<TimeSpan> TimeStampsForEachStroke;
+        private double totalDrawingTime; //totalDrawingTime całego podpisu tylko czas aktualnych pociągnięć
+        private List<double> TimeStampsForEachStroke;
         Signature testedSignature; //dana sygnatura dla TimeSize_Probe do badania
         private double totalRatioAreaToTime; //całkowity stosunek pola do czasu
         private List<Tuple<double, double, double>> StrokesDimensionsForEachStroke; //szerokość, długość, pole dla każdego ze Stroków
@@ -24,8 +24,8 @@ namespace PodpisBio.Src.Author
         public TimeSize_Probe(Signature givenSignature)
         {
             //Ustawianie początkowych wartości klasy TimeSize_Probe
-            totalDrawingTime = new TimeSpan(0);
-            TimeStampsForEachStroke = new List<TimeSpan>();
+            totalDrawingTime = 0;
+            TimeStampsForEachStroke = new List<double>();
             ratioAreaToTimeForEachStroke = new List<double>();
             this.StrokesDimensionsForEachStroke = new List<Tuple<double, double, double>>();
 
@@ -53,7 +53,7 @@ namespace PodpisBio.Src.Author
         // funkcja wewnętrzna dla konstruktora
         {
             //dla każdego pociągnięcia
-            foreach (InkStroke stroke in testedSignature.getRichStrokes())
+            foreach (Stroke stroke in testedSignature.getStrokesOriginal())
             {
                 //weź początek pisania w pociągnięciu i koniec pisania
                 /*
@@ -64,12 +64,12 @@ namespace PodpisBio.Src.Author
                 ulong delta = ending_time - starting_time;
 
                */
-                TimeStampsForEachStroke.Add(stroke.StrokeDuration.Value);
-                /*
+                //TimeStampsForEachStroke.Add(stroke.StrokeDuration.Value); //Stary strokeDuration z richStrokes();
+
+                TimeStampsForEachStroke.Add(stroke.DurationInMilis);
                 //totalDrawingTime całego podpisu tylko czas aktualnych pociągnięć
-                totalDrawingTime = totalDrawingTime + delta;
-                */
-                totalDrawingTime = stroke.StrokeDuration.Value + totalDrawingTime;
+                // totalDrawingTime = totalDrawingTime + delta;
+                totalDrawingTime = stroke.DurationInMilis + totalDrawingTime;
             }
             Debug.WriteLine("Total Drawing Time dla tego podpisu to: " + totalDrawingTime);
         }
@@ -79,10 +79,10 @@ namespace PodpisBio.Src.Author
         // funkcja wewnętrzna dla konstruktora
         {
             //dla każdego pociągnięcia
-            foreach (InkStroke stroke in this.testedSignature.getRichStrokes())
+            foreach (Stroke stroke in testedSignature.getStrokesOriginal())
             {
-                double strokeHeight = stroke.BoundingRect.Height;
-                double strokeWidth = stroke.BoundingRect.Width;
+                double strokeHeight = stroke.Height;
+                double strokeWidth = stroke.Width;
                 this.StrokesDimensionsForEachStroke.Add(new Tuple<double, double, double>(strokeHeight, strokeWidth, strokeHeight * strokeWidth));
                 Debug.WriteLine("Wymiary pociągnięcia to: " + strokeHeight + " " + strokeWidth);
             }
@@ -94,7 +94,7 @@ namespace PodpisBio.Src.Author
            
             Debug.WriteLine("TUTAJ" + testedSignature.getHeight() + " " + testedSignature.getLentgh());
             Debug.WriteLine("Liczba:     " + testedSignature.getHeight() * testedSignature.getLentgh());
-            totalRatioAreaToTime = (testedSignature.getHeight() * testedSignature.getLentgh()) / this.totalDrawingTime.TotalMilliseconds;
+            totalRatioAreaToTime = (testedSignature.getHeight() * testedSignature.getLentgh()) / this.totalDrawingTime;
             Debug.WriteLine("Total Area to Time Ratio: " + TotalRatioAreaToTime);
           
         }
@@ -106,7 +106,7 @@ namespace PodpisBio.Src.Author
             foreach (Tuple<double, double, double> stroke in StrokesDimensionsForEachStroke)
             {
                 //liczy ratio pole do czasu z listy czasów i dodaje do listy ratio
-                double __ratio__ = stroke.Item3 / TimeStampsForEachStroke[__counter__].TotalMilliseconds;
+                double __ratio__ = stroke.Item3 / TimeStampsForEachStroke[__counter__];
                 this.ratioAreaToTimeForEachStroke.Add(__ratio__);
                 Debug.WriteLine("Stroke numer " + __counter__ + "ma ratio rozmiar/czas" + __ratio__);
                 __counter__++;
@@ -114,7 +114,7 @@ namespace PodpisBio.Src.Author
 
         }
 
-        public TimeSpan getTotalDrawingTime()
+        public double getTotalDrawingTime()
            {
                 return this.totalDrawingTime;
            }
@@ -130,7 +130,7 @@ namespace PodpisBio.Src.Author
             return this.ratioAreaToTimeForEachStroke;
         }
 
-        public List<TimeSpan> getTimeStampsForEachStroke()
+        public List<double> getTimeStampsForEachStroke()
         {
             return this.TimeStampsForEachStroke;
         }
