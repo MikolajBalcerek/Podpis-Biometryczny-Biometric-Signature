@@ -42,8 +42,6 @@ namespace PodpisBio.Src
             //inicjalizacja wielkości pola do rysowania
             this.initRealSizeInkCanvas(110, 40);
 
-            this.setNavbarColor();
-
             //ściągnięcie listy autorów żeby wyświetliło default
             this.updateAuthorCombobox();
             this.authorCombobox.SelectedIndex = 0;
@@ -59,23 +57,6 @@ namespace PodpisBio.Src
             guideLine.X1 = 0.05 * width;
             guideLine.X2 = 0.95 * width;
             guideLine.Y1 = guideLine.Y2 = 0.7 * height;
-        }
-
-        private void setNavbarColor()
-        {
-            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
-            {
-                var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-                if (titleBar != null)
-                {
-                    titleBar.ButtonBackgroundColor = Color.FromArgb(255, 133, 22, 22);
-                    titleBar.ButtonForegroundColor = Colors.White;
-                    titleBar.BackgroundColor = Color.FromArgb(255, 153, 22, 22);
-                    titleBar.ForegroundColor = Colors.White;
-
-                    //Color.FromArgb(255, 63, 81, 181);
-                }
-            }
         }
 
         private void initializePenHandlers()

@@ -6,6 +6,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:Maps="using:Windows.UI.Xaml.Controls.Maps"
     x:Class="PodpisBio.MainPage"
     mc:Ignorable="d" MinWidth="800" MinHeight="500">
+    
+    
 
     <Grid Background="White" RequestedTheme="Light">
         <Grid.ColumnDefinitions>
@@ -32,6 +34,7 @@
             <Button Content="Weryfikowanie" Click="Weryfikowanie_Click" HorizontalAlignment="Stretch" Height="70"/>
             <Button Content="Podpisy" Click="Podpisy_Click" HorizontalAlignment="Stretch" Height="70"/>
             <Button Content="Wykresy" Click="Wykresy_Click" HorizontalAlignment="Stretch" Height="70"/>
+            <Button Content="Ustawienia" Click="Ustawienia_Click" HorizontalAlignment="Stretch" Height="70"/>
         </StackPanel>
 
 
