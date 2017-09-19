@@ -20,6 +20,7 @@ namespace PodpisBio
             this.InitializeComponent();
             this.setNavbarColor();
             this.goToDefaultPage(this, null);
+            this.showTitleBar(true);
         }
 
         //Ustawia kolor paska tytułowego w oknie aplikacji
@@ -30,12 +31,27 @@ namespace PodpisBio
                 var titleBar = ApplicationView.GetForCurrentView().TitleBar;
                 if (titleBar != null)
                 {
-                    titleBar.ButtonBackgroundColor = Color.FromArgb(255, 133, 22, 22);
-                    titleBar.ButtonForegroundColor = Colors.White;
-                    titleBar.BackgroundColor = Color.FromArgb(255, 153, 22, 22);
-                    titleBar.ForegroundColor = Colors.White;
+                    var textColor = Colors.White;
+                    var titlebarBackgroundColor = Color.FromArgb(255, 153, 22, 22);
+                    var buttonBackgroundColor = Color.FromArgb(255, 133, 22, 22);
+
+                    titleBar.ButtonBackgroundColor = buttonBackgroundColor;
+                    titleBar.ButtonForegroundColor = textColor;
+                    titleBar.BackgroundColor = titlebarBackgroundColor;
+                    titleBar.ForegroundColor = textColor;
+                    titleBar.InactiveBackgroundColor = titlebarBackgroundColor;
+                    titleBar.InactiveForegroundColor = Colors.LightGray;
+                    titleBar.ButtonInactiveBackgroundColor = buttonBackgroundColor;
+                    titleBar.ButtonInactiveForegroundColor = textColor;
                 }
             }
+        }
+
+        private void showTitleBar(bool show)
+        {
+            ApplicationViewTitleBar formattableTitleBar = ApplicationView.GetForCurrentView().TitleBar;
+            CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = !show;
         }
 
         private void goToDefaultPage(object sender, RoutedEventArgs e)
