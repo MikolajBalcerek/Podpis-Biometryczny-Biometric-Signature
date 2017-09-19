@@ -1,51 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Core;
 using Windows.UI.Input.Inking.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using System.Diagnostics;
-using PodpisBio.Src;
-using PodpisBio.Src.Author;
-using System.Threading.Tasks;
-using System.Text;
 using Windows.UI.Input.Inking;
 using Windows.ApplicationModel.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI;
-using Windows.UI.Xaml.Shapes;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.Graphics.Display;
-using PodpisBio.Src.Service;
 using Windows.Foundation.Metadata;
+using PodpisBio.Src.Author;
 
-//Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x415
+//Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace PodpisBio
+namespace PodpisBio.Src
 {
     /// <summary>
     /// Pusta strona, która może być używana samodzielnie lub do której można nawigować wewnątrz ramki.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class SignaturePage : Page
     {
         private int strokesCount; //Liczba przyciśnięć tylko do poglądu, Signature ma swój
         public Stopwatch timer; //Obiekt zajmujący się czasem ogólnoaplikacji
 
         SignatureController signatureController;
         AuthorController authorController;
-        public MainPage()
+        public SignaturePage()
         {
-            
+
             //Start the clock!
             timer = new Stopwatch();
             timer.Start();
@@ -68,7 +52,7 @@ namespace PodpisBio
         private void initRealSizeInkCanvas(double mmWidth, double mmHeight)
         {
             RealScreenSizeCalculator calc = new RealScreenSizeCalculator();
-            int width = (int) calc.convertToPixels(mmWidth);
+            int width = (int)calc.convertToPixels(mmWidth);
             int height = (int)calc.convertToPixels(mmHeight);
             inkCanvasHolder.Height = height;
             inkCanvasHolder.Width = width;
@@ -127,7 +111,7 @@ namespace PodpisBio
         private void Core_PointerPressing(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
             strokesCount = strokesCount + 1;
-            
+
             updateInfoInLabel(strokesCountLabel, "Ilość naciśnięć: " + strokesCount);
             updateInfoInLabel(timeLastPressedLabel, "Czas ostatniego naciśnięcia w ms:  " + timer.ElapsedMilliseconds);
             //Debug.WriteLine("Adam wcisnął " + strokesCount + " razy" + "ostatni raz " + timer.ElapsedMilliseconds);
@@ -177,11 +161,11 @@ namespace PodpisBio
             try
             {
                 var author = authorController.getAuthor(authorCombobox.SelectedItem.ToString());
-                if(signatureController.addSignature(strokes, author, isOriginal) == null)
+                if (signatureController.addSignature(strokes, author, isOriginal) == null)
                 {
                     DisplayWarningMessage("Błąd", "Próba dodania podpisu zakończona niepowodzeniem");
                 }
-                
+
             }
             catch (System.NullReferenceException)
             {
@@ -204,7 +188,7 @@ namespace PodpisBio
                 Debug.WriteLine("Author name cannot be empty");
                 authorInputBox.Background = new SolidColorBrush(Color.FromArgb(180, 255, 0, 0));
             }
-            else if(authorController.isContaining(authorInputBox.Text))
+            else if (authorController.isContaining(authorInputBox.Text))
             {
                 Debug.WriteLine("Author already exists");
                 authorInputBox.Background = new SolidColorBrush(Color.FromArgb(180, 255, 0, 0));
@@ -215,14 +199,14 @@ namespace PodpisBio
                 authorInputBox.Text = "";
                 authorInputBox.Background = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
                 updateAuthorCombobox();
-            } 
+            }
         }
 
         private void updateAuthorCombobox()
         {
             authorCombobox.Items.Clear();
 
-            foreach(var authorName in authorController.getAuthorsNames())
+            foreach (var authorName in authorController.getAuthorsNames())
             {
                 authorCombobox.Items.Add(authorName);
             }
@@ -231,7 +215,7 @@ namespace PodpisBio
         }
 
         private async void Button_ClickAsync(object sender, RoutedEventArgs e)
-         //GUZIK WYKRESY
+        //GUZIK WYKRESY
         {
             if (authorController.Empty())
             {
@@ -287,9 +271,7 @@ namespace PodpisBio
                 addSignature();
                 Clear_Screen_Add_Strokes();
             }
-            catch(ArgumentOutOfRangeException){ Debug.WriteLine("Nie można zapisać pustego podpisu!"); }
-
-            
+            catch (ArgumentOutOfRangeException) { Debug.WriteLine("Nie można zapisać pustego podpisu!"); }
         }
     }
 }
