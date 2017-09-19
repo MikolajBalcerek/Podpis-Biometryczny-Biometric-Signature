@@ -7,36 +7,61 @@
     x:Class="PodpisBio.MainPage"
     mc:Ignorable="d" MinWidth="1200">
 
-    <Grid Background="#9FA8DA" RequestedTheme="Light">
+    <Grid Background="White" RequestedTheme="Light">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="400"/>
-            <ColumnDefinition Width="803*"/>
+            <ColumnDefinition  Width="200"/>
+            <ColumnDefinition Width="500*"/>
         </Grid.ColumnDefinitions>
-        <Rectangle Fill="#3f51b5" HorizontalAlignment="Left" Stroke="Black" VerticalAlignment="Stretch" Margin="-5,0,0,0" Width="400"/>
-        <Grid x:Name="inkCanvasHolder" Margin="0,300,200,0" Width="300" Height="100" VerticalAlignment="Top" HorizontalAlignment="Right" Background="SkyBlue" Grid.Column="1">
-            <Rectangle x:Name="background" Fill="#FFF4F4F5" Stroke="Black"/>
-            <Line x:Name="guideLine" Stroke="Black" StrokeThickness="1" Opacity="0.3"/>
-            <InkCanvas x:Name="inkCanvas1"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="600*"/>
+        </Grid.RowDefinitions>
+
+        <Border Background="White"/>
+        <Border Grid.Column="0" Grid.Row="1"  Background="#323232"/>
+        <Border Grid.Column="0" Grid.Row="0"  Background="#272727"/>
+        <Border Grid.Column ="1" Grid.Row="0" Background="#a11717"/>
+        <Border Grid.Column ="1" Grid.Row="1" Background="White"/>
+
+        <!--(0,0) Menu title-->
+        <TextBlock Margin="20,10,10,10" Height="50" TextWrapping="NoWrap" Text="Menu" VerticalAlignment="Top" FontSize="35" Foreground="White" FontFamily="Arial"/>
+
+        <!--(1,0) Menu content-->
+        <StackPanel Grid.Column="0" Grid.Row="1">
+            <Button Content="Wyszukiwanie" HorizontalAlignment="Stretch" Height="70" Margin="0,100,0,0"/>
+            <Button Content="Weryfikowanie" HorizontalAlignment="Stretch" Height="70"/>
+            <Button Content="Podpisy" HorizontalAlignment="Stretch" Height="70"/>
+            <Button Content="Wykresy" HorizontalAlignment="Stretch" Height="70"/>
+        </StackPanel>
+
+
+        <Grid Grid.Column="1" Grid.Row="1">
+            <StackPanel Margin="20,20,0,0" Width="500" Height="100" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <TextBlock x:Name="penPosition" Text="Pozycja rysika: " HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" />
+                <TextBlock x:Name="strokesCountLabel" Text="Liczba naciśnięć: " HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                <TextBlock x:Name ="timeLastPressedLabel" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Czas ostatniego naciśnięcia" VerticalAlignment="Top"/>
+            </StackPanel>
+            <Button x:Name="AddAuthor" Content="Dodaj osobę" HorizontalAlignment="Left" Margin="30,220,0,0" VerticalAlignment="Top" Click="AddAuthor_Click" Width="120"/>
+            <Button Content="Wyczyść" HorizontalAlignment="Left" Margin="400,290,0,0" VerticalAlignment="Top" Click="Clear_Click" />
+            <Button x:Name="saveToFileButton" Content="Zapisz do pliku" HorizontalAlignment="Left" Margin="30,260,0,0" VerticalAlignment="Top" Click="SaveToFile_Click" Height="32"/>
+            <Button x:Name="saveButton" Content="Zapisz" HorizontalAlignment="Left" Margin="400,250,0,0" VerticalAlignment="Top" Width="76" Click="saveButton_Click"/>
+            <Button Content="Wykresy" HorizontalAlignment="Left" Margin="30,300,0,0" VerticalAlignment="Top" Click="Button_ClickAsync" Width="120" Height="32"/>
+            <ComboBox x:Name="authorCombobox" HorizontalAlignment="Left" Margin="350,180,0,0" VerticalAlignment="Top" Width="306"/>
+            <TextBox x:Name="authorInputBox" HorizontalAlignment="Left" Margin="30,180,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="276" PlaceholderText="Autor"/>
+            <Canvas x:Name="canvas1" HorizontalAlignment="Left" Height="0" Margin="12,114,0,0" VerticalAlignment="Top" Width="60"/>
+            <CheckBox x:Name="isOriginalCheckBox" Content="Oryginalny podpis" HorizontalAlignment="Left" Margin="340,330,0,0" VerticalAlignment="Top" Width="174" IsChecked="True"/>
+
+
+            <!--InkCanvas-->
+            <Grid x:Name="inkCanvasHolder" Margin="500,250,0,0" Width="300" Height="100" VerticalAlignment="Top" HorizontalAlignment="Left" Background="SkyBlue">
+                <Rectangle x:Name="background" Fill="#FFF4F4F5" Stroke="Black"/>
+                <Line x:Name="guideLine" Stroke="Black" StrokeThickness="1" Opacity="0.3"/>
+                <InkCanvas x:Name="inkCanvas1"/>
+            </Grid>
         </Grid>
-        <TextBlock x:Name="label1" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
-        <Button Content="Wyczyść" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Click="Clear_Click" Grid.Column="1"/>
-        <TextBlock x:Name="strokesCountLabel" HorizontalAlignment="Left" Margin="10,30,0,0" TextWrapping="Wrap" Text="Strokes Count:" VerticalAlignment="Top"/>
-        <TextBlock x:Name ="timeLastPressedLabel" HorizontalAlignment="Left" Margin="10,49,0,0" TextWrapping="Wrap" Text="Czas ostatniego naciśnięcia" VerticalAlignment="Top"/>
-        <Button x:Name="saveToFileButton" Content="Zapisz do pliku" HorizontalAlignment="Right" Margin="0,10,468,0" VerticalAlignment="Top" Click="SaveToFile_Click" Height="32" Grid.Column="1"/>
-        <Button x:Name="AddAuthor" Content="Dodaj osobę" HorizontalAlignment="Right" Margin="0,57,468,0" VerticalAlignment="Top" Click="AddAuthor_Click" Width="120" Grid.Column="1"/>
-        <ComboBox x:Name="authorCombobox" HorizontalAlignment="Right" Margin="0,10,216,0" VerticalAlignment="Top" Width="221" Grid.Column="1"/>
-        <TextBox x:Name="authorInputBox" HorizontalAlignment="Right" Margin="0,57,216,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="221" PlaceholderText="Autor" Grid.Column="1"/>
-        <Button Content="Wykresy" HorizontalAlignment="Right" Margin="0,8,620,0" VerticalAlignment="Top" Click="Button_ClickAsync" Width="114" Grid.Column="1"/>
-        <Canvas x:Name="canvas1" HorizontalAlignment="Left" Height="0" Margin="12,114,0,0" VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.5,0.5"/>
-        <CheckBox x:Name="isOriginalCheckBox" Content="Oryginalny podpis" HorizontalAlignment="Right" Margin="0,57,6,0" VerticalAlignment="Top" Width="174" IsChecked="True" Grid.Column="1"/>
-        <Button x:Name="saveButton" Content="Zapisz" HorizontalAlignment="Right" Margin="0,10,122,0" VerticalAlignment="Top" Width="62" Click="saveButton_Click" Grid.Column="1"/>
+
+
         <local:NewButton Margin="220.667,456,0,135" Height="49" Width="114" Grid.Column="1"/>
-        <Button Content="Button" HorizontalAlignment="Stretch" Margin="40,130,40,0" VerticalAlignment="Top" Height="50"/>
-        <Button Content="Button" HorizontalAlignment="Stretch" Margin="40,200,40,0" VerticalAlignment="Top" Height="50"/>
-        <Button Content="Button" HorizontalAlignment="Stretch" Margin="40,270,40,0" VerticalAlignment="Top" Height="50"/>
-        <Button Content="Button" HorizontalAlignment="Stretch" Margin="40,340,40,0" VerticalAlignment="Top" Height="50"/>
+
     </Grid>
-
-
-
 </Page>

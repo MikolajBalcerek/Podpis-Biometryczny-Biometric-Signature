@@ -84,10 +84,12 @@ namespace PodpisBio
                 var titleBar = ApplicationView.GetForCurrentView().TitleBar;
                 if (titleBar != null)
                 {
-                    titleBar.ButtonBackgroundColor = Color.FromArgb(255, 63, 81, 181);
+                    titleBar.ButtonBackgroundColor = Color.FromArgb(255, 133, 22, 22);
                     titleBar.ButtonForegroundColor = Colors.White;
-                    titleBar.BackgroundColor = Color.FromArgb(255, 63, 81, 181);
+                    titleBar.BackgroundColor = Color.FromArgb(255, 153, 22, 22);
                     titleBar.ForegroundColor = Colors.White;
+
+                    //Color.FromArgb(255, 63, 81, 181);
                 }
             }
         }
@@ -113,7 +115,7 @@ namespace PodpisBio
         //Event handler dla rysowania
         private void Core_PointerMoving(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
-            updateInfoInLabel(label1, "Adam rysuje X: " + args.CurrentPoint.Position.X + ", Y: " + args.CurrentPoint.Position.Y + ", z mocą: " + args.CurrentPoint.Properties.Pressure + ", " + args.CurrentPoint.Properties.Twist);
+            updateInfoInLabel(penPosition, "Adam rysuje X: " + args.CurrentPoint.Position.X + ", Y: " + args.CurrentPoint.Position.Y + ", z mocą: " + args.CurrentPoint.Properties.Pressure + ", " + args.CurrentPoint.Properties.Twist);
         }
 
         //Event handler dla rysowania
