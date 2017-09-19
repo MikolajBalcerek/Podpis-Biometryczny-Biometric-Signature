@@ -9,7 +9,7 @@
 
     <Grid Background="#ECEFF1" RequestedTheme="Light">
 
-        <Grid x:Name="inkCanvasHolder" Margin="20,150,0,0" Width="300" Height="100" VerticalAlignment="Top" HorizontalAlignment="Left" Background="SkyBlue">
+        <Grid x:Name="inkCanvasHolder" Margin="700,250,0,0" Width="300" Height="100" VerticalAlignment="Top" HorizontalAlignment="Left" Background="SkyBlue">
             <Rectangle x:Name="background" Fill="#FFF4F4F5" Stroke="Black"/>
             <Line x:Name="guideLine" Stroke="Black" StrokeThickness="1" Opacity="0.3"/>
             <InkCanvas x:Name="inkCanvas1"/>
