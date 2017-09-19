@@ -12,7 +12,9 @@ namespace RestService.Models
             Points = new HashSet<Point>();
         }
         public int Id { get; set; }
-        public Boolean isScaled { get; set; }
+        public double Height { get; set; }
+        public double Width { get; set; }
+        public double DurationInMilis { get; set; }
         public virtual ICollection<Point> Points { get; set; }
         public int SignatureId { get; set; }
     }
