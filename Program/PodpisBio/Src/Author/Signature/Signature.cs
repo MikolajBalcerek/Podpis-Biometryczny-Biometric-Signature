@@ -20,7 +20,7 @@ namespace PodpisBio.Src
 
         double length;
         double height;
-        private List<InkStroke> richInkStrokes; //stroke z timestampami od microsoftu
+        //private List<InkStroke> richInkStrokes; //stroke z timestampami od microsoftu
 
         public void increaseStrokesCount() { this.strokesCount = this.strokesCount + 1; }
         public int getStrokesCount() { return this.strokesCount; }
@@ -34,7 +34,7 @@ namespace PodpisBio.Src
             Strokes = new List<Stroke>();
 
             StrokesModified = new List<Stroke>();
-            richInkStrokes = new List<InkStroke>();
+            //richInkStrokes = new List<InkStroke>();
             length = 0;
             height = 0;
         }
@@ -101,15 +101,6 @@ namespace PodpisBio.Src
         public List<Stroke> getStrokesModified()
         {
             return this.StrokesModified;
-        }
-
-        public List<InkStroke> getRichStrokes()
-        {
-            return this.richInkStrokes;
-        }
-        public void setRichStrokes(List<InkStroke> richInkStrokes)
-        {
-            this.richInkStrokes = richInkStrokes;
         }
 
         public List<Point> getAllOriginalPoints()

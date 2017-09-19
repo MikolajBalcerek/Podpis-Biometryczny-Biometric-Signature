@@ -227,22 +227,29 @@ namespace PodpisBio
         {
 
             /*aktualizuje box InfoBoxTimeSizeProbe o informacje z TimeSizeProbe dla danego podpisu */
-            InfoBoxTimeSizeProbe.Text = "";
-            InfoBoxTimeSizeProbe.Text = "Total Ratio To Time: " +  this.signature.getTimeSizeProbe().getTotalRatioAreaToTime().ToString() + " \n";
-            
-            
-            //wyświetla informacje o osobnych pociągnięciach
-            int __counter__ = 0;
-            //List<Double> magic = this.signature.getTimeSizeProbe().
-
-            
-            foreach (double ratio in this.signature.getTimeSizeProbe().getRatioAreaToTimeForEachStroke())
+            try //po dodaniu bazy danych syfi się, działało przed bazą danych, odwołanie się do getTimeSizeProbe() zwraca error
             {
-                __counter__++;
-                InfoBoxTimeSizeProbe.Text += "Ratio Stroke " + __counter__ + "   " + ratio.ToString() + "\n";
+                InfoBoxTimeSizeProbe.Text = "";
+                InfoBoxTimeSizeProbe.Text = "Total Ratio To Time: " + this.signature.getTimeSizeProbe().getTotalRatioAreaToTime().ToString() + " \n";
+
+                //wyświetla informacje o osobnych pociągnięciach
+                int __counter__ = 0;
+                //List<Double> magic = this.signature.getTimeSizeProbe().
+
+
+                foreach (double ratio in this.signature.getTimeSizeProbe().getRatioAreaToTimeForEachStroke())
+                {
+                    __counter__++;
+                    InfoBoxTimeSizeProbe.Text += "Ratio Stroke " + __counter__ + "   " + ratio.ToString() + "\n";
+                }
+
+            }
+            catch (System.NullReferenceException)
+            {
+                InfoBoxTimeSizeProbe.Text = "TODO!!!!!! Nie można wyświetlić informacji o TimeSizeProbe dla starych podpisów z jakiegoś powodu";
+
             }
             
-
 
         }
     }

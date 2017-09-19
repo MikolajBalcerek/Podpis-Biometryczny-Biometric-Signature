@@ -3,7 +3,7 @@ namespace RestService.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Initial : DbMigration
+    public partial class Init : DbMigration
     {
         public override void Up()
         {
@@ -33,7 +33,9 @@ namespace RestService.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        isScaled = c.Boolean(nullable: false),
+                        Height = c.Double(nullable: false),
+                        Width = c.Double(nullable: false),
+                        DurationInMilis = c.Double(nullable: false),
                         SignatureId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
