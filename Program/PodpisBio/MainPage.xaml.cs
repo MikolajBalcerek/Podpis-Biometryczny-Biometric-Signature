@@ -123,6 +123,11 @@ namespace PodpisBio
 
         private void Core_PointerPressing(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
+            if (args.CurrentPoint.Properties.IsEraser)
+            {
+                Clear_Screen_Add_Strokes();
+            }
+
             strokesCount = strokesCount + 1;
             
             updateInfoInLabel(strokesCountLabel, "Ilość naciśnięć: " + strokesCount);
@@ -146,10 +151,13 @@ namespace PodpisBio
             Clear_Screen_Add_Strokes();
         }
 
-        private void Clear_Screen_Add_Strokes()
+        private async void Clear_Screen_Add_Strokes()
         {
             //Clears inkCanvas
-            inkCanvas1.InkPresenter.StrokeContainer.Clear();
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                inkCanvas1.InkPresenter.StrokeContainer.Clear();
+            });
 
             strokesCount = 0; //tylko do wyświetlania, Signature class ma realcount
         }
