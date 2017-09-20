@@ -33,7 +33,7 @@ namespace PodpisBio.Src.Author
                 this.signatures.Add(signature);
             }
 
-            return responseSignature;
+            return signature;
         }
 
         public void addSignature(Signature signature)
@@ -62,6 +62,7 @@ namespace PodpisBio.Src.Author
                     Src.Point point = new Src.Point((float)pointTemp.Position.X, (float)pointTemp.Position.Y, pointTemp.Pressure, pointTemp.Timestamp, pointTemp.TiltX, pointTemp.TiltY);
                     pointList.Add(point);
                 }
+                stroke.Points = pointList;
                 stroke.init();
                 strokeList.Add(stroke);
             }
