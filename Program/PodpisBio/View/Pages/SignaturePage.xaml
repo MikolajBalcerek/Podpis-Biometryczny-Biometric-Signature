@@ -27,6 +27,7 @@
         <!--InkCanvas-->
         <Grid x:Name="inkCanvasHolder" Margin="500,250,0,0" Width="300" Height="100" VerticalAlignment="Top" HorizontalAlignment="Left" Background="SkyBlue">
             <Rectangle x:Name="background" Fill="#FFF4F4F5" Stroke="Black"/>
+            <Canvas x:Name="showSignature"/>
             <Line x:Name="guideLine" Stroke="Black" StrokeThickness="1" Opacity="0.3"/>
             <InkCanvas x:Name="inkCanvas1"/>
         </Grid>

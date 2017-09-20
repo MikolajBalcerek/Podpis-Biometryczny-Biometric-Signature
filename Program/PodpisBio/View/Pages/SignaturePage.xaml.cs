@@ -13,6 +13,7 @@ using Windows.UI;
 using Windows.Foundation.Metadata;
 using PodpisBio.Src.Author;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Shapes;
 
 //Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=234238
 

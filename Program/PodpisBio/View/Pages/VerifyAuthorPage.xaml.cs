@@ -48,7 +48,7 @@ namespace PodpisBio.Src
 
         private void VerifyButton_Click(object sender, RoutedEventArgs e)
         {
-            this.inkCanvas1.InkPresenter.StrokeContainer.Clear();
+            inkCanvas1.InkPresenter.StrokeContainer.Clear();
         }
     }
 }
