@@ -49,9 +49,11 @@ namespace PodpisBio.Src.FinalScore
             return temp;
         }
 
-        private double checkStrokesCount(Signature first, Signature second/*, Wagi*/)
+        private double checkStrokesCount(Signature original, Signature testSubject/*, Wagi*/)
         {
             double temp = 1;
+            
+            
 
             return temp;
         }
@@ -59,6 +61,7 @@ namespace PodpisBio.Src.FinalScore
         private double checkTimeSizeRatio(Signature first, Signature second/*, Wagi*/)
         {
             double temp = 1;
+
 
             return temp;
         }

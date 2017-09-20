@@ -25,7 +25,7 @@ namespace PodpisBio.Src.Author
             Signature signature = new Signature(strokeList, author.getId(), isOriginal);
 
             //TYMCZASOWO JEST TUTAJ \/ ABY OBLICZENIA BAZUJĄCE NA TYM SIĘ ZGADZAŁY
-            // signature.setRichStrokes(listStroke);
+            //signature.setRichStrokes(listStroke);
             //TYMCZASOWO JEST TUTAJ /\ TO CO POTRZEBUJEMY Z TEJ KLASY TRZEBA DODAC DO MODELU BAZY
 
             //Wysyła do bazy obiekt przez SignatureService. Jeśli baza zwróci ten sam obiekt -> jest zapisywany, jeśli zwróci obiekt==null wówczas nie został zapisany do bazy
