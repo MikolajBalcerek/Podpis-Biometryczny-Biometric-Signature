@@ -16,12 +16,14 @@ namespace PodpisBio
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private SignatureController signatureController;
         private AuthorController authorController;
         public MainPage()
         {
             this.InitializeComponent();
             this.setNavbarColor();
-            this.authorController = new AuthorController();
+            this.signatureController = new SignatureController();
+            this.authorController = new AuthorController(signatureController);
             this.goToDefaultPage(this, null);
             this.showTitleBar(true);
         }
