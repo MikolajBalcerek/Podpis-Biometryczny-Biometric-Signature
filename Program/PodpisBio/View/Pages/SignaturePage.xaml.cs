@@ -40,7 +40,7 @@ namespace PodpisBio.Src
             this.initializePenHandlers();
 
             //inicjalizacja wielkości pola do rysowania
-            this.initRealSizeInkCanvas(110, 40);
+            this.initRealSizeInkCanvas(130, 50);
 
             
         }
@@ -98,6 +98,11 @@ namespace PodpisBio.Src
 
         private void Core_PointerPressing(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
+            if (args.CurrentPoint.Properties.IsEraser)
+            {
+                Clear_Screen_Add_Strokes();
+            }
+
             strokesCount = strokesCount + 1;
 
             updateInfoInLabel(strokesCountLabel, "Ilość naciśnięć: " + strokesCount);
@@ -121,10 +126,13 @@ namespace PodpisBio.Src
             Clear_Screen_Add_Strokes();
         }
 
-        private void Clear_Screen_Add_Strokes()
+        private async void Clear_Screen_Add_Strokes()
         {
             //Clears inkCanvas
-            inkCanvas1.InkPresenter.StrokeContainer.Clear();
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                inkCanvas1.InkPresenter.StrokeContainer.Clear();
+            });
 
             strokesCount = 0; //tylko do wyświetlania, Signature class ma realcount
         }
@@ -269,7 +277,43 @@ namespace PodpisBio.Src
                 addSignature();
                 Clear_Screen_Add_Strokes();
             }
-            catch (ArgumentOutOfRangeException) { Debug.WriteLine("Nie można zapisać pustego podpisu!"); }
+            catch(ArgumentOutOfRangeException){ Debug.WriteLine("Nie można zapisać pustego podpisu!"); }
+
+            
+        }
+
+        private void displayAuthorSignature()
+        {
+            this.showSignature.Children.Clear();
+            if (!this.isOriginalCheckBox.IsChecked.Value)
+            {
+                if (!authorCombobox.Items.Count.Equals(0))
+                {
+                    var signature = authorController.getAuthor(authorCombobox.SelectedItem.ToString()).getSignature(0);
+                    var ptsToDraw = new PointCollection();
+                    foreach (var stroke in signature.getStrokesOriginal())
+                    {
+                        var points = new PointCollection();
+                        foreach (var point in stroke.getPoints())
+                            points.Add(new Windows.Foundation.Point(point.getX(), point.getY()));
+                        drawPoints(points);
+                    }
+                }
+            }
+        }
+
+        private void drawPoints(PointCollection points)
+        {
+            var polyline = new Polyline();
+            polyline.Stroke = new SolidColorBrush(Windows.UI.Colors.Black);
+            polyline.StrokeThickness = 1;
+            polyline.Points = points;
+            this.showSignature.Children.Add(polyline);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            displayAuthorSignature();
         }
     }
 }

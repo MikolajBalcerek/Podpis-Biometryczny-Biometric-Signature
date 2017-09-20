@@ -12,7 +12,10 @@ namespace PodpisBio.Src.Author
     {
         //PRAMETRY AKTUALIZOWANE Z BAZĄ DANYCH//
         public List<Point> Points { get; set; }
-        public bool isScaled { get; set; }
+        public double Height { get; set; }
+        public double Width { get; set; }
+        public double DurationInMilis { get; set; } 
+        //public double 
         //KONIEC//
 
         public List<Derivatives> derivatives { get; set; }
@@ -21,6 +24,13 @@ namespace PodpisBio.Src.Author
         {
             Points = new List<Point>();
             derivatives = new List<Derivatives>();
+        }
+
+        public Stroke(double Height, double Width, double DurationInMilis):this()
+        {
+            this.Height = Height;
+            this.Width = Width;
+            this.DurationInMilis = DurationInMilis;
         }
 
         public Stroke(List<Point> Points) : this()

@@ -25,7 +25,7 @@ namespace PodpisBio.Src.Author
             Signature signature = new Signature(strokeList, author.getId(), isOriginal);
 
             //TYMCZASOWO JEST TUTAJ \/ ABY OBLICZENIA BAZUJĄCE NA TYM SIĘ ZGADZAŁY
-            signature.setRichStrokes(listStroke);
+            //signature.setRichStrokes(listStroke);
             //TYMCZASOWO JEST TUTAJ /\ TO CO POTRZEBUJEMY Z TEJ KLASY TRZEBA DODAC DO MODELU BAZY
 
             //Wysyła do bazy obiekt przez SignatureService. Jeśli baza zwróci ten sam obiekt -> jest zapisywany, jeśli zwróci obiekt==null wówczas nie został zapisany do bazy
@@ -46,7 +46,10 @@ namespace PodpisBio.Src.Author
             List<Stroke> strokeList = new List<Stroke>();
             foreach (var strokeTemp in strokes)
             {
-                Stroke stroke = new Stroke();
+                var height = strokeTemp.BoundingRect.Height;
+                var width = strokeTemp.BoundingRect.Width;
+                var duration = strokeTemp.StrokeDuration.Value.TotalMilliseconds;
+                Stroke stroke = new Stroke(height, width, duration);
                 foreach (var pointTemp in strokeTemp.GetInkPoints())
                 {
                     Src.Point point = new Src.Point((float)pointTemp.Position.X, (float)pointTemp.Position.Y, pointTemp.Pressure, pointTemp.Timestamp, pointTemp.TiltX, pointTemp.TiltY);
