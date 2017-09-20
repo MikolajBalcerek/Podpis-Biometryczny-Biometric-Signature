@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PodpisBio.Src.Author;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace PodpisBio.Src
     /// </summary>
     public sealed partial class VerifyAuthorPage : Page
     {
+        private AuthorController authorController;
         public VerifyAuthorPage()
         {
             this.InitializeComponent();
@@ -31,6 +33,15 @@ namespace PodpisBio.Src
             //inicjalizacja wielkości pola do rysowania
             this.initRealSizeInkCanvas(130, 50);
         }
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            //base.OnNavigatedTo(e);
+            this.authorController = (AuthorController)e.Parameter;
+
+            //Zaktualizowanie listy autorów
+            this.updateAuthorCombobox();
+        }
+
         private void initRealSizeInkCanvas(double mmWidth, double mmHeight)
         {
             RealScreenSizeCalculator calc = new RealScreenSizeCalculator();
@@ -49,6 +60,22 @@ namespace PodpisBio.Src
         private void VerifyButton_Click(object sender, RoutedEventArgs e)
         {
             inkCanvas1.InkPresenter.StrokeContainer.Clear();
+        }
+
+        private void updateAuthorCombobox()
+        {
+            var authorNames = authorController.getAuthorsNames();
+
+            if (authorNames.Any())
+            {
+                foreach (var authorName in this.authorController.getAuthorsNames())
+                {
+                    this.authorCombobox.Items.Add(authorName);
+                }
+                this.authorCombobox.SelectedIndex = 0;
+            }
+            
+            
         }
     }
 }

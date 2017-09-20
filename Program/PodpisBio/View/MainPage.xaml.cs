@@ -71,7 +71,7 @@ namespace PodpisBio
 
         private void Weryfikowanie_Click(object sender, RoutedEventArgs e)
         {
-            this.MainPageDisplayFrame.Navigate(typeof(VerifyAuthorPage));
+            this.MainPageDisplayFrame.Navigate(typeof(VerifyAuthorPage), authorController);
         }
 
         private void Podpisy_Click(object sender, RoutedEventArgs e)
