@@ -22,19 +22,56 @@ namespace PodpisBio.Src.FinalScore
         private double check(Signature first, Signature second/*, Wagi*/)
         {
             double temp = 0;
-            double length = checkLength(first, second)/* * Waga.*/;
+            double lengthM = checkLengthM(first, second);
+            if (lengthM < 0.5)
+            {
+                return 0;
+            }
+            double strokesCount = checkStrokesCount(first, second);
+            double timeSizeRatio = checkTimeSizeRatio(first, second);
+            double timeSizeRatioForEachStroke = checkTimeSizeRatioForEachStroke(first, second);
+            double preciseComparison = checkPreciseComparison(first, second);
             /*
-             * Reszta 
+             * Inne
              */
 
-            temp = length /*+ Reszta*/;
+            temp = (lengthM + strokesCount + timeSizeRatio + timeSizeRatioForEachStroke + preciseComparison) / 5;
+            //temp = lengthM * waga + strokesCount * waga + timeSizeRatio * waga + timeSizeRatioForEachStroke * waga + preciseComparison * waga;
 
             return temp;
         }
 
-        private double checkLength(Signature first, Signature second)
+        private double checkLengthM(Signature first, Signature second)
         {
             double temp = 1-(Math.Abs(first.getLentghM()-second.getLentghM()) / first.getLentghM());
+
+            return temp;
+        }
+
+        private double checkStrokesCount(Signature first, Signature second/*, Wagi*/)
+        {
+            double temp = 1;
+
+            return temp;
+        }
+
+        private double checkTimeSizeRatio(Signature first, Signature second/*, Wagi*/)
+        {
+            double temp = 1;
+
+            return temp;
+        }
+
+        private double checkTimeSizeRatioForEachStroke(Signature first, Signature second/*, Wagi*/)
+        {
+            double temp = 1;
+
+            return temp;
+        }
+
+        private double checkPreciseComparison(Signature first, Signature second/*, Wagi*/)
+        {
+            double temp = 1;
 
             return temp;
         }
