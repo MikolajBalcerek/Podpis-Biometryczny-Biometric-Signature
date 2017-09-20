@@ -70,13 +70,10 @@ namespace PodpisBio.Src
             calcHeight();
 
             //badanie rozmiaru/czas za pomoc¹ TimeSize klasy
-            //ze wzglêdu na masowe wywo³ania init dla miliona wykresów 
-            //tworzenie TimeSizeProbe przenios³em do getTimeSizeProbe
-            /*if (object.ReferenceEquals(null, this.ownTimeSizeProbe))
+            if (object.ReferenceEquals(null, this.ownTimeSizeProbe))
             {
                 this.ownTimeSizeProbe = new TimeSize_Probe(this);
             }
-            */
         }
 
         public void addStroke(Stroke stroke)
@@ -219,9 +216,7 @@ namespace PodpisBio.Src
         }
 
         public TimeSize_Probe getTimeSizeProbe()
-        {   //TERAZ TE¯ TO JEST G£ÓWNE MIEJSCE TWORZENIA TIMESIZE PROBE
-            //zmienione dla przyspieszenia ³adowania wykresów
-            //teraz powinno liczyæ TimeSizeProbe() tylko dla wyœwietlanych/wykorzystywanych podpisów, a nie dla wszystkich
+        {
             if(object.ReferenceEquals(null, this.ownTimeSizeProbe))
             {
                 this.ownTimeSizeProbe = new TimeSize_Probe(this);
