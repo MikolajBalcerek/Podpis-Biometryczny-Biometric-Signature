@@ -31,11 +31,15 @@ namespace PodpisBio.Src.Author
                 else
                 {
                     //Jeśli pobrano autorów, dodaj do listy
-                    this.authors.AddRange(service.getAuthors());
+                    this.authors.AddRange(authors);
                     foreach(var author in authors)
                     {
                         foreach(var sign in author.getSignatures())
                         {
+                            foreach(var stroke in sign.getStrokesOriginal())
+                            {
+                                stroke.init();
+                            }
                             sign.init();
                             signatureController.addSignature(sign);
                         }
