@@ -296,5 +296,39 @@ namespace PodpisBio
 
             
         }
+
+        private void displayAuthorSignature()
+        {
+            this.showSignature.Children.Clear();
+            if (!this.isOriginalCheckBox.IsChecked.Value)
+            {
+                if (!authorCombobox.Items.Count.Equals(0))
+                {
+                    var signature = authorController.getAuthor(authorCombobox.SelectedItem.ToString()).getSignature(0);
+                    var ptsToDraw = new PointCollection();
+                    foreach (var stroke in signature.getStrokesOriginal())
+                    {
+                        var points = new PointCollection();
+                        foreach (var point in stroke.getPoints())
+                            points.Add(new Windows.Foundation.Point(point.getX(), point.getY()));
+                        drawPoints(points);
+                    }
+                }
+            }
+        }
+
+        private void drawPoints(PointCollection points)
+        {
+            var polyline = new Polyline();
+            polyline.Stroke = new SolidColorBrush(Windows.UI.Colors.Black);
+            polyline.StrokeThickness = 1;
+            polyline.Points = points;
+            this.showSignature.Children.Add(polyline);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            displayAuthorSignature();
+        }
     }
 }
