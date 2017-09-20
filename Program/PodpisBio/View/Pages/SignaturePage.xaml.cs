@@ -12,6 +12,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI;
 using Windows.Foundation.Metadata;
 using PodpisBio.Src.Author;
+using Windows.UI.Xaml.Navigation;
 
 //Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -25,8 +26,8 @@ namespace PodpisBio.Src
         private int strokesCount; //Liczba przyciśnięć tylko do poglądu, Signature ma swój
         public Stopwatch timer; //Obiekt zajmujący się czasem ogólnoaplikacji
 
-        SignatureController signatureController;
         AuthorController authorController;
+        SignatureController signatureController;
         public SignaturePage()
         {
 
@@ -35,19 +36,25 @@ namespace PodpisBio.Src
             timer.Start();
 
             signatureController = new SignatureController();
-            authorController = new AuthorController();
             this.InitializeComponent();
             this.initializePenHandlers();
 
             //inicjalizacja wielkości pola do rysowania
             this.initRealSizeInkCanvas(110, 40);
 
-            //ściągnięcie listy autorów żeby wyświetliło default
-            this.updateAuthorCombobox();
-            this.authorCombobox.SelectedIndex = 0;
+            
         }
 
-        private void initRealSizeInkCanvas(double mmWidth, double mmHeight)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            //base.OnNavigatedTo(e);
+            this.authorController = (AuthorController)e.Parameter;
+
+            //Zaktualizowanie listy autorów
+            this.updateAuthorCombobox();
+        }
+
+            private void initRealSizeInkCanvas(double mmWidth, double mmHeight)
         {
             RealScreenSizeCalculator calc = new RealScreenSizeCalculator();
             int width = (int)calc.convertToPixels(mmWidth);
@@ -192,7 +199,17 @@ namespace PodpisBio.Src
                 authorCombobox.Items.Add(authorName);
             }
 
-            authorCombobox.SelectedIndex = authorCombobox.Items.Count - 1;
+            if (authorCombobox.Items.Count.Equals(0))
+            {
+                authorCombobox.IsEnabled = false;
+            }
+            else
+            {
+                authorCombobox.IsEnabled = true;
+                authorCombobox.SelectedIndex = authorCombobox.Items.Count - 1;
+            }
+
+            
         }
 
         private async void Button_ClickAsync(object sender, RoutedEventArgs e)

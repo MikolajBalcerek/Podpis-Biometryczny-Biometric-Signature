@@ -5,6 +5,7 @@ using Windows.Foundation.Metadata;
 using Windows.UI.ViewManagement;
 using Windows.UI;
 using Windows.ApplicationModel.Core;
+using PodpisBio.Src.Author;
 
 //Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x415
 
@@ -15,10 +16,12 @@ namespace PodpisBio
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private AuthorController authorController;
         public MainPage()
         {
             this.InitializeComponent();
             this.setNavbarColor();
+            this.authorController = new AuthorController();
             this.goToDefaultPage(this, null);
             this.showTitleBar(true);
         }
@@ -71,7 +74,7 @@ namespace PodpisBio
 
         private void Podpisy_Click(object sender, RoutedEventArgs e)
         {
-            this.MainPageDisplayFrame.Navigate(typeof(SignaturePage));
+            this.MainPageDisplayFrame.Navigate(typeof(SignaturePage), authorController);
         }
 
         private void Wykresy_Click(object sender, RoutedEventArgs e)
