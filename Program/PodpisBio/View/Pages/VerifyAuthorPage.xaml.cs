@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -25,6 +26,41 @@ namespace PodpisBio.Src
         public VerifyAuthorPage()
         {
             this.InitializeComponent();
+            inkCanvas1.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen;
+
+            //inicjalizacja wielkości pola do rysowania
+            this.initRealSizeInkCanvas(130, 50);
+        }
+        private void initRealSizeInkCanvas(double mmWidth, double mmHeight)
+        {
+            RealScreenSizeCalculator calc = new RealScreenSizeCalculator();
+            int width = (int)calc.convertToPixels(mmWidth);
+            int height = (int)calc.convertToPixels(mmHeight);
+            inkCanvasHolder.Height = height;
+            inkCanvasHolder.Width = width;
+            inkCanvasHolder.MinWidth = width;
+            StackPanel1.MinWidth = width + height + 10;
+            VerifyButton.Height = VerifyButton.Width = height;
+            //guideLine.Margin = new Thickness(0.05 * width, 0.7 * height, 0.05 * width, 0);
+            guideLine.X1 = 0.05 * width;
+            guideLine.X2 = 0.95 * width;
+            guideLine.Y1 = guideLine.Y2 = 0.7 * height;
+
+            //Redefinicja kolumn dla poprawnego skalowania przy nowych wymiarach okna
+            InnerGrid.ColumnDefinitions.Clear();
+            var column0 = new ColumnDefinition();
+            var column1 = new ColumnDefinition();
+
+            column0.MinWidth = height+10;
+            column1.MinWidth = width+10;
+
+            InnerGrid.ColumnDefinitions.Add(column0);
+            InnerGrid.ColumnDefinitions.Add(column1);
+        }
+
+        private void VerifyButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.inkCanvas1.InkPresenter.StrokeContainer.Clear();
         }
     }
 }

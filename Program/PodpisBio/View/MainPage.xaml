@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:Maps="using:Windows.UI.Xaml.Controls.Maps"
     x:Class="PodpisBio.MainPage"
-    mc:Ignorable="d" MinWidth="800" MinHeight="500">
+    mc:Ignorable="d">
     
     
 
@@ -41,9 +41,6 @@
         <Grid Grid.Column="1" Grid.Row="1">
             <Frame Name="MainPageDisplayFrame"/>
         </Grid>
-
-
-        <local:NewButton Margin="220.667,456,0,135" Height="49" Width="114" Grid.Column="1"/>
 
     </Grid>
 </Page>
