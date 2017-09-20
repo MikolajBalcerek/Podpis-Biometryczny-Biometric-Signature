@@ -68,6 +68,7 @@ namespace PodpisBio.Src
 
             if (authorNames.Any())
             {
+                this.authorCombobox.Items.Clear();
                 foreach (var authorName in this.authorController.getAuthorsNames())
                 {
                     this.authorCombobox.Items.Add(authorName);

@@ -11,7 +11,7 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         
         <StackPanel x:Name="StackPanel1" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <ComboBox x:Name="authorCombobox" HorizontalAlignment="Stretch" Margin="0,0,0,20"/>
+            <ComboBox x:Name="authorCombobox" Height="50" HorizontalAlignment="Stretch" Margin="0,0,0,20" FontSize="18"/>
             <!--InkCanvas-->
             <RelativePanel>
                 <Button x:Name="VerifyButton" Height="100" Width="100" Content="Weryfikuj" Margin="5" Click="VerifyButton_Click"/>
