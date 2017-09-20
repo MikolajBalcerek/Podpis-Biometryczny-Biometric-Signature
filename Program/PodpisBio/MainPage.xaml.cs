@@ -50,7 +50,7 @@ namespace PodpisBio
             timer.Start();
 
             signatureController = new SignatureController();
-            authorController = new AuthorController();
+            authorController = new AuthorController(signatureController);
             this.InitializeComponent();
             this.initializePenHandlers();
 
@@ -248,7 +248,7 @@ namespace PodpisBio
             await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 Frame frame = new Frame();
-                var signatures = this.signatureController.signatures;
+                var signatures = this.signatureController.getSignatures();
                 frame.Navigate(typeof(ShowSignatures), authorController);
                 Window.Current.Content = frame;
                 // You have to activate the window in order to show it later.

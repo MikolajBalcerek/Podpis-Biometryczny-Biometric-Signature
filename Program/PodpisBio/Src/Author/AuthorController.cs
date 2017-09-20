@@ -10,13 +10,14 @@ namespace PodpisBio.Src.Author
 {
     class AuthorController
     {
-        public List<Author> authors = new List<Author>();
-
+        private List<Author> authors = new List<Author>();
+        private SignatureController signatureController;
         private AuthorService service;
 
-        public AuthorController()
+        public AuthorController(SignatureController signatureController)
         {
             service = new AuthorService();
+            this.signatureController = signatureController;
             initAuthorsFromDatabase();
         }
 
@@ -36,7 +37,7 @@ namespace PodpisBio.Src.Author
                         foreach(var sign in author.getSignatures())
                         {
                             sign.init();
-
+                            signatureController.addSignature(sign);
                         }
                     }
                 }  
