@@ -71,7 +71,7 @@ namespace PodpisBio.Src.Author
                 // totalDrawingTime = totalDrawingTime + delta;
                 totalDrawingTime = stroke.DurationInMilis + totalDrawingTime;
             }
-            Debug.WriteLine("Total Drawing Time dla tego podpisu to: " + totalDrawingTime);
+            //Debug.WriteLine("Total Drawing Time dla tego podpisu to: " + totalDrawingTime);
         }
 
         private void calculateSizeForEachStroke()
@@ -84,7 +84,7 @@ namespace PodpisBio.Src.Author
                 double strokeHeight = stroke.Height;
                 double strokeWidth = stroke.Width;
                 this.StrokesDimensionsForEachStroke.Add(new Tuple<double, double, double>(strokeHeight, strokeWidth, strokeHeight * strokeWidth));
-                Debug.WriteLine("Wymiary pociągnięcia to: " + strokeHeight + " " + strokeWidth);
+                //Debug.WriteLine("Wymiary pociągnięcia to: " + strokeHeight + " " + strokeWidth);
             }
         }
 
@@ -94,10 +94,10 @@ namespace PodpisBio.Src.Author
 
             testedSignature.calcHeight();
             testedSignature.calcLength(true);
-            Debug.WriteLine("TUTAJ" + testedSignature.getHeight() + " " + testedSignature.getLentghO());
-            Debug.WriteLine("Liczba:     " + testedSignature.getHeight() * testedSignature.getLentghO());
+            //Debug.WriteLine("TUTAJ" + testedSignature.getHeight() + " " + testedSignature.getLentghO());
+            //Debug.WriteLine("Liczba:     " + testedSignature.getHeight() * testedSignature.getLentghO());
             totalRatioAreaToTime = (testedSignature.getHeight() * testedSignature.getLentghO()) / this.totalDrawingTime;
-            Debug.WriteLine("Total Area to Time Ratio: " + TotalRatioAreaToTime);
+            //Debug.WriteLine("Total Area to Time Ratio: " + TotalRatioAreaToTime);
           
         }
 
@@ -110,7 +110,7 @@ namespace PodpisBio.Src.Author
                 //liczy ratio pole do czasu z listy czasów i dodaje do listy ratio
                 double __ratio__ = stroke.Item3 / TimeStampsForEachStroke[__counter__];
                 this.ratioAreaToTimeForEachStroke.Add(__ratio__);
-                Debug.WriteLine("Stroke numer " + __counter__ + "ma ratio rozmiar/czas" + __ratio__);
+                //Debug.WriteLine("Stroke numer " + __counter__ + "ma ratio rozmiar/czas" + __ratio__);
                 __counter__++;
              }
 
