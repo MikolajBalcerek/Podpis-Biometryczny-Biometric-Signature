@@ -18,7 +18,8 @@ namespace PodpisBio.Src
         public bool isOriginal { get; set; }
         //KONIEC//
 
-        double length;
+        double lengthO;
+        double lengthM;
         double height;
         //private List<InkStroke> richInkStrokes; //stroke z timestampami od microsoftu
 
@@ -35,7 +36,8 @@ namespace PodpisBio.Src
 
             StrokesModified = new List<Stroke>();
             //richInkStrokes = new List<InkStroke>();
-            length = 0;
+            lengthO = 0;
+            lengthM = 0;
             height = 0;
         }
         //G³ówny konstruktor do tworzenia sygnatury
@@ -64,7 +66,7 @@ namespace PodpisBio.Src
                 scaleSignature();
                 fit();
             }
-            calcLength();
+            calcLength(false);
             calcHeight();
 
             //badanie rozmiaru/czas za pomoc¹ TimeSize klasy
@@ -86,9 +88,14 @@ namespace PodpisBio.Src
         
 
 
-        public double getLentgh()
+        public double getLentghO()
         {
-            return this.length;
+            return this.lengthO;
+        }
+
+        public double getLentghM()
+        {
+            return this.lengthM;
         }
 
         public double getHeight()
@@ -217,10 +224,18 @@ namespace PodpisBio.Src
             return this.ownTimeSizeProbe;
         }
 
-        public void calcLength()
+        public void calcLength(bool xd)
         {
             double length = 0;
-            List<Point> points = this.getAllOriginalPoints();
+            List<Point> points = new List<Point>();
+            if (xd)
+            {
+                points = this.getAllOriginalPoints();
+            }
+            else
+            {
+                points = this.getAllModifiedPoints();
+            }
             
             List<double> p = new List<double>();
 
@@ -258,7 +273,14 @@ namespace PodpisBio.Src
                 Debug.WriteLine("Dlugosc = 0");
             }
 
-            this.length = length;
+            if (xd)
+            {
+                this.lengthO = length;
+            }
+            else
+            {
+                this.lengthM = length;
+            }
         }
 
         public void calcHeight()
