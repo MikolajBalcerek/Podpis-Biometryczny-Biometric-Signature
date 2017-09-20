@@ -46,6 +46,7 @@ namespace PodpisBio.Src.Author
             List<Stroke> strokeList = new List<Stroke>();
             foreach (var strokeTemp in strokes)
             {
+                List<Point> pointList = new List<Point>();
                 var height = strokeTemp.BoundingRect.Height;
                 var width = strokeTemp.BoundingRect.Width;
                 var duration = strokeTemp.StrokeDuration.Value.TotalMilliseconds;
@@ -53,8 +54,9 @@ namespace PodpisBio.Src.Author
                 foreach (var pointTemp in strokeTemp.GetInkPoints())
                 {
                     Src.Point point = new Src.Point((float)pointTemp.Position.X, (float)pointTemp.Position.Y, pointTemp.Pressure, pointTemp.Timestamp, pointTemp.TiltX, pointTemp.TiltY);
-                    stroke.addPoint(point);
+                    pointList.Add(point);
                 }
+                stroke.init();
                 strokeList.Add(stroke);
             }
 
