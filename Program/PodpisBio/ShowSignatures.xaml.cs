@@ -138,6 +138,11 @@ namespace PodpisBio
             var times = getNormalisedTimes();
             var points = this.signature.getAllOriginalPoints();
             var derivatives = this.signature.getOriginalDerivatives();
+            if (derivatives.Count == 0)
+            {
+                derivatives = this.signature.calcDerivatives();
+                Debug.WriteLine("Adam ma " + derivatives.Count + " ficzerów.");
+            }
             IEnumerable<float> feature;
             switch (option)
             {
@@ -200,7 +205,7 @@ namespace PodpisBio
             var normalised = new List<double>();
             var height = canvas1.ActualHeight;
             foreach (var sample in samples)
-                normalised.Add(height * (sample) / (samples.Max() - samples.Min()) + height);
+                normalised.Add(height * (sample) / (samples.Max() - samples.Min()) + .8 * height);
             //is 0 division possible here
             return normalised;
         }

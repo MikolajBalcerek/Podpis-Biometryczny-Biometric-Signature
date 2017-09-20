@@ -116,6 +116,17 @@ namespace PodpisBio.Src
             return points;
         }
 
+        public List<Derivatives> calcDerivatives()
+        {
+            var YOLO = new List<Derivatives>();
+            YOLO.Add(new Derivatives());
+            Dynamics calculator = new Dynamics();
+            var points = this.getAllOriginalPoints();
+            for (int i = 1; i < points.Count; i++)
+                YOLO.Add(calculator.calcDerivatives(points[i - 1], points[i], YOLO[i - 1]));
+            return YOLO;
+        }
+
         public List<Point> getAllModifiedPoints()
         {
             List<Point> points = new List<Point>();
@@ -251,11 +262,11 @@ namespace PodpisBio.Src
                     if (elem > max) { max = elem; }
                 }
                 length = max - min;
-                Debug.WriteLine("Dlugosc =" + (max - min));
+                //Debug.WriteLine("Dlugosc =" + (max - min));
             }
             else
             {
-                Debug.WriteLine("Dlugosc = 0");
+                //Debug.WriteLine("Dlugosc = 0");
             }
 
             this.length = length;
@@ -295,11 +306,11 @@ namespace PodpisBio.Src
                     if (elem > max) { max = elem; }
                 }
                 height = max - min;
-                Debug.WriteLine("Wysokosc =" + (max - min));
+                //Debug.WriteLine("Wysokosc =" + (max - min));
             }
             else
             {
-                Debug.WriteLine("Wysokosc = 0");
+                //Debug.WriteLine("Wysokosc = 0");
             }
 
             this.height = height;
