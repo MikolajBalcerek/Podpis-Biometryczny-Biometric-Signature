@@ -12,19 +12,14 @@
         <StackPanel x:Name="StackPanel1" HorizontalAlignment="Center" VerticalAlignment="Center">
             <ComboBox x:Name="authorCombobox" HorizontalAlignment="Stretch" Margin="0,0,0,20"/>
             <!--InkCanvas-->
-            <Grid x:Name="InnerGrid">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                
+            <RelativePanel>
                 <Button x:Name="VerifyButton" Height="100" Width="100" Content="Weryfikuj" Margin="5" Click="VerifyButton_Click"/>
-                <Grid x:Name="inkCanvasHolder" Width="300" Height="100" Margin="5" Background="SkyBlue" Grid.Column="1">
+                <Grid RelativePanel.RightOf="VerifyButton"  x:Name="inkCanvasHolder" Width="300" Height="100" Margin="5" Background="SkyBlue" Grid.Column="1">
                     <Rectangle x:Name="background" Fill="#FFF4F4F5" Stroke="Black"/>
                     <Line x:Name="guideLine" VerticalAlignment="Top" Stroke="Black" StrokeThickness="1" Opacity="0.3"/>
                     <InkCanvas x:Name="inkCanvas1"/>
                 </Grid>
-            </Grid>
+            </RelativePanel>
         </StackPanel>
     </Grid>
 </Page>

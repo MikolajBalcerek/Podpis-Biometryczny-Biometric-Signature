@@ -41,21 +41,9 @@ namespace PodpisBio.Src
             inkCanvasHolder.MinWidth = width;
             StackPanel1.MinWidth = width + height + 10;
             VerifyButton.Height = VerifyButton.Width = height;
-            //guideLine.Margin = new Thickness(0.05 * width, 0.7 * height, 0.05 * width, 0);
             guideLine.X1 = 0.05 * width;
             guideLine.X2 = 0.95 * width;
             guideLine.Y1 = guideLine.Y2 = 0.7 * height;
-
-            //Redefinicja kolumn dla poprawnego skalowania przy nowych wymiarach okna
-            InnerGrid.ColumnDefinitions.Clear();
-            var column0 = new ColumnDefinition();
-            var column1 = new ColumnDefinition();
-
-            column0.MinWidth = height+10;
-            column1.MinWidth = width+10;
-
-            InnerGrid.ColumnDefinitions.Add(column0);
-            InnerGrid.ColumnDefinitions.Add(column1);
         }
 
         private void VerifyButton_Click(object sender, RoutedEventArgs e)
