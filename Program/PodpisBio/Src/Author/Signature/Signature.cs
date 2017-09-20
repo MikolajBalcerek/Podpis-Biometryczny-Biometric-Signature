@@ -23,12 +23,7 @@ namespace PodpisBio.Src
         double height;
         //private List<InkStroke> richInkStrokes; //stroke z timestampami od microsoftu
 
-        public void increaseStrokesCount() { this.strokesCount = this.strokesCount + 1; }
-        public int getStrokesCount() { return this.strokesCount; }
-
         private Author.TimeSize_Probe ownTimeSizeProbe; //klasa badaj¹ca w³asnoœci czasu i rozmiaru podpisu
-
-        private int strokesCount;
 
         public Signature()
         {
@@ -46,7 +41,6 @@ namespace PodpisBio.Src
             this.isOriginal = isOriginal;
             this.AuthorId = authorId;
             this.Strokes = strokes;
-            this.strokesCount = strokes.Count;
 
             //Docelowo bêdzie wykonywane z tego poziomu, jednak konstruktor nie inicjalizuje wszystkich potrzebnych zmiennych (brak w modelu bazy danych)
             //init();

@@ -51,22 +51,27 @@ namespace PodpisBio.Src.Author
 
         public List<Derivatives> getDerivatives() { return this.derivatives; }
 
-        public void addPoint(Point point)
+        public void init()
         {
-            if (!this.Points.Any())
+            List<Point> Points = new List<Point>(this.Points);
+            this.Points.Clear();
+            foreach(var point in Points)
             {
-                this.Points.Add(point);
-                this.derivatives.Add(new Derivatives());
-            }
-            else
-            {
-                Dynamics calculator = new Dynamics();
-                var prevPoint = this.Points[this.Points.Count - 1];
-                var prevDerivatives = this.derivatives[this.derivatives.Count() - 1];
-                var derivatives = calculator.calcDerivatives(prevPoint, point, prevDerivatives);
-                this.Points.Add(point);
-                this.derivatives.Add(derivatives);
-                //Debug.WriteLine("Adam oblicza pochodne v = " + derivatives.Velocity + " i acc = " + derivatives.Acc);
+                if (!this.Points.Any())
+                {
+                    this.Points.Add(point);
+                    this.derivatives.Add(new Derivatives());
+                }
+                else
+                {
+                    Dynamics calculator = new Dynamics();
+                    var prevPoint = this.Points[this.Points.Count - 1];
+                    var prevDerivatives = this.derivatives[this.derivatives.Count() - 1];
+                    var derivatives = calculator.calcDerivatives(prevPoint, point, prevDerivatives);
+                    this.Points.Add(point);
+                    this.derivatives.Add(derivatives);
+                    //Debug.WriteLine("Adam oblicza pochodne v = " + derivatives.Velocity + " i acc = " + derivatives.Acc);
+                }
             }
         }
 

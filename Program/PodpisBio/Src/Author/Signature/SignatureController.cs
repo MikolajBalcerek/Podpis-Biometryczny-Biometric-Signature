@@ -11,8 +11,8 @@ namespace PodpisBio.Src.Author
 {
     class SignatureController
     {
-        public List<Signature> signatures = new List<Signature>();
-        SignatureService signatureService = new SignatureService();
+        private List<Signature> signatures = new List<Signature>();
+        private SignatureService signatureService = new SignatureService();
 
         public SignatureController() { }
 
@@ -23,10 +23,6 @@ namespace PodpisBio.Src.Author
             var strokeList = buildStrokes(listStroke);
             //Budujemy KOMPLETNY obiekt klasy Signature (taki obiekt będzie dodawany i pobierany z bazy i będzie stanowił podstawę dla obliczeń)
             Signature signature = new Signature(strokeList, author.getId(), isOriginal);
-
-            //TYMCZASOWO JEST TUTAJ \/ ABY OBLICZENIA BAZUJĄCE NA TYM SIĘ ZGADZAŁY
-            //signature.setRichStrokes(listStroke);
-            //TYMCZASOWO JEST TUTAJ /\ TO CO POTRZEBUJEMY Z TEJ KLASY TRZEBA DODAC DO MODELU BAZY
 
             //Wysyła do bazy obiekt przez SignatureService. Jeśli baza zwróci ten sam obiekt -> jest zapisywany, jeśli zwróci obiekt==null wówczas nie został zapisany do bazy
             var responseSignature = signatureService.postSignature(signature);
@@ -40,12 +36,23 @@ namespace PodpisBio.Src.Author
             return responseSignature;
         }
 
+        public void addSignature(Signature signature)
+        {
+            this.signatures.Add(signature);
+        }
+
+        public List<Signature> getSignatures()
+        {
+            return this.signatures;
+        }
+
         //Zwraca obiekt klasy Signature JEDYNIE z wypełnionymi strokami i punktami
         private List<Stroke> buildStrokes(List<InkStroke> strokes)
         {
             List<Stroke> strokeList = new List<Stroke>();
             foreach (var strokeTemp in strokes)
             {
+                List<Point> pointList = new List<Point>();
                 var height = strokeTemp.BoundingRect.Height;
                 var width = strokeTemp.BoundingRect.Width;
                 var duration = strokeTemp.StrokeDuration.Value.TotalMilliseconds;
@@ -53,8 +60,9 @@ namespace PodpisBio.Src.Author
                 foreach (var pointTemp in strokeTemp.GetInkPoints())
                 {
                     Src.Point point = new Src.Point((float)pointTemp.Position.X, (float)pointTemp.Position.Y, pointTemp.Pressure, pointTemp.Timestamp, pointTemp.TiltX, pointTemp.TiltY);
-                    stroke.addPoint(point);
+                    pointList.Add(point);
                 }
+                stroke.init();
                 strokeList.Add(stroke);
             }
 

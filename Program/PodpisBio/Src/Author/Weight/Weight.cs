@@ -37,7 +37,7 @@ namespace PodpisBio.Src.Author.Weight
             foreach (Signature s in this.sign)
             {
                 lengthMList.Add(s.getLentghM());
-                strokesCountList.Add(Convert.ToDouble(s.getStrokesCount()));
+                strokesCountList.Add(Convert.ToDouble(s.getStrokesOriginal().Count));
             }
 
             double calcLengthM = calcLengthM_SD(lengthMList);
