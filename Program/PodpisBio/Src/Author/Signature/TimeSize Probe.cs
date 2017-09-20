@@ -31,8 +31,8 @@ namespace PodpisBio.Src.Author
 
             this.testedSignature = givenSignature;
             //get aktualne rozmiary podpisu
-            testedSignature.calcLength();
-            lengthX = testedSignature.getLentgh();
+            testedSignature.calcLength(true);
+            lengthX = testedSignature.getLentghO();
             testedSignature.calcHeight();
             heightY = testedSignature.getHeight();
             
@@ -93,10 +93,10 @@ namespace PodpisBio.Src.Author
         {
 
             testedSignature.calcHeight();
-            testedSignature.calcLength();
-            Debug.WriteLine("TUTAJ" + testedSignature.getHeight() + " " + testedSignature.getLentgh());
-            Debug.WriteLine("Liczba:     " + testedSignature.getHeight() * testedSignature.getLentgh());
-            totalRatioAreaToTime = (testedSignature.getHeight() * testedSignature.getLentgh()) / this.totalDrawingTime;
+            testedSignature.calcLength(true);
+            Debug.WriteLine("TUTAJ" + testedSignature.getHeight() + " " + testedSignature.getLentghO());
+            Debug.WriteLine("Liczba:     " + testedSignature.getHeight() * testedSignature.getLentghO());
+            totalRatioAreaToTime = (testedSignature.getHeight() * testedSignature.getLentghO()) / this.totalDrawingTime;
             Debug.WriteLine("Total Area to Time Ratio: " + TotalRatioAreaToTime);
           
         }
