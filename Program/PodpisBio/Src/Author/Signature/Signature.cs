@@ -229,11 +229,11 @@ namespace PodpisBio.Src
             return this.ownTimeSizeProbe;
         }
 
-        public void calcLength(bool originalOrModifiedPoints)
+        public void calcLength(bool xD)
         {
             double length = 0;
             List<Point> points = new List<Point>();
-            if (originalOrModifiedPoints)
+            if (xD)
             {
                 points = this.getAllOriginalPoints();
             }
@@ -278,7 +278,7 @@ namespace PodpisBio.Src
                 //Debug.WriteLine("Dlugosc = 0");
             }
 
-            if (originalOrModifiedPoints)
+            if (xD)
             {
                 this.lengthO = length;
             }
