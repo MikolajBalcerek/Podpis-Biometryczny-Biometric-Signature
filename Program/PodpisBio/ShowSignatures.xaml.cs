@@ -35,7 +35,7 @@ namespace PodpisBio
     public sealed partial class ShowSignatures : Page
     {
         private Signature signature;
-        private AuthorController autController = new AuthorController();
+        private AuthorController autController;
         ObservableCollection<String> plotOptions = new ObservableCollection<String>();
         ObservableCollection<String> authorNames = new ObservableCollection<String>();
         ObservableCollection<int> signatureIndexes = new ObservableCollection<int>();
