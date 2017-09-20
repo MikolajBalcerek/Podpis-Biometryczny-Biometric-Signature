@@ -224,11 +224,11 @@ namespace PodpisBio.Src
             return this.ownTimeSizeProbe;
         }
 
-        public void calcLength(bool xd)
+        public void calcLength(bool originalOrModifiedPoints)
         {
             double length = 0;
             List<Point> points = new List<Point>();
-            if (xd)
+            if (originalOrModifiedPoints)
             {
                 points = this.getAllOriginalPoints();
             }
@@ -266,14 +266,14 @@ namespace PodpisBio.Src
                     if (elem > max) { max = elem; }
                 }
                 length = max - min;
-                Debug.WriteLine("Dlugosc =" + (max - min));
+                //Debug.WriteLine("Dlugosc =" + (max - min));
             }
             else
             {
-                Debug.WriteLine("Dlugosc = 0");
+                //Debug.WriteLine("Dlugosc = 0");
             }
 
-            if (xd)
+            if (originalOrModifiedPoints)
             {
                 this.lengthO = length;
             }
@@ -317,11 +317,11 @@ namespace PodpisBio.Src
                     if (elem > max) { max = elem; }
                 }
                 height = max - min;
-                Debug.WriteLine("Wysokosc =" + (max - min));
+                //Debug.WriteLine("Wysokosc =" + (max - min));
             }
             else
             {
-                Debug.WriteLine("Wysokosc = 0");
+                //Debug.WriteLine("Wysokosc = 0");
             }
 
             this.height = height;
