@@ -92,8 +92,8 @@ namespace PodpisBio.Src.Author
         //funkcja wewnętrzna licząca stosunek pola podpisu/czas całkowity podpisu
         {
 
-            testedSignature.calcHeight();
-            testedSignature.calcLength(true);
+            //testedSignature.calcHeight();
+            //testedSignature.calcLength(true);
             //Debug.WriteLine("TUTAJ" + testedSignature.getHeight() + " " + testedSignature.getLentghO());
             //Debug.WriteLine("Liczba:     " + testedSignature.getHeight() * testedSignature.getLentghO());
             totalRatioAreaToTime = (testedSignature.getHeight() * testedSignature.getLentghO()) / this.totalDrawingTime;
