@@ -78,7 +78,7 @@ namespace PodpisBio.Src.Author
                     return author;
                 }
             }
-            return null;
+            return new Author();
         }
 
         //Sprawdza czy istnieje taki autor
