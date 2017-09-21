@@ -12,6 +12,8 @@ namespace PodpisBio.Src.Author.Weight
         
         private double lengthMWeight;
         private double strokesCountWeight;
+        private double totalRatioWeight;
+        private double totalRatioForEachStrokeWeight;
 
         public Weight(List<Signature> sign)
         {
@@ -29,6 +31,16 @@ namespace PodpisBio.Src.Author.Weight
             return this.strokesCountWeight;
         }
 
+        public double getTotalRatioWeight()
+        {
+            return this.totalRatioWeight;
+        }
+
+        public double getTotalRatioForEachStrokeWeight()
+        {
+            return this.totalRatioForEachStrokeWeight;
+        }
+
         private void init()
         {
             List<double> lengthMList = new List<double>();
@@ -38,15 +50,17 @@ namespace PodpisBio.Src.Author.Weight
 
             foreach (Signature s in this.sign)
             {
-                lengthMList.Add(s.getLentghM());
+                lengthMList.Add(s.getLengthM());
                 strokesCountList.Add(Convert.ToDouble(s.getStrokesOriginal().Count));
                 totalRatioList.Add(s.getTimeSizeProbe().getTotalRatioAreaToTime());
                 totalRatioForEachStrokeList.Add(s.getTimeSizeProbe().getRatioAreaToTimeForEachStroke());
 
             }
 
-            double calcLengthM = calcLengthM_SD(lengthMList);
-            double calcStrokesCount = calcStrokesCount_SD(strokesCountList);
+            double calcLengthM = calc_SD(lengthMList);
+            double calcStrokesCount = calc_SD(strokesCountList);
+            double calcTotalRatio = calc_SD(totalRatioList);
+            double calcTotalRatioForEachStroke = calcTotalRatioForEachStroke_SD(totalRatioForEachStrokeList);
 
             double temp = calcLengthM + calcStrokesCount;
 
@@ -54,32 +68,29 @@ namespace PodpisBio.Src.Author.Weight
             this.strokesCountWeight = calcStrokesCount / temp;
         }
 
-        private double calcLengthM_SD(List<double> list)
+        private double calc_SD(List<double> list)
         {
             double temp = 0;
-            float[] lengthM = list.Select(x => (float)x).ToArray();
-            float average = lengthM.Average();
+            float[] array = list.Select(x => (float)x).ToArray();
+            float average = array.Average();
 
-            float sumOfSquaresOfDifferences = lengthM.Select(val => (val - average) * (val - average)).Sum();
-            double sd = Math.Sqrt(sumOfSquaresOfDifferences / lengthM.Length);
+            float sumOfSquaresOfDifferences = array.Select(val => (val - average) * (val - average)).Sum();
+            double sd = Math.Sqrt(sumOfSquaresOfDifferences / array.Length);
 
             temp = 1 - (sd / Convert.ToDouble(average));
 
             return temp;
         }
 
-        private double calcStrokesCount_SD(List<double> list)
+        private double calcTotalRatioForEachStroke_SD(List<List<double>> list)
         {
             double temp = 0;
-            float[] strokesCount = list.Select(x => (float)x).ToArray();
-            float average = strokesCount.Average();
+            double[][] array = list.Select(a => a.ToArray()).ToArray();
+            
 
-            float sumOfSquaresOfDifferences = strokesCount.Select(val => (val - average) * (val - average)).Sum();
-            double sd = Math.Sqrt(sumOfSquaresOfDifferences / strokesCount.Length);
-
-            temp = 1 - (sd / Convert.ToDouble(average));
 
             return temp;
         }
+        
     }
 }
