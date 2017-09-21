@@ -13,20 +13,21 @@
             <TextBlock x:Name="penPosition" Text="Pozycja rysika: " HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" />
             <TextBlock x:Name="strokesCountLabel" Text="Liczba naciśnięć: " HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top"/>
             <TextBlock x:Name ="timeLastPressedLabel" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Czas ostatniego naciśnięcia" VerticalAlignment="Top"/>
+            <TextBlock x:Name="countOriginal" Text="Oryginalnych podpisów:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBlock x:Name="countFake" Text="Podrobionych podpisów:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         </StackPanel>
         <Button x:Name="AddAuthor" Content="Dodaj osobę" HorizontalAlignment="Left" Margin="30,220,0,0" VerticalAlignment="Top" Click="AddAuthor_Click" Width="120"/>
         <Button Content="Wyczyść" HorizontalAlignment="Left" Margin="400,290,0,0" VerticalAlignment="Top" Click="Clear_Click" />
         <Button x:Name="saveToFileButton" Content="Zapisz do pliku" HorizontalAlignment="Left" Margin="30,260,0,0" VerticalAlignment="Top" Click="SaveToFile_Click" Height="32"/>
         <Button x:Name="saveButton" Content="Zapisz" HorizontalAlignment="Left" Margin="400,250,0,0" VerticalAlignment="Top" Width="76" Click="saveButton_Click"/>
         <Button Content="Wykresy" HorizontalAlignment="Left" Margin="30,300,0,0" VerticalAlignment="Top" Click="Button_ClickAsync" Width="120" Height="32"/>
-        <ComboBox x:Name="authorCombobox" HorizontalAlignment="Left" Margin="350,180,0,0" VerticalAlignment="Top" Width="306"/>
+        <ComboBox x:Name="authorCombobox" HorizontalAlignment="Left" Margin="350,180,0,0" VerticalAlignment="Top" Width="306" SelectionChanged="authorCombobox_SelectionChanged"/>
         <TextBox x:Name="authorInputBox" HorizontalAlignment="Left" Margin="30,180,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="276" PlaceholderText="Autor"/>
         <Canvas x:Name="canvas1" HorizontalAlignment="Left" Height="0" Margin="12,114,0,0" VerticalAlignment="Top" Width="60"/>
-        <CheckBox x:Name="isOriginalCheckBox" Content="Oryginalny podpis" HorizontalAlignment="Left" Margin="340,330,0,0" VerticalAlignment="Top" Width="174" IsChecked="True"/>
-        <Button Content="Wyświetl oryginał" HorizontalAlignment="Left" Margin="250,250,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+        <CheckBox x:Name="isOriginalCheckBox" Content="Oryginalny podpis" HorizontalAlignment="Left" Margin="340,330,0,0" VerticalAlignment="Top" Width="174" IsChecked="True" Click="isOriginalCheckBox_Click"/>
 
-        <TextBlock x:Name="countOriginal" Height="50" Width="200" Margin="349,400,651,290"/>
-        <TextBlock x:Name="countFake" Height="50" Width="200" Margin="349,430,651,235"/>
+        
+        
 
         <!--InkCanvas-->
         <Grid x:Name="inkCanvasHolder" Margin="500,250,0,0" Width="300" Height="100" VerticalAlignment="Top" HorizontalAlignment="Left" Background="SkyBlue">

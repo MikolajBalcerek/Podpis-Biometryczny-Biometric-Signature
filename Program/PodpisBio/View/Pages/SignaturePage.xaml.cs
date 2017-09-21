@@ -14,6 +14,8 @@ using Windows.Foundation.Metadata;
 using PodpisBio.Src.Author;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
+using System.Linq;
+using System.Threading.Tasks;
 
 //Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -127,7 +129,7 @@ namespace PodpisBio.Src
             Clear_Screen_Add_Strokes();
         }
 
-        private async void Clear_Screen_Add_Strokes()
+        private async Task Clear_Screen_Add_Strokes()
         {
             //Clears inkCanvas
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -269,12 +271,14 @@ namespace PodpisBio.Src
             ContentDialogResult result = await dialog.ShowAsync();
         }
 
-        private void saveButton_Click(object sender, RoutedEventArgs e)
+        private async void saveButton_Click(object sender, RoutedEventArgs e)
         {
+            this.saveButton.IsEnabled = false;
             List<InkStroke> strokes = new List<InkStroke>(inkCanvas1.InkPresenter.StrokeContainer.GetStrokes());
-            Clear_Screen_Add_Strokes();
+            await Clear_Screen_Add_Strokes();
             addSignature(strokes);
             updateSignatureCount();
+            this.saveButton.IsEnabled = true;
         }
 
         private void displayAuthorSignature()
