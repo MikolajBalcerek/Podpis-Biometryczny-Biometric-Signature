@@ -34,7 +34,7 @@ namespace PodpisBio.Src.Author
                     this.authors.AddRange(authors);
                     foreach(var author in authors)
                     {
-                        foreach(var sign in author.getSignatures())
+                        foreach(var sign in author.getAllSignatures())
                         {
                             foreach(var stroke in sign.getStrokesOriginal())
                             {
