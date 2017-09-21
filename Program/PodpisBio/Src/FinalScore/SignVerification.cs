@@ -43,7 +43,7 @@ namespace PodpisBio.Src.FinalScore
 
         private double checkLengthM(Signature first, Signature second)
         {
-            double temp = 1-(Math.Abs(first.getLentghM()-second.getLentghM()) / first.getLentghM());
+            double temp = 1-(Math.Abs(first.getLengthM()-second.getLengthM()) / first.getLengthM());
             if (temp < 0) { return 0; }
 
             return temp;
