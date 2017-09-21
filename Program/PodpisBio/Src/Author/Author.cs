@@ -38,9 +38,35 @@ namespace PodpisBio.Src.Author
 
         public String getName() { return Name; }
 
-        public List<Signature> getSignatures()
+        public List<Signature> getAllSignatures()
         {
             return Signatures;
+        }
+
+        public List<Signature> getOriginalSignatures()
+        {
+            List<Signature> original = new List<Signature>();
+            foreach(var sign in Signatures)
+            {
+                if (sign.isOriginal)
+                {
+                    original.Add(sign);
+                }
+            }
+            return original;
+        }
+
+        public List<Signature> getFakeSignatures()
+        {
+            List<Signature> fake = new List<Signature>();
+            foreach (var sign in Signatures)
+            {
+                if (!sign.isOriginal)
+                {
+                    fake.Add(sign);
+                }
+            }
+            return fake;
         }
 
         public Signature getSignature(int index)

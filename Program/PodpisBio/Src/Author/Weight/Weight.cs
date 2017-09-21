@@ -33,11 +33,16 @@ namespace PodpisBio.Src.Author.Weight
         {
             List<double> lengthMList = new List<double>();
             List<double> strokesCountList = new List<double>();
+            List<double> totalRatioList = new List<double>();
+            List<List<double>> totalRatioForEachStrokeList = new List<List<double>>();
 
             foreach (Signature s in this.sign)
             {
                 lengthMList.Add(s.getLentghM());
                 strokesCountList.Add(Convert.ToDouble(s.getStrokesOriginal().Count));
+                totalRatioList.Add(s.getTimeSizeProbe().getTotalRatioAreaToTime());
+                totalRatioForEachStrokeList.Add(s.getTimeSizeProbe().getRatioAreaToTimeForEachStroke());
+
             }
 
             double calcLengthM = calcLengthM_SD(lengthMList);

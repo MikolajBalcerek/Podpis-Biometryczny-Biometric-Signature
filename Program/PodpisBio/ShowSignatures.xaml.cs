@@ -200,7 +200,7 @@ namespace PodpisBio
             var normalised = new List<double>();
             var height = canvas1.ActualHeight;
             foreach (var sample in samples)
-                normalised.Add(height * (sample) / (samples.Max() - samples.Min()) + height);
+                normalised.Add(.7 * height * (sample - samples.Min()) / (samples.Max() - samples.Min()) + .7 * height);
             //is 0 division possible here
             return normalised;
         }

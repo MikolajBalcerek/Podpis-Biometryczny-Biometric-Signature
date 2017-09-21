@@ -300,7 +300,7 @@ namespace PodpisBio.Src
                     p.Add(points[i].getY());
                 }
             }
-            p.Distinct();
+            p = p.Distinct().ToList();
             if (p.Count() > 0)
             {
                 double min = p[0];

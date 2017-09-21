@@ -41,7 +41,7 @@ namespace PodpisBio.Src
             this.initializePenHandlers();
 
             //inicjalizacja wielkości pola do rysowania
-            this.initRealSizeInkCanvas(130, 50);
+            this.initRealSizeInkCanvas(110, 40);
 
             
         }
@@ -315,6 +315,13 @@ namespace PodpisBio.Src
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             displayAuthorSignature();
+        }
+
+        private void TestButton_Click(object sender, RoutedEventArgs e)
+        {
+            var author = authorController.getAuthor(authorCombobox.SelectedItem.ToString());
+            this.countOriginal.Text = "Oryginalnych podpisów: " + author.getOriginalSignatures().Count;
+            this.countFake.Text = "Podrobionych podpisów: " + author.getFakeSignatures().Count;
         }
     }
 }
