@@ -71,12 +71,11 @@ namespace PodpisBio.Src.Author
 
         public Signature getSignature(int index)
         {
-            if (this.Signatures.Count <= index)
+            if (this.getAllSignatures().Any())
             {
-                Debug.WriteLine("indeks większy od liczby podpisów.");
-                //getSignature();
+                return this.getAllSignatures()[index];
             }
-            return this.Signatures[index];
+            return new Signature();
         }
 
         public int getSignaturesNumber()
