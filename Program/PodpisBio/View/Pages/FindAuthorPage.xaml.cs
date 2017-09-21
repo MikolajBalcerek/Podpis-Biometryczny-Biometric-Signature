@@ -29,7 +29,7 @@ namespace PodpisBio.Src
             inkCanvas1.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen;
 
             //inicjalizacja wielkości pola do rysowania
-            this.initRealSizeInkCanvas(130, 50);
+            this.initRealSizeInkCanvas(110, 40);
         }
         private void initRealSizeInkCanvas(double mmWidth, double mmHeight)
         {
