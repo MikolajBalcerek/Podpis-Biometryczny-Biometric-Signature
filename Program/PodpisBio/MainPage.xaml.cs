@@ -331,7 +331,7 @@ namespace PodpisBio
             displayAuthorSignature();
         }
 
-        private void authorCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void TestButton_Click(object sender, RoutedEventArgs e)
         {
             var author = authorController.getAuthor(authorCombobox.SelectedItem.ToString());
             this.countOriginal.Text = "Oryginalnych podpisów: " + author.getOriginalSignatures().Count;
