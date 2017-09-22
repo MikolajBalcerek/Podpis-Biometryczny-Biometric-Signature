@@ -1,95 +1,72 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Core;
 using Windows.UI.Input.Inking.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using System.Diagnostics;
-using PodpisBio.Src;
-using PodpisBio.Src.Author;
-using System.Threading.Tasks;
-using System.Text;
 using Windows.UI.Input.Inking;
 using Windows.ApplicationModel.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI;
-using Windows.UI.Xaml.Shapes;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.Graphics.Display;
-using PodpisBio.Src.Service;
 using Windows.Foundation.Metadata;
+using PodpisBio.Src.Author;
+using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Shapes;
+using System.Linq;
+using System.Threading.Tasks;
 
-//Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x415
+//Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace PodpisBio
+namespace PodpisBio.Src
 {
     /// <summary>
     /// Pusta strona, która może być używana samodzielnie lub do której można nawigować wewnątrz ramki.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class SignaturePage : Page
     {
         private int strokesCount; //Liczba przyciśnięć tylko do poglądu, Signature ma swój
         public Stopwatch timer; //Obiekt zajmujący się czasem ogólnoaplikacji
 
-        SignatureController signatureController;
         AuthorController authorController;
-        public MainPage()
+        SignatureController signatureController;
+        public SignaturePage()
         {
+
             //Start the clock!
             timer = new Stopwatch();
             timer.Start();
 
             signatureController = new SignatureController();
-            authorController = new AuthorController(signatureController);
             this.InitializeComponent();
             this.initializePenHandlers();
 
             //inicjalizacja wielkości pola do rysowania
             this.initRealSizeInkCanvas(110, 40);
 
-            this.setNavbarColor();
-
-            //ściągnięcie listy autorów żeby wyświetliło default
-            this.updateAuthorCombobox();
-            this.authorCombobox.SelectionChangedTrigger = ComboBoxSelectionChangedTrigger.Committed;
-            //this.authorCombobox.SelectedIndex = 0;       
+            
         }
 
-        private void initRealSizeInkCanvas(double mmWidth, double mmHeight)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            //base.OnNavigatedTo(e);
+            this.authorController = (AuthorController)e.Parameter;
+
+            //Zaktualizowanie listy autorów
+            this.updateAuthorCombobox();
+        }
+
+            private void initRealSizeInkCanvas(double mmWidth, double mmHeight)
         {
             RealScreenSizeCalculator calc = new RealScreenSizeCalculator();
-            int width = (int) calc.convertToPixels(mmWidth);
+            int width = (int)calc.convertToPixels(mmWidth);
             int height = (int)calc.convertToPixels(mmHeight);
             inkCanvasHolder.Height = height;
             inkCanvasHolder.Width = width;
             guideLine.X1 = 0.05 * width;
             guideLine.X2 = 0.95 * width;
             guideLine.Y1 = guideLine.Y2 = 0.7 * height;
-        }
-
-        private void setNavbarColor()
-        {
-            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
-            {
-                var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-                if (titleBar != null)
-                {
-                    titleBar.ButtonBackgroundColor = Color.FromArgb(255, 63, 81, 181);
-                    titleBar.ButtonForegroundColor = Colors.White;
-                    titleBar.BackgroundColor = Color.FromArgb(255, 63, 81, 181);
-                    titleBar.ForegroundColor = Colors.White;
-                }
-            }
         }
 
         private void initializePenHandlers()
@@ -113,7 +90,7 @@ namespace PodpisBio
         //Event handler dla rysowania
         private void Core_PointerMoving(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
-            updateInfoInLabel(label1, "Adam rysuje X: " + args.CurrentPoint.Position.X + ", Y: " + args.CurrentPoint.Position.Y + ", z mocą: " + args.CurrentPoint.Properties.Pressure + ", " + args.CurrentPoint.Properties.Twist);
+            updateInfoInLabel(penPosition, "Adam rysuje X: " + args.CurrentPoint.Position.X + ", Y: " + args.CurrentPoint.Position.Y + ", z mocą: " + args.CurrentPoint.Properties.Pressure + ", " + args.CurrentPoint.Properties.Twist);
         }
 
         //Event handler dla rysowania
@@ -130,7 +107,7 @@ namespace PodpisBio
             }
 
             strokesCount = strokesCount + 1;
-            
+
             updateInfoInLabel(strokesCountLabel, "Ilość naciśnięć: " + strokesCount);
             updateInfoInLabel(timeLastPressedLabel, "Czas ostatniego naciśnięcia w ms:  " + timer.ElapsedMilliseconds);
             //Debug.WriteLine("Adam wcisnął " + strokesCount + " razy" + "ostatni raz " + timer.ElapsedMilliseconds);
@@ -152,7 +129,7 @@ namespace PodpisBio
             Clear_Screen_Add_Strokes();
         }
 
-        private async void Clear_Screen_Add_Strokes()
+        private async Task Clear_Screen_Add_Strokes()
         {
             //Clears inkCanvas
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -181,11 +158,11 @@ namespace PodpisBio
             try
             {
                 var author = authorController.getAuthor(authorCombobox.SelectedItem.ToString());
-                if(signatureController.addSignature(strokes, author, isOriginal) == null)
+                if (signatureController.addSignature(strokes, author, isOriginal) == null)
                 {
                     DisplayWarningMessage("Błąd", "Próba dodania podpisu zakończona niepowodzeniem");
                 }
-                
+
             }
             catch (System.NullReferenceException)
             {
@@ -208,7 +185,7 @@ namespace PodpisBio
                 Debug.WriteLine("Author name cannot be empty");
                 authorInputBox.Background = new SolidColorBrush(Color.FromArgb(180, 255, 0, 0));
             }
-            else if(authorController.isContaining(authorInputBox.Text))
+            else if (authorController.isContaining(authorInputBox.Text))
             {
                 Debug.WriteLine("Author already exists");
                 authorInputBox.Background = new SolidColorBrush(Color.FromArgb(180, 255, 0, 0));
@@ -219,23 +196,33 @@ namespace PodpisBio
                 authorInputBox.Text = "";
                 authorInputBox.Background = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
                 updateAuthorCombobox();
-            } 
+            }
         }
 
         private void updateAuthorCombobox()
         {
             authorCombobox.Items.Clear();
 
-            foreach(var authorName in authorController.getAuthorsNames())
+            foreach (var authorName in authorController.getAuthorsNames())
             {
                 authorCombobox.Items.Add(authorName);
             }
 
-            authorCombobox.SelectedIndex = authorCombobox.Items.Count - 1;
+            if (authorCombobox.Items.Count.Equals(0))
+            {
+                authorCombobox.IsEnabled = false;
+            }
+            else
+            {
+                authorCombobox.IsEnabled = true;
+                authorCombobox.SelectedIndex = authorCombobox.Items.Count - 1;
+            }
+
+            
         }
 
         private async void Button_ClickAsync(object sender, RoutedEventArgs e)
-         //GUZIK WYKRESY
+        //GUZIK WYKRESY
         {
             if (authorController.Empty())
             {
@@ -284,12 +271,14 @@ namespace PodpisBio
             ContentDialogResult result = await dialog.ShowAsync();
         }
 
-        private void saveButton_Click(object sender, RoutedEventArgs e)
+        private async void saveButton_Click(object sender, RoutedEventArgs e)
         {
+            this.saveButton.IsEnabled = false;
             List<InkStroke> strokes = new List<InkStroke>(inkCanvas1.InkPresenter.StrokeContainer.GetStrokes());
-            Clear_Screen_Add_Strokes();
+            await Clear_Screen_Add_Strokes();
             addSignature(strokes);
             updateSignatureCount();
+            this.saveButton.IsEnabled = true;
         }
 
         private void displayAuthorSignature()
