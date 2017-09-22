@@ -26,8 +26,8 @@
         <Canvas x:Name="canvas1" HorizontalAlignment="Left" Height="0" Margin="12,114,0,0" VerticalAlignment="Top" Width="60"/>
         <CheckBox x:Name="isOriginalCheckBox" Content="Oryginalny podpis" HorizontalAlignment="Left" Margin="340,330,0,0" VerticalAlignment="Top" Width="174" IsChecked="True" Click="isOriginalCheckBox_Click"/>
 
-        
-        
+
+
 
         <!--InkCanvas-->
         <Grid x:Name="inkCanvasHolder" Margin="500,250,0,0" Width="300" Height="100" VerticalAlignment="Top" HorizontalAlignment="Left" Background="SkyBlue">

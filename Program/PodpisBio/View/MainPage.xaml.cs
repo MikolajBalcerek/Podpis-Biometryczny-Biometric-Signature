@@ -22,7 +22,7 @@ namespace PodpisBio
         {
             this.InitializeComponent();
             this.setNavbarColor();
-            this.signatureController = new SignatureController();
+            this.signatureController = SignatureController.Instance;
             this.authorController = new AuthorController(signatureController);
             this.goToDefaultPage(this, null);
             this.showTitleBar(true);

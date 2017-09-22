@@ -1,4 +1,5 @@
 ﻿using PodpisBio.Src.Author;
+using PodpisBio.Src.FinalScore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,6 +8,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
+using Windows.UI.Input.Inking;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -14,6 +16,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+
 
 //Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -59,8 +62,31 @@ namespace PodpisBio.Src
 
         private void VerifyButton_Click(object sender, RoutedEventArgs e)
         {
+            
+            // button weryfikuj
+
+            // pobierz strokes z tablicy
+            List<InkStroke> strokes = new List<InkStroke>(inkCanvas1.InkPresenter.StrokeContainer.GetStrokes());
+            
+            //wyczyść ekran
             inkCanvas1.InkPresenter.StrokeContainer.Clear();
+
+            //stwórz nową sygnaturę dla pustego autora
+            Signature addedSignature = SignatureController.Instance.addSignature(strokes, new Author.Author(), false);
+            
+            //zainicjuj nowoutworzoną sygnaturę
+            addedSignature.init();
+
+            //pobierz listę sygnatur dla wybranego autora na stronie VerifyAuthorPage
+            var ListOfSignatures = authorController.getAuthor(authorCombobox.SelectedItem.ToString()).getAllSignatures();
+
+            //Utwórz obiekt i zacznij weryfikację
+            SignVerification verification = new SignVerification();
+            verification.init(addedSignature, ListOfSignatures);
+            
         }
+
+
 
         private void updateAuthorCombobox()
         {

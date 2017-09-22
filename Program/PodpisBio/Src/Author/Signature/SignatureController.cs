@@ -11,10 +11,22 @@ namespace PodpisBio.Src.Author
 {
     class SignatureController
     {
+        //IMPLEMENTACJA singleton, jeden globalny signature controller
+        //Zostało tak zaimplenetowan, ponieważ ta klasa zajmuje się dodawaniem 
+        private static readonly SignatureController instance = new SignatureController();
+        private SignatureController() { }
+
+        public static SignatureController Instance
+        {
+            get
+            {
+                return instance;
+            }
+        }
+
         private List<Signature> signatures = new List<Signature>();
         private SignatureService signatureService = new SignatureService();
 
-        public SignatureController() { }
 
         //Dodaje podpis (do bazy i lokalnie)
         public Signature addSignature(List<InkStroke> listStroke, Author author, bool isOriginal)

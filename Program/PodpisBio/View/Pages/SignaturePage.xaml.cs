@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 using System.Linq;
 using System.Threading.Tasks;
+using PodpisBio.Src.FinalScore;
 
 //Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -24,7 +25,7 @@ namespace PodpisBio.Src
     /// <summary>
     /// Pusta strona, która może być używana samodzielnie lub do której można nawigować wewnątrz ramki.
     /// </summary>
-    public sealed partial class SignaturePage : Page
+    public partial class SignaturePage : Page
     {
         private int strokesCount; //Liczba przyciśnięć tylko do poglądu, Signature ma swój
         public Stopwatch timer; //Obiekt zajmujący się czasem ogólnoaplikacji
@@ -38,7 +39,7 @@ namespace PodpisBio.Src
             timer = new Stopwatch();
             timer.Start();
 
-            signatureController = new SignatureController();
+            signatureController = SignatureController.Instance;
             this.InitializeComponent();
             this.initializePenHandlers();
 
@@ -52,6 +53,7 @@ namespace PodpisBio.Src
         {
             //base.OnNavigatedTo(e);
             this.authorController = (AuthorController)e.Parameter;
+            
 
             //Zaktualizowanie listy autorów
             this.updateAuthorCombobox();
@@ -142,7 +144,7 @@ namespace PodpisBio.Src
 
 
         //Add signature
-        private void addSignature(List<InkStroke> strokes)
+        public void addSignature(List<InkStroke> strokes)
         {
             if (strokes.Count == 0)
             {
@@ -329,6 +331,21 @@ namespace PodpisBio.Src
         {
             displayAuthorSignature();
         }
+
+        /*
+        private async void VerificationButton_ClickAsync(object sender, RoutedEventArgs e)
+        {
+            //tymczasowy button weryfikuj
+            List<InkStroke> strokes = new List<InkStroke>(inkCanvas1.InkPresenter.StrokeContainer.GetStrokes());
+            await Clear_Screen_Add_Strokes();
+            Signature addedSignature = signatureController.addSignature(strokes, new Author.Author(), false);
+            addedSignature.init();
+            var ListOfSignatures = authorController.getAuthor(authorCombobox.SelectedItem.ToString()).getAllSignatures();
+            SignVerification verification = new SignVerification();
+            verification.init(addedSignature, ListOfSignatures);
+
+        }
+        */
 
         private void authorCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
