@@ -96,6 +96,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Src\Author\Weight\Weight.cs" />
+    <Compile Include="Src\FinalScore\DynamicTimeWrapping.cs" />
     <Compile Include="Src\FinalScore\SignVerification.cs" />
     <Compile Include="Src\Service\AuthorService.cs" />
     <Compile Include="Src\Service\Base.cs" />
