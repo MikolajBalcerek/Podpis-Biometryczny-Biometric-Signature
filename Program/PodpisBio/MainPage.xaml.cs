@@ -61,6 +61,7 @@ namespace PodpisBio
 
             //ściągnięcie listy autorów żeby wyświetliło default
             this.updateAuthorCombobox();
+            this.authorCombobox.SelectionChangedTrigger = ComboBoxSelectionChangedTrigger.Committed;
             //this.authorCombobox.SelectedIndex = 0;       
         }
 
@@ -164,10 +165,8 @@ namespace PodpisBio
 
 
         //Add signature
-        private void addSignature()
+        private void addSignature(List<InkStroke> strokes)
         {
-            List<InkStroke> strokes = new List<InkStroke>(inkCanvas1.InkPresenter.StrokeContainer.GetStrokes());
-
             if (strokes.Count == 0)
             {
                 DisplayNoSignaturesDialog();
@@ -287,55 +286,68 @@ namespace PodpisBio
 
         private void saveButton_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                addSignature();
-                Clear_Screen_Add_Strokes();
-            }
-            catch(ArgumentOutOfRangeException){ Debug.WriteLine("Nie można zapisać pustego podpisu!"); }
-
-            
+            List<InkStroke> strokes = new List<InkStroke>(inkCanvas1.InkPresenter.StrokeContainer.GetStrokes());
+            Clear_Screen_Add_Strokes();
+            addSignature(strokes);
+            updateSignatureCount();
         }
 
         private void displayAuthorSignature()
         {
             this.showSignature.Children.Clear();
+            //Sprawdza czy checkBox jest odznaczony
             if (!this.isOriginalCheckBox.IsChecked.Value)
             {
-                if (!authorCombobox.Items.Count.Equals(0))
+                //Sprawdza czy są autorzy na liście
+                if (authorCombobox.Items.Any())
                 {
                     var signature = authorController.getAuthor(authorCombobox.SelectedItem.ToString()).getSignature(0);
-                    var ptsToDraw = new PointCollection();
-                    foreach (var stroke in signature.getStrokesOriginal())
-                    {
-                        var points = new PointCollection();
-                        foreach (var point in stroke.getPoints())
-                            points.Add(new Windows.Foundation.Point(point.getX(), point.getY()));
-                        drawPoints(points);
-                    }
+                    drawOriginalSignature(signature);
                 }
             }
         }
 
-        private void drawPoints(PointCollection points)
+        private void drawOriginalSignature(Signature signature)
         {
-            var polyline = new Polyline();
-            polyline.Stroke = new SolidColorBrush(Windows.UI.Colors.Black);
-            polyline.StrokeThickness = 1;
-            polyline.Points = points;
-            this.showSignature.Children.Add(polyline);
+            var ptsToDraw = new PointCollection();
+            foreach (var stroke in signature.getStrokesOriginal())
+            {
+                var points = new PointCollection();
+                foreach (var point in stroke.getPoints())
+                {
+                    points.Add(new Windows.Foundation.Point(point.getX(), point.getY()));
+                }
+                var polyline = new Polyline();
+                polyline.Stroke = new SolidColorBrush(Colors.Black);//new SolidColorBrush(Windows.UI.Colors.Black);
+                polyline.StrokeThickness = 1;
+                polyline.Points = points;
+                this.showSignature.Children.Add(polyline);
+            }
+
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void updateSignatureCount()
+        {
+            if (!authorCombobox.SelectedIndex.Equals(-1))
+            {
+                var author = authorController.getAuthor(authorCombobox.SelectedItem.ToString());
+                this.countOriginal.Text = "Oryginalnych podpisów: " + author.getOriginalSignatures().Count;
+                this.countFake.Text = "Podrobionych podpisów: " + author.getFakeSignatures().Count;
+            }
+        }
+
+        private void isOriginalCheckBox_Click(object sender, RoutedEventArgs e)
         {
             displayAuthorSignature();
         }
 
-        private void TestButton_Click(object sender, RoutedEventArgs e)
+        private void authorCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var author = authorController.getAuthor(authorCombobox.SelectedItem.ToString());
-            this.countOriginal.Text = "Oryginalnych podpisów: " + author.getOriginalSignatures().Count;
-            this.countFake.Text = "Podrobionych podpisów: " + author.getFakeSignatures().Count;
+            if (!authorCombobox.SelectedIndex.Equals(-1))
+            {
+                updateSignatureCount();
+                displayAuthorSignature();
+            }
         }
     }
 }

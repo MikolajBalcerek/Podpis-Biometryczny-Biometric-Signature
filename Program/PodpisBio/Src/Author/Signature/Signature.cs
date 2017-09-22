@@ -82,12 +82,12 @@ namespace PodpisBio.Src
         
 
 
-        public double getLentghO()
+        public double getLengthO()
         {
             return this.lengthO;
         }
 
-        public double getLentghM()
+        public double getLengthM()
         {
             return this.lengthM;
         }
@@ -300,7 +300,7 @@ namespace PodpisBio.Src
                     p.Add(points[i].getY());
                 }
             }
-            p = p.Distinct().ToList();
+            p=p.Distinct().ToList();
             if (p.Count() > 0)
             {
                 double min = p[0];

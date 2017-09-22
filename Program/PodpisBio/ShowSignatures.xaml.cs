@@ -82,6 +82,7 @@ namespace PodpisBio
                 this.signatureIndexes.Add(i);
             for (int i = 0; i < author.getSignaturesNumber(); i++)
                 Debug.WriteLine(this.signatureIndexes[i]);
+            updatePlot();
         }
 
         private void sigComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -93,6 +94,7 @@ namespace PodpisBio
             var index = sigCombobox.SelectedIndex;
             this.signature = author.getSignature(index);
             updateInfoBoxTimeSize(); //wyświetla informacje o TimeSizeProbe dla tego podpisu
+            updatePlot();
         }
 
         private void drawPoints(PointCollection points)
@@ -116,20 +118,23 @@ namespace PodpisBio
             ContentDialogResult result = await dialog.ShowAsync();
         }
 
-        private void ShowPlot_Click(object sender, RoutedEventArgs e)
+        private void updatePlot()
         {
-            canvas1.Children.Clear();
-            if(this.signature == null || plotCombobox.SelectedItem == null)
+            if (!autCombobox.SelectedIndex.Equals(-1) && !sigCombobox.SelectedIndex.Equals(-1) && !plotCombobox.SelectedIndex.Equals(-1))
             {
-                NullSignatureDialog();
-                return;
+                canvas1.Children.Clear();
+                if (this.signature == null || plotCombobox.SelectedItem == null)
+                {
+                    NullSignatureDialog();
+                    return;
+                }
+                Debug.WriteLine("Wartość plotComboboxa to " + plotCombobox.SelectedItem.ToString());
+                var option = plotCombobox.SelectedItem.ToString();
+                if (option == "Podpis")
+                    drawSignature();
+                else
+                    drawFeature(option);
             }
-            Debug.WriteLine("Wartość plotComboboxa to " + plotCombobox.SelectedItem.ToString());
-            var option = plotCombobox.SelectedItem.ToString();
-            if (option == "Podpis")
-                drawSignature();
-            else
-                drawFeature(option);
         }
 
         private void drawFeature(string option)
@@ -251,6 +256,27 @@ namespace PodpisBio
             }
             
 
+        }
+
+        private void plotCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            updatePlot();
+        }
+
+        private void ShowPlot_Click(object sender, RoutedEventArgs e)
+        {
+            canvas1.Children.Clear();
+            if (this.signature == null || plotCombobox.SelectedItem == null)
+            {
+                NullSignatureDialog();
+                return;
+            }
+            Debug.WriteLine("Wartość plotComboboxa to " + plotCombobox.SelectedItem.ToString());
+            var option = plotCombobox.SelectedItem.ToString();
+            if (option == "Podpis")
+                drawSignature();
+            else
+                drawFeature(option);
         }
     }
 }
