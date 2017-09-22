@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace PodpisBio.Src.Author.Weight
+namespace PodpisBio.Src
 {
     class Weight
     {
@@ -68,7 +68,7 @@ namespace PodpisBio.Src.Author.Weight
             this.strokesCountWeight = calcStrokesCount / temp * forWeight;
             this.totalRatioWeight = calcTotalRatio / temp * forWeight;
             this.totalRatioForEachStrokeWeight = calcTotalRatioForEachStroke / temp * forWeight;
-            //Debug.WriteLine("Wagi heheszki");
+            //Debug.WriteLine("Wagi heheszki "+ this.lengthMWeight +" "+ this.strokesCountWeight+" "+ this.totalRatioWeight+" "+ this.totalRatioForEachStrokeWeight);
         }
 
         private double calc_SD(List<double> list)

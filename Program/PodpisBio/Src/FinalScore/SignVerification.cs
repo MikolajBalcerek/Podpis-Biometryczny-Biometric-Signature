@@ -9,19 +9,20 @@ namespace PodpisBio.Src.FinalScore
 {
     class SignVerification
     {
-        public List<double> init(Signature sign, List<Signature> signList/*, Wagi*/)
+        public List<double> init(Signature sign, List<Signature> signList, Weight weights)
         {
             List<double> ver = new List<double>();
             foreach(Signature first in signList)
             {
-                ver.Add(check(first, sign));
+                ver.Add(check(first, sign, weights));
             }
 
             return ver;
         }
 
-        private double check(Signature first, Signature second/*, Wagi*/)
+        private double check(Signature first, Signature second, Weight weights)
         {
+            double preciseWeight = 0.3;
             double temp = 0;
             double lengthM = checkLengthM(first, second);
             if (lengthM < 0.5)
@@ -35,8 +36,8 @@ namespace PodpisBio.Src.FinalScore
             /*
              */
 
-            temp = (lengthM + strokesCount + timeSizeRatio + timeSizeRatioForEachStroke + preciseComparison) / 5;
-            //temp = lengthM * waga + strokesCount * waga + timeSizeRatio * waga + timeSizeRatioForEachStroke * waga + preciseComparison * waga;
+            //temp = (lengthM + strokesCount + timeSizeRatio + timeSizeRatioForEachStroke + preciseComparison) / 5;
+            temp = lengthM * weights.getLengthMWeight() + strokesCount * weights.getStrokesCountWeight() + timeSizeRatio * weights.getTotalRatioWeight() + timeSizeRatioForEachStroke * weights.getTotalRatioForEachStrokeWeight() + preciseComparison * preciseWeight;
 
             return temp;
         }

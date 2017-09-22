@@ -16,7 +16,7 @@ namespace PodpisBio.Src.Author
         public int Id { get; set; }
         public String Name { get; set; }
         public List<Signature> Signatures { get; set; }
-        public Weight.Weight Weights { get; set; }
+        public Weight Weights { get; set; }
         //KONIEC//
 
         public Author()
@@ -37,7 +37,7 @@ namespace PodpisBio.Src.Author
 
         public void calcWeights()
         {
-            this.Weights = new Weight.Weight(getOriginalSignatures());
+            this.Weights = new Weight(getOriginalSignatures());
         }
 
         public int getId() { return Id; }
@@ -84,7 +84,7 @@ namespace PodpisBio.Src.Author
             return new Signature();
         }
 
-        public Weight.Weight getWeight()
+        public Weight getWeight()
         {
             return this.Weights;
         }
