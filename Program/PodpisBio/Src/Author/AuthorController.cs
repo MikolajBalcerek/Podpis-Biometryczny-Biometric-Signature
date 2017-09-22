@@ -43,6 +43,8 @@ namespace PodpisBio.Src.Author
                             sign.init();
                             signatureController.addSignature(sign);
                         }
+                        //Póki nie ma w bazie danych
+                        author.calcWeights();
                     }
                 }  
             }

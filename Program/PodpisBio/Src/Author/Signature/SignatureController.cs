@@ -32,6 +32,7 @@ namespace PodpisBio.Src.Author
                 author.addSignature(signature);
                 this.signatures.Add(signature);
             }
+            author.calcWeights();
 
             return signature;
         }
