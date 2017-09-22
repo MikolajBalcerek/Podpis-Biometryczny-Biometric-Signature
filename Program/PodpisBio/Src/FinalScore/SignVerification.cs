@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +33,6 @@ namespace PodpisBio.Src.FinalScore
             double timeSizeRatioForEachStroke = checkTimeSizeRatioForEachStroke(first, second);
             double preciseComparison = checkPreciseComparison(first, second);
             /*
-             * Inne
              */
 
             temp = (lengthM + strokesCount + timeSizeRatio + timeSizeRatioForEachStroke + preciseComparison) / 5;
@@ -51,19 +51,50 @@ namespace PodpisBio.Src.FinalScore
 
         private double checkStrokesCount(Signature original, Signature testSubject/*, Wagi*/)
         {
-            double temp = 1;
-            
-            
+            //NIEPRZETESTOWANE!!
+            //sprawdzenie ilości stroków dla nowego podpisu wobec każdego z podpisów oryginalnych z osobna
+            double score = 1; // Zmienna zwracająca jak dobrze metoda uważa podpis jest wiarygodny
 
-            return temp;
+            int originalCount = original.getStrokesOriginal().Count();
+            int testSubjectCount = original.getStrokesOriginal().Count();
+
+            if (originalCount == testSubjectCount)
+            {
+                score = 1;
+            }
+            else
+            {
+                score = 1 - (Math.Abs(originalCount - testSubjectCount) * 0.20);
+                if (score <= 0)
+                {
+                    score = 0;
+                }
+            }
+            Debug.WriteLine("Wynik SignVerification dla checkStrokesCount " + score);
+
+            return score;
         }
 
-        private double checkTimeSizeRatio(Signature first, Signature second/*, Wagi*/)
+        private double checkTimeSizeRatio(Signature original, Signature testSubject /*, Wagi*/)
         {
-            double temp = 1;
 
+            //NIEPRZETESTOWANE!!
+            //sprawdzenie checkTimeSizeRatio dla nowego podpisu wobec każdego z podpisów oryginalnych z osobna
+            double score = 1; // Zmienna zwracająca jak dobrze metoda uważa podpis jest wiarygodny
+            double originalTotalRatio = original.getTimeSizeProbe().getTotalRatioAreaToTime();
+            double testSubjectTotalRatio = testSubject.getTimeSizeProbe().getTotalRatioAreaToTime();
 
-            return temp;
+            if ((originalTotalRatio/testSubjectTotalRatio) <= 1)
+            {
+                score = 1 - (1 - originalTotalRatio / testSubjectTotalRatio);
+            }
+            else
+            {
+                score = 1 - (((originalTotalRatio / testSubjectTotalRatio)) - 1);
+            }
+
+            Debug.WriteLine("Wynik SignVerification dla checkTimeSizeRatio " + score);
+            return score;
         }
 
         private double checkTimeSizeRatioForEachStroke(Signature first, Signature second/*, Wagi*/)
