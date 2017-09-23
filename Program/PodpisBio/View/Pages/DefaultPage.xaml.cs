@@ -20,9 +20,9 @@ namespace PodpisBio.Src
     /// <summary>
     /// Pusta strona, która może być używana samodzielnie lub do której można nawigować wewnątrz ramki.
     /// </summary>
-    public sealed partial class AddNewUserPage : Page
+    public sealed partial class DefaultPage : Page
     {
-        public AddNewUserPage()
+        public DefaultPage()
         {
             this.InitializeComponent();
         }

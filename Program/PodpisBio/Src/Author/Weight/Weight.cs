@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace PodpisBio.Src.Author.Weight
+namespace PodpisBio.Src
 {
     class Weight
     {
@@ -43,6 +42,7 @@ namespace PodpisBio.Src.Author.Weight
 
         private void init()
         {
+            double forWeight = 0.7;
             List<double> lengthMList = new List<double>();
             List<double> strokesCountList = new List<double>();
             List<double> totalRatioList = new List<double>();
@@ -57,15 +57,18 @@ namespace PodpisBio.Src.Author.Weight
 
             }
 
-            double calcLengthM = calc_SD(lengthMList);
-            double calcStrokesCount = calc_SD(strokesCountList);
-            double calcTotalRatio = calc_SD(totalRatioList);
-            double calcTotalRatioForEachStroke = calcTotalRatioForEachStroke_SD(totalRatioForEachStrokeList);
+            double calcLengthM = calcLengthM_SD(lengthMList);
+            double calcStrokesCount = calcStrokesCount_SD(strokesCountList);
+            double calcTotalRatio = calcTotalRatio_SD(totalRatioList) * 2.0;
+            double calcTotalRatioForEachStroke = calcTotalRatio / 2.0;
 
-            double temp = calcLengthM + calcStrokesCount;
+            double temp = calcLengthM + calcStrokesCount + calcTotalRatio + calcTotalRatioForEachStroke;
 
-            this.lengthMWeight = calcLengthM / temp;
-            this.strokesCountWeight = calcStrokesCount / temp;
+            this.lengthMWeight = calcLengthM / temp * forWeight;
+            this.strokesCountWeight = calcStrokesCount / temp * forWeight;
+            this.totalRatioWeight = calcTotalRatio / temp * forWeight;
+            this.totalRatioForEachStrokeWeight = calcTotalRatioForEachStroke / temp * forWeight;
+            //Debug.WriteLine("Wagi heheszki "+ this.lengthMWeight +" "+ this.strokesCountWeight+" "+ this.totalRatioWeight+" "+ this.totalRatioForEachStrokeWeight);
         }
 
         private double calc_SD(List<double> list)
@@ -78,19 +81,35 @@ namespace PodpisBio.Src.Author.Weight
             double sd = Math.Sqrt(sumOfSquaresOfDifferences / array.Length);
 
             temp = 1 - (sd / Convert.ToDouble(average));
+            if (temp < 0) { return 0.0; }
 
             return temp;
         }
 
-        private double calcTotalRatioForEachStroke_SD(List<List<double>> list)
+        private double calcLengthM_SD(List<double> list)
         {
-            double temp = 0;
-            double[][] array = list.Select(a => a.ToArray()).ToArray();
+            return calc_SD(list);
+        }
+
+        private double calcStrokesCount_SD(List<double> list)
+        {
+            return calc_SD(list);
+        }
+
+        private double calcTotalRatio_SD(List<double> list)
+        {
+            return calc_SD(list);
+        }
+
+        //private double calcTotalRatioForEachStroke_SD(List<List<double>> list)
+        //{
+        //    double temp = 0;
+        //    double[][] array = list.Select(a => a.ToArray()).ToArray();
             
 
 
-            return temp;
-        }
+        //    return temp;
+        //}
         
     }
 }
