@@ -28,12 +28,12 @@ namespace PodpisBio.Src.Author
             var responseSignature = signatureService.postSignature(signature);
             if (responseSignature != null)
             {
-                signature.init();
-                author.addSignature(signature);
-                this.signatures.Add(signature);
+                //signature.init();
+                author.addSignature(responseSignature);
+                this.signatures.Add(responseSignature);
             }
 
-            return signature;
+            return responseSignature;
         }
 
         public void addSignature(Signature signature)
@@ -63,7 +63,7 @@ namespace PodpisBio.Src.Author
                     pointList.Add(point);
                 }
                 stroke.Points = pointList;
-                stroke.init();
+                //stroke.init();
                 strokeList.Add(stroke);
             }
 

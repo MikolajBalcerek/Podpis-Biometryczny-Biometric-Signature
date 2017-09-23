@@ -38,9 +38,9 @@ namespace PodpisBio.Src.Author
                         {
                             foreach(var stroke in sign.getStrokesOriginal())
                             {
-                                stroke.init();
+                                //stroke.init();
                             }
-                            sign.init();
+                            //sign.init();
                             signatureController.addSignature(sign);
                         }
                     }

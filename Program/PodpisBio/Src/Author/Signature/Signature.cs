@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using Windows.UI.Input.Inking;
 using PodpisBio.Src.Author;
+using System.Runtime.Serialization;
 
 namespace PodpisBio.Src
 {
@@ -47,7 +48,8 @@ namespace PodpisBio.Src
         }
 
         //Inicjalizacja obliczeñ
-        public void init()
+        [OnDeserialized]
+        public void init(StreamingContext context)
         {
             List<Stroke> temp = new List<Stroke>();
             foreach (Stroke st in Strokes)

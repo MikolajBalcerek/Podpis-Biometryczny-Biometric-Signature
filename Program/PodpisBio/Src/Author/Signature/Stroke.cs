@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using PodpisBio.Src.Service;
+using System.Runtime.Serialization;
 
 namespace PodpisBio.Src.Author
 {
@@ -50,8 +51,9 @@ namespace PodpisBio.Src.Author
         public List<Point> getPoints() { return Points; }
 
         public List<Derivatives> getDerivatives() { return this.derivatives; }
-
-        public void init()
+        
+        [OnDeserialized]
+        public void init(StreamingContext context)
         {
             List<Point> Points = new List<Point>(this.Points);
             this.Points.Clear();
