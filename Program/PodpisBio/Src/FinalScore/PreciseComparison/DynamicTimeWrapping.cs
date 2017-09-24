@@ -36,6 +36,33 @@ namespace PodpisBio.Src.FinalScore
             return dtw[n - 1][m - 1];
         }
 
+        private float calcMetricDTW(List<Point> pts1, List<Point> pts2, List<Derivatives> der1, List<Derivatives> der2,
+            Func<Point, Point, Derivatives, Derivatives, float> d)
+        {
+            var n = pts1.Count + 1;
+            var m = pts2.Count + 1;
+
+            float[][] dtw = new float[n][];
+            //jagged arrays są szybsze od [,]
+            for (int i = 0; i < n; i++)
+                dtw[i] = new float[m];
+
+            for (int i = 0; i < n; i++)
+                dtw[i][0] = float.PositiveInfinity;
+            for (int j = 0; j < m; j++)
+                dtw[0][j] = float.PositiveInfinity;
+            dtw[0][0] = 0;
+
+            for (int i = 1; i < n; i++)
+                for (int j = 1; j < m; j++)
+                {
+                    var distance = d(pts1[i - 1], pts2[j - 1], der1[i - 1], der2[j - 1]);
+                    dtw[i][j] = distance + min(dtw[i - 1][j], dtw[i][j - 1], dtw[i - 1][j - 1]);
+                }
+
+            return dtw[n - 1][m - 1];
+        }
+
         private float EuclidianDistancePoints(Point p1, Point p2, Derivatives d1, Derivatives d2)
         {
             var sum = (p1.X - p2.X) * (p1.X - p2.X);
@@ -76,6 +103,23 @@ namespace PodpisBio.Src.FinalScore
 
             return (float)Math.Sqrt(sum);
         }
+
+        public float calcSimilarity(List<float> sgn1Feature, List<float> sgn2Feature)
+        {
+            var normalisedSgn1 = dataPrep.prepareFeature(sgn1Feature);
+            var normalisedSgn2 = dataPrep.prepareFeature(sgn2Feature);
+            return calcSimpleDTW(sgn1Feature, sgn2Feature);
+        }
+
+        public float calcSimilatity(Signature sgn1, Signature sgn2)
+        {
+            var points1 = dataPrep.preparePoints(sgn1.getAllOriginalPoints());
+            var points2 = dataPrep.preparePoints(sgn2.getAllOriginalPoints());
+            var derivatives1 = dataPrep.prepareDerivatives(sgn1.getOriginalDerivatives());
+            var derivatives2 = dataPrep.prepareDerivatives(sgn2.getOriginalDerivatives());
+            return calcMetricDTW(points1, points2, derivatives1, derivatives2, EuclidianDistance);
+        }
+
         private float min(float a, float b, float c)
         {
             return Math.Min(a, Math.Min(b, c));
