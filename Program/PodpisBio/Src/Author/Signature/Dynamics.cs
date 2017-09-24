@@ -26,6 +26,8 @@ namespace PodpisBio.Src.Author
          * +1 -- nacisk rośnie
          */
 
+        public Derivatives() { }
+
         public Derivatives(float v, float vx, float vy, float acc, float accx, float accy, float dtiltX, float dtiltY, float pc)
         {
             velocity = v;
