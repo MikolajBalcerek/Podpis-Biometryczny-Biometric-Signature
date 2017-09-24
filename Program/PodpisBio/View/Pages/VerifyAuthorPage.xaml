@@ -11,13 +11,14 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         
         <StackPanel x:Name="StackPanel1" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock x:Name="resultText" Text="Wynik weryfikacji: " Margin="10"/>
+            <ListView x:Name="resultList"  Height="200" HorizontalAlignment="Stretch"/>
+            <TextBlock x:Name="resultText" Text="Najlepszy rezultat: " Margin="10"/>
             <ComboBox x:Name="authorCombobox" Height="50" HorizontalAlignment="Stretch" Margin="0,0,0,20" FontSize="18"/>
             <!--InkCanvas-->
             <RelativePanel>
                 <StackPanel x:Name="StackPanel2">
-                    <Button x:Name="VerifyButton" Height="50" Width="100" Content="Weryfikuj" Margin="0,0,0,0" Click="VerifyButton_Click"/>
-                    <Button x:Name="ClearButton" Height="50" Width="100" Content="Wyczyść" Margin="0,0,0,0" Click="ClearButton_Click"/>
+                    <Button x:Name="VerifyButton" Height="50" Width="100" Content="Weryfikuj" Margin="0,0,0,1" Click="VerifyButton_Click"/>
+                    <Button x:Name="ClearButton" Height="50" Width="100" Content="Wyczyść" Margin="0,1,0,0" Click="ClearButton_Click"/>
                 </StackPanel>
                 <Grid RelativePanel.RightOf="StackPanel2"  x:Name="inkCanvasHolder" Width="300" Height="100" Margin="5,0,0,0" Background="SkyBlue" Grid.Column="1">
                     <Rectangle x:Name="background" Fill="#FFF4F4F5" Stroke="Black"/>

@@ -1,4 +1,5 @@
 ﻿using PodpisBio.Src.Author;
+using PodpisBio.Src.FinalScore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -54,7 +55,7 @@ namespace PodpisBio.Src
             inkCanvasHolder.Width = width;
             inkCanvasHolder.MinWidth = width;
             StackPanel1.MinWidth = width + height + 10;
-            VerifyButton.Height = ClearButton.Height = height / 2;
+            VerifyButton.Height = ClearButton.Height = height / 2 -1;
             VerifyButton.Width = ClearButton.Width = height;
             guideLine.X1 = 0.05 * width;
             guideLine.X2 = 0.95 * width;
@@ -71,17 +72,28 @@ namespace PodpisBio.Src
             //zainicjalizowana sygnatura z inkCanvas
             var signature = getSignatureFromInkCanvas();
             //zainicjalizowane ORYGINALNE sygnatury od wybranego autora z comboBoxa
-            var authorOriginalSignatures = getSignaturesFromAuthorCombobox();
-
+            var signatureList = getOriginalSignaturesFromAuthor();
+            //wagi  autora
+            var weights = getAuthorWeights();
 
             //MIEJSCE NA METODĘ DO POROWNYWANIA PODPISOW
-
+            SignVerification signVerification = new SignVerification();
+            var finalScores = signVerification.init(signature, signatureList, weights);
             //MIEJSCE NA METODĘ DO POROWNYWANIA PODPISOW
 
 
-            //wyświetlenie rezultatu
+            //wyświetlenie listy rezultatów
+            this.resultList.Items.Clear();
+            double bestResult = 0;
+            foreach (var score in finalScores)
+            {
+                if(score > bestResult) { bestResult = score; }
+                this.resultList.Items.Add(score);
+            }
+
+            //wyświetlenie rezultatu końcowego
             String result = "REZULTAT";
-            this.resultText.Text = "Wynik weryfikacji: " + result;
+            this.resultText.Text = "Najlepszy rezultat: " + bestResult;
         }
 
         private void updateAuthorCombobox()
@@ -107,7 +119,7 @@ namespace PodpisBio.Src
             return signatureController.buildInitializedSignature(inkStrokes);
         }
 
-        private List<Signature> getSignaturesFromAuthorCombobox()
+        private List<Signature> getOriginalSignaturesFromAuthor()
         {
             List<Signature> signatureList = new List<Signature>();
             if (this.authorCombobox.Items.Any())
@@ -115,6 +127,11 @@ namespace PodpisBio.Src
                 signatureList = authorController.getAuthor(this.authorCombobox.SelectedItem.ToString()).getOriginalSignatures();
             }
             return signatureList;
+        }
+
+        private Weight getAuthorWeights()
+        {
+            return authorController.getAuthor(this.authorCombobox.SelectedItem.ToString()).getWeight();
         }
     }
 }
