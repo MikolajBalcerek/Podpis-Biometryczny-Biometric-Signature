@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Input.Inking;
@@ -64,11 +65,25 @@ namespace PodpisBio.Src.Author
                     pointList.Add(point);
                 }
                 stroke.Points = pointList;
-                //stroke.init();
                 strokeList.Add(stroke);
             }
 
             return strokeList;
+        }
+
+        public Signature buildInitializedSignature(List<InkStroke> inkStrokes)
+        {
+            Signature signature = new Signature();
+            var strokeList = buildStrokes(inkStrokes);
+            foreach (var stroke in strokeList)
+            {
+                stroke.init();
+            }
+            signature.addStrokes(strokeList);
+            signature.init();
+
+            return signature;
+
         }
 
     }

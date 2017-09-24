@@ -51,9 +51,11 @@ namespace PodpisBio.Src.Author
         public List<Point> getPoints() { return Points; }
 
         public List<Derivatives> getDerivatives() { return this.derivatives; }
-        
+
         [OnDeserialized]
-        public void init(StreamingContext context)
+        public void init(StreamingContext context) { init(); }
+        
+        public void init()
         {
             sortPointsByTimestamp();
             List<Point> Points = new List<Point>(this.Points);

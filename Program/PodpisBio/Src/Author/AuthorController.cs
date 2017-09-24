@@ -11,7 +11,7 @@ namespace PodpisBio.Src.Author
     class AuthorController
     {
         private List<Author> authors = new List<Author>();
-        private SignatureController signatureController;
+        public SignatureController signatureController { get; }
         private AuthorService service;
 
         public AuthorController(SignatureController signatureController)

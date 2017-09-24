@@ -7,6 +7,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
+using Windows.UI.Input.Inking;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -25,6 +26,7 @@ namespace PodpisBio.Src
     public sealed partial class VerifyAuthorPage : Page
     {
         private AuthorController authorController;
+        private SignatureController signatureController;
         public VerifyAuthorPage()
         {
             this.InitializeComponent();
@@ -37,6 +39,7 @@ namespace PodpisBio.Src
         {
             //base.OnNavigatedTo(e);
             this.authorController = (AuthorController)e.Parameter;
+            this.signatureController = authorController.signatureController;
 
             //Zaktualizowanie listy autorów
             this.updateAuthorCombobox();
@@ -51,15 +54,34 @@ namespace PodpisBio.Src
             inkCanvasHolder.Width = width;
             inkCanvasHolder.MinWidth = width;
             StackPanel1.MinWidth = width + height + 10;
-            VerifyButton.Height = VerifyButton.Width = height;
+            VerifyButton.Height = ClearButton.Height = height / 2;
+            VerifyButton.Width = ClearButton.Width = height;
             guideLine.X1 = 0.05 * width;
             guideLine.X2 = 0.95 * width;
             guideLine.Y1 = guideLine.Y2 = 0.7 * height;
         }
 
-        private void VerifyButton_Click(object sender, RoutedEventArgs e)
+        private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             inkCanvas1.InkPresenter.StrokeContainer.Clear();
+        }
+
+        private void VerifyButton_Click(object sender, RoutedEventArgs e)
+        {
+            //zainicjalizowana sygnatura z inkCanvas
+            var signature = getSignatureFromInkCanvas();
+            //zainicjalizowane ORYGINALNE sygnatury od wybranego autora z comboBoxa
+            var authorOriginalSignatures = getSignaturesFromAuthorCombobox();
+
+
+            //MIEJSCE NA METODĘ DO POROWNYWANIA PODPISOW
+
+            //MIEJSCE NA METODĘ DO POROWNYWANIA PODPISOW
+
+
+            //wyświetlenie rezultatu
+            String result = "REZULTAT";
+            this.resultText.Text = "Wynik weryfikacji: " + result;
         }
 
         private void updateAuthorCombobox()
@@ -75,8 +97,24 @@ namespace PodpisBio.Src
                 }
                 this.authorCombobox.SelectedIndex = 0;
             }
-            
-            
+        }
+
+        //zwraca zainicjalizowaną sygnaturę od inkCanvas
+        private Signature getSignatureFromInkCanvas()
+        {
+            var inkStrokes = new List<InkStroke>(inkCanvas1.InkPresenter.StrokeContainer.GetStrokes());
+
+            return signatureController.buildInitializedSignature(inkStrokes);
+        }
+
+        private List<Signature> getSignaturesFromAuthorCombobox()
+        {
+            List<Signature> signatureList = new List<Signature>();
+            if (this.authorCombobox.Items.Any())
+            {
+                signatureList = authorController.getAuthor(this.authorCombobox.SelectedItem.ToString()).getOriginalSignatures();
+            }
+            return signatureList;
         }
     }
 }

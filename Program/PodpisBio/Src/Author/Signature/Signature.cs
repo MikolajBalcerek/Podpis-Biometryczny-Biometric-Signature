@@ -46,10 +46,10 @@ namespace PodpisBio.Src
             //Docelowo bêdzie wykonywane z tego poziomu, jednak konstruktor nie inicjalizuje wszystkich potrzebnych zmiennych (brak w modelu bazy danych)
             //init();
         }
-
-        //Inicjalizacja obliczeñ
         [OnDeserialized]
-        public void init(StreamingContext context)
+        public void init(StreamingContext context){ init(); }
+        //Inicjalizacja obliczeñ
+        public void init()
         {
             List<Stroke> temp = new List<Stroke>();
             foreach (Stroke st in Strokes)
