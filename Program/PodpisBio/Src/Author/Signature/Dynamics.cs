@@ -25,6 +25,19 @@ namespace PodpisBio.Src.Author
          *  0 -- nacisk się nie zmienia
          * +1 -- nacisk rośnie
          */
+
+        public Derivatives(float v, float vx, float vy, float acc, float accx, float accy, float dtiltX, float dtiltY, float pc)
+        {
+            velocity = v;
+            velocityX = vx;
+            velocityY = vy;
+            this.acc = acc;
+            accX = accx;
+            accY = accy;
+            this.dtiltX = dtiltX;
+            this.dtiltY = dtiltY;
+            this.pressureChange = pc;
+        }
         public float VelocityX { get; set; }
         public float VelocityY { get; set; }
         public float Velocity { get; set; }
