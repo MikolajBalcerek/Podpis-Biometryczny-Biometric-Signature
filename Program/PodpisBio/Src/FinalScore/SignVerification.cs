@@ -110,15 +110,16 @@ namespace PodpisBio.Src.FinalScore
         private double checkPreciseComparison(Signature first, Signature second)
         {
             DynamicTimeWrapping dtw = new DynamicTimeWrapping();
-            if (dtw.calcSimilarity(first, second) < 1100)
+            var result = dtw.calcSimilarity(first, second);
+            if (result < 1100)
                 return 0.95;
-            if (dtw.calcSimilarity(first, second) < 1200)
+            if (result < 1200)
                 return 0.8;
-            if (dtw.calcSimilarity(first, second) < 1500)
+            if (result < 1500)
                 return 0.7;
-            if (dtw.calcSimilarity(first, second) < 1450)
+            if (result < 1450)
                 return 0.6;
-            if (dtw.calcSimilarity(first, second) < 1500)
+            if (result < 1500)
                 return 0.2;
             return 0;
         }
