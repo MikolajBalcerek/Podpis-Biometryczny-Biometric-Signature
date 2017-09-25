@@ -56,13 +56,16 @@ namespace PodpisBio.Src
             List<double> totalRatioList = new List<double>();
             List<List<double>> totalRatioForEachStrokeList = new List<List<double>>();
 
+            //Bierze tylko "i" oryginalnych do wag
+            int i = 0;
             foreach (Signature s in this.sign)
             {
+                if (i >= 5) { break; }
                 lengthMList.Add(s.getLengthM());
                 strokesCountList.Add(Convert.ToDouble(s.getStrokesOriginal().Count));
                 totalRatioList.Add(s.getTimeSizeProbe().getTotalRatioAreaToTime());
                 totalRatioForEachStrokeList.Add(s.getTimeSizeProbe().getRatioAreaToTimeForEachStroke());
-
+                i++;
             }
 
             double calcLengthM = calcLengthM_SD(lengthMList);
