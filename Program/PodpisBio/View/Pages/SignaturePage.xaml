@@ -9,7 +9,7 @@
     mc:Ignorable="d" MinWidth="1000">
 
     <Grid Background="White">
-        <StackPanel Margin="20,20,0,0" Width="500" Height="100" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <StackPanel Margin="20,20,0,0"  Height="100" HorizontalAlignment="Stretch" VerticalAlignment="Top">
             <TextBlock x:Name="penPosition" Text="Pozycja rysika: " HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" />
             <TextBlock x:Name="strokesCountLabel" Text="Liczba naciśnięć: " HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top"/>
             <TextBlock x:Name ="timeLastPressedLabel" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Czas ostatniego naciśnięcia" VerticalAlignment="Top"/>
