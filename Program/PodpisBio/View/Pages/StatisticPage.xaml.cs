@@ -2,6 +2,7 @@
 using PodpisBio.Src.FinalScore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -45,6 +46,8 @@ namespace PodpisBio.Src
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
+            testFunction();
+
             this.resultList.Items.Clear();
 
             var originalAll = getOriginalSignaturesFromAuthor();
@@ -171,6 +174,86 @@ namespace PodpisBio.Src
         private Weight getAuthorWeights()
         {
             return authorController.getAuthor(this.authorCombobox.SelectedItem.ToString()).getWeight();
+        }
+
+
+        private void testFunction()
+        {
+            foreach (var author in authorController.getAuthors())
+            {
+                var originalAll = author.getOriginalSignatures();
+                var fake = author.getFakeSignatures();
+                var weights = author.getWeight();
+
+                List<Signature> originalTest = new List<Signature>();
+                List<Signature> originalBasic = new List<Signature>();
+
+                //Oddzielenie oryginalnych podpisow bazowych od testowych do sprawdzenia (basicCount ustala sie w klasie Weight)
+                int temp = 0;
+                foreach (Signature s in originalAll)
+                {
+                    if (temp < weights.getBasicCount())
+                    {
+                        originalBasic.Add(s);
+                    }
+                    else
+                    {
+                        originalTest.Add(s);
+                    }
+
+                    temp++;
+                }
+
+                SignVerification signVerification = new SignVerification();
+
+                //Weryfikacja podpisow branych jako baza do liczenia wag i weryfikacji (musi zwracac besta = 1)
+                foreach (Signature s in originalBasic)
+                {
+                    var finalScores = signVerification.init(s, originalBasic, weights);
+
+                    StringBuilder result = new StringBuilder();
+                    StringBuilder resultTemp = new StringBuilder();
+                    double best = double.PositiveInfinity;
+                    result.Append("Basic: ");
+                    foreach (var score in finalScores)
+                    {
+                        if (score < best) { best = score; }
+                    }
+                    Debug.WriteLine(author.getName() + ", basic: " + best);
+                }
+
+                //Weryfikacja oryginalnych podpisow ktore sa w bazie danych (bez tych branych jako baza do wag i weryfikacji)
+                foreach (Signature s in originalTest)
+                {
+                    var finalScores = signVerification.init(s, originalBasic, weights);
+
+                    StringBuilder result = new StringBuilder();
+                    StringBuilder resultTemp = new StringBuilder();
+                    double best = double.PositiveInfinity;
+                    result.Append("Original: ");
+                    foreach (var score in finalScores)
+                    {
+                        if (score < best) { best = score; }
+                    }
+                    Debug.WriteLine(author.getName() + ", original: " + best);
+                }
+
+                //Weryfikacja podrobionych podpisow ktore sa w bazie danych
+                foreach (Signature s in fake)
+                {
+                    var finalScores = signVerification.init(s, originalBasic, weights);
+
+                    StringBuilder result = new StringBuilder();
+                    StringBuilder resultTemp = new StringBuilder();
+                    double best = double.PositiveInfinity;
+                    result.Append("Fake: ");
+                    foreach (var score in finalScores)
+                    {
+                        if (score < best) { best = score; }
+                    }
+                    Debug.WriteLine(author.getName() + ", fake: " + best);
+                }
+            }
         }
     }
 }

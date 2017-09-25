@@ -11,10 +11,12 @@ namespace PodpisBio.Src
     class Point
     {
         //PRAMETRY AKTUALIZOWANE Z BAZĄ DANYCH//
+        public int Id { get; set; }
         public float X { get; set; }
         public float Y { get; set; }
         public float Pressure { get; set; }
         public long Timestamp { get; set; }
+        public int StrokeId { get; set; }
         //KONIEC//
 
         public float tiltX, tiltY;

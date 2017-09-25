@@ -12,10 +12,12 @@ namespace PodpisBio.Src.Author
     class Stroke
     {
         //PRAMETRY AKTUALIZOWANE Z BAZĄ DANYCH//
+        public int Id { get; set; }
         public List<Point> Points { get; set; }
         public double Height { get; set; }
         public double Width { get; set; }
         public double DurationInMilis { get; set; } 
+        public int SignatureId { get; set; }
         //public double 
         //KONIEC//
 

@@ -38,6 +38,18 @@ namespace PodpisBio.Src.Author
             return responseSignature;
         }
 
+        public void calculateIfMissing()
+        {
+            foreach(var signature in this.signatures)
+            {
+                if (signature.lengthM.Equals(0) || signature.lengthO.Equals(0) || signature.height.Equals(0))
+                {
+                    signature.calculateParameters();
+                    signatureService.putSignature(signature);
+                }
+            }
+        }
+
         public void addSignature(Signature signature)
         {
             this.signatures.Add(signature);

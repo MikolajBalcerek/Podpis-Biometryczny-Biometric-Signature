@@ -31,9 +31,9 @@ namespace PodpisBio.Src.Author
 
             this.testedSignature = givenSignature;
             //get aktualne rozmiary podpisu
-            testedSignature.calcLength(true);
+            //testedSignature.calcLength(true);
             lengthX = testedSignature.getLengthO();
-            testedSignature.calcHeight();
+            //testedSignature.calcHeight();
             heightY = testedSignature.getHeight();
             
             //Operacje Badania czasu/rozmiar

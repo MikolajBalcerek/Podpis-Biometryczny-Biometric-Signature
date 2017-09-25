@@ -30,5 +30,10 @@ namespace PodpisBio.Src.Service
         {
             return postObjectAsync<Signature>("Signatures/", signature);
         }
+
+        public Signature putSignature(Signature signature)
+        {
+            return putObjectAsync<Signature>("Signatures/" + signature.Id, signature);
+        }
     }
 }

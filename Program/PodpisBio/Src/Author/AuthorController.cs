@@ -36,11 +36,6 @@ namespace PodpisBio.Src.Author
                     {
                         foreach(var sign in author.getAllSignatures())
                         {
-                            foreach(var stroke in sign.getStrokesOriginal())
-                            {
-                                //stroke.init();
-                            }
-                            //sign.init();
                             signatureController.addSignature(sign);
                         }
                         //Póki nie ma w bazie danych
@@ -81,6 +76,11 @@ namespace PodpisBio.Src.Author
                 }
             }
             return new Author();
+        }
+
+        public List<Author> getAuthors()
+        {
+            return authors;
         }
 
         //Sprawdza czy istnieje taki autor

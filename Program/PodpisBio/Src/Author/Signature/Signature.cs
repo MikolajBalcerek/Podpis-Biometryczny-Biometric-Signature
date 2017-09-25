@@ -13,15 +13,16 @@ namespace PodpisBio.Src
     class Signature
     {
         //PRAMETRY AKTUALIZOWANE Z BAZ¥ DANYCH//
+        public int Id { get; set; }
         public int AuthorId { get; set; }
         public List<Stroke> Strokes { get; set; }
         public List<Stroke> StrokesModified { get; set; }
         public bool isOriginal { get; set; }
         //KONIEC//
 
-        double lengthO;
-        double lengthM;
-        double height;
+        public double lengthO { get; set; }
+        public double lengthM { get; set; }
+        public double height { get; set; }
         //private List<InkStroke> richInkStrokes; //stroke z timestampami od microsoftu
 
         private Author.TimeSize_Probe ownTimeSizeProbe; //klasa badaj¹ca w³asnoœci czasu i rozmiaru podpisu
@@ -62,14 +63,19 @@ namespace PodpisBio.Src
                 scaleSignature();
                 fit();
             }
-            calcLength(false);
-            calcHeight();
 
             //badanie rozmiaru/czas za pomoc¹ TimeSize klasy
             if (object.ReferenceEquals(null, this.ownTimeSizeProbe))
             {
                 this.ownTimeSizeProbe = new TimeSize_Probe(this);
             }
+        }
+
+        public void calculateParameters()
+        {
+            if (lengthO.Equals(0)) { calcLength(true); }
+            if (lengthM.Equals(0)) { calcLength(false); }
+            if (height.Equals(0)) { calcHeight(); }
         }
 
         public void addStroke(Stroke stroke)

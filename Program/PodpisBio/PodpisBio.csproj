@@ -101,7 +101,6 @@
     <Compile Include="Src\FinalScore\PreciseComparison\ProbabilisticDTW.cs" />
     <Compile Include="Src\FinalScore\SignVerification.cs" />
     <Compile Include="Src\Service\AuthorService.cs" />
-    <Compile Include="Src\Service\Base.cs" />
     <Compile Include="Src\Service\RestService.cs" />
     <Compile Include="View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

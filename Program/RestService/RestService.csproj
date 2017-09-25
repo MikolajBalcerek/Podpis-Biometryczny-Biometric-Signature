@@ -202,6 +202,10 @@
     <Compile Include="Migrations\201709190908058_Init.Designer.cs">
       <DependentUpon>201709190908058_Init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709252030020_Update1.cs" />
+    <Compile Include="Migrations\201709252030020_Update1.Designer.cs">
+      <DependentUpon>201709252030020_Update1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Point.cs" />
@@ -288,6 +292,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201709190908058_Init.resx">
       <DependentUpon>201709190908058_Init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709252030020_Update1.resx">
+      <DependentUpon>201709252030020_Update1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

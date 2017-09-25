@@ -75,6 +75,38 @@ namespace PodpisBio.Src.Service
             return result;
         }
 
+        public T putObjectAsync<T>(String objectUrl, Object objectToPost)
+        {
+            T result = default(T);
+            HttpClient client = new HttpClient();
+
+            var json = JsonConvert.SerializeObject(objectToPost);
+            var httpContent = new StringContent(json);
+            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            // This allows for debugging possible JSON issues
+            var settings = new JsonSerializerSettings
+            {
+                Error = (sender, args) =>
+                {
+                    if (System.Diagnostics.Debugger.IsAttached)
+                    {
+                        System.Diagnostics.Debugger.Break();
+                    }
+                }
+            };
+
+            using (HttpResponseMessage response = client.PutAsync(connectionUrl + objectUrl, httpContent).Result)
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    result = JsonConvert.DeserializeObject<T>(response.Content.ReadAsStringAsync().Result, settings);
+                }
+            }
+
+            return result;
+        }
+
         public T deserializeJson<T>(String jsonString)
         {
             T result = default(T);

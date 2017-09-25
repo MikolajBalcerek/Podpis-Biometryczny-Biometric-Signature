@@ -24,6 +24,7 @@ namespace PodpisBio
             this.setNavbarColor();
             this.signatureController = new SignatureController();
             this.authorController = new AuthorController(signatureController);
+            signatureController.calculateIfMissing();
             this.goToDefaultPage(this, null);
             this.showTitleBar(true);
         }
