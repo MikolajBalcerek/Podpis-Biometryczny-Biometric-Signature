@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace PodpisBio.Src.FinalScore
 {
+    //Sprawdza podany podpis ze wszystkimi z podanej listy (return lista podobienstwa dla kazdego z podanej listy (0-1))
     class SignVerification
     {
         public List<double> init(Signature sign, List<Signature> signList, Weight weights)
@@ -19,7 +20,8 @@ namespace PodpisBio.Src.FinalScore
 
             return ver;
         }
-
+        
+        //Podobienstwo 2 podpisow (return 1 - identyczne)
         private double check(Signature first, Signature second, Weight weights)
         {
             double temp = 0;
@@ -41,6 +43,7 @@ namespace PodpisBio.Src.FinalScore
             return temp;
         }
 
+        //Podobienstwo dlugosci sygnatur (return 1 - identyczne)
         private double checkLengthM(Signature first, Signature second)
         {
             double temp = 1 - (Math.Abs(first.getLengthM() - second.getLengthM()) / first.getLengthM());
@@ -48,10 +51,10 @@ namespace PodpisBio.Src.FinalScore
 
             return temp;
         }
-
+        
+        //Podobienstwo ilosci nacisniec (return 1 - identyczne)
         private double checkStrokesCount(Signature original, Signature testSubject)
         {
-            //sprawdzenie checkTimeSizeRatio dla nowego podpisu wobec każdego z podpisów oryginalnych z osobna
             double score = 1; // Zmienna zwracająca jak dobrze metoda uważa podpis jest wiarygodny
 
             int originalCount = original.getStrokesOriginal().Count();
@@ -76,7 +79,7 @@ namespace PodpisBio.Src.FinalScore
 
             return score;
         }
-
+        
         private double checkTimeSizeRatio(Signature original, Signature testSubject)
         {
             //NIEPRZETESTOWANE

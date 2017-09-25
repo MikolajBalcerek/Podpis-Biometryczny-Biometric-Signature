@@ -149,6 +149,7 @@ namespace PodpisBio.Src
             return d;
         }
 
+        //Przesuniecie: min x=0 oraz min y=0
         public void fit()
         {
             List<Point> points = this.getAllModifiedPoints();
@@ -162,12 +163,6 @@ namespace PodpisBio.Src
                 if (x.getY() < y_min) { y_min = x.getY(); }
             }
 
-            //List<Stroke> temp = new List<Stroke>();
-            //foreach(Stroke st in strokesModified)
-            //{
-            //    temp.Add(new Stroke(st));
-            //}
-
             foreach (Stroke st in this.StrokesModified)
             {
                 foreach (Point x in st.getPoints())
@@ -179,6 +174,7 @@ namespace PodpisBio.Src
             //this.strokesModified = temp;
         }
 
+        //Skalowanie tak aby obszar od -sd do +sd od average byl rowny 2cm (wysokosc)
         public void scaleSignature()
         {
             List<Point> points = this.getAllModifiedPoints();
@@ -220,6 +216,7 @@ namespace PodpisBio.Src
             return this.ownTimeSizeProbe;
         }
 
+        //Obliczenie dlugosci sygnatury (oryginalnej badz zmodyfikowanej) bez uwzglednienia pojedynczych kresek (np kreska na koncy podpisu)
         public void calcLength(bool useOriginalPoints)
         {
             double length = 0;
@@ -278,7 +275,8 @@ namespace PodpisBio.Src
                 this.lengthM = length;
             }
         }
-
+        
+        //Obliczenie wysokosci oryginalnej sygnatury bez uwzglednienia pojedynczych kresek (np dluga kreska przy "L")
         public void calcHeight()
         {
             //liczy wysokoœæ 

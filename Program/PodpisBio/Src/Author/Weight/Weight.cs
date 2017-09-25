@@ -8,6 +8,7 @@ namespace PodpisBio.Src
     class Weight
     {
         private List<Signature> sign;
+        private double basicCount; //Ilosc oryginalnych podpisow z bazy ktore maja byc brane przy ustalaniu wag
         
         private double lengthMWeight;
         private double strokesCountWeight;
@@ -18,7 +19,15 @@ namespace PodpisBio.Src
         public Weight(List<Signature> sign)
         {
             this.sign = sign;
+            this.basicCount = 5.0;
+            if(this.basicCount > sign.Count) { this.basicCount = Convert.ToDouble(sign.Count); }
+
             init();
+        }
+
+        public double getBasicCount()
+        {
+            return this.basicCount;
         }
 
         public double getLengthMWeight()
@@ -60,7 +69,7 @@ namespace PodpisBio.Src
             int i = 0;
             foreach (Signature s in this.sign)
             {
-                if (i >= 5) { break; }
+                if (i >= this.basicCount) { break; }
                 lengthMList.Add(s.getLengthM());
                 strokesCountList.Add(Convert.ToDouble(s.getStrokesOriginal().Count));
                 totalRatioList.Add(s.getTimeSizeProbe().getTotalRatioAreaToTime());
@@ -79,9 +88,10 @@ namespace PodpisBio.Src
             this.strokesCountWeight = calcStrokesCount / temp * forWeight;
             this.totalRatioWeight = calcTotalRatio / temp * forWeight;
             this.totalRatioForEachStrokeWeight = calcTotalRatioForEachStroke / temp * forWeight;
-            //Debug.WriteLine("Wagi heheszki "+ this.lengthMWeight +" "+ this.strokesCountWeight+" "+ this.totalRatioWeight+" "+ this.totalRatioForEachStrokeWeight);
+            //Debug.WriteLine("Wagi: "+ this.lengthMWeight +" "+ this.strokesCountWeight+" "+ this.totalRatioWeight+" "+ this.totalRatioForEachStrokeWeight);
         }
 
+        //Odchylenie standardowe (dla danego parametru) z podpisow, ktore sa brane jako baza oryginalnych do weryfikacji
         private double calc_SD(List<double> list)
         {
             double temp = 0;

@@ -54,10 +54,11 @@ namespace PodpisBio.Src
             List<Signature> originalTest = new List<Signature>();
             List<Signature> originalBasic = new List<Signature>();
 
+            //Oddzielenie oryginalnych podpisow bazowych od testowych do sprawdzenia (basicCount ustala sie w klasie Weight)
             int temp = 0;
             foreach(Signature s in originalAll)
             {
-                if (temp < 5)
+                if (temp < weights.getBasicCount())
                 {
                     originalBasic.Add(s);
                 }
@@ -71,6 +72,7 @@ namespace PodpisBio.Src
 
             SignVerification signVerification = new SignVerification();
 
+            //Weryfikacja podpisow branych jako baza do liczenia wag i weryfikacji (musi zwracac besta = 1)
             foreach (Signature s in originalBasic)
             {
                 var finalScores = signVerification.init(s, originalBasic, weights);
@@ -90,6 +92,7 @@ namespace PodpisBio.Src
                 this.resultList.Items.Add(result);
             }
 
+            //Weryfikacja oryginalnych podpisow ktore sa w bazie danych (bez tych branych jako baza do wag i weryfikacji)
             foreach (Signature s in originalTest)
             {
                 var finalScores = signVerification.init(s, originalBasic, weights);
@@ -109,6 +112,7 @@ namespace PodpisBio.Src
                 this.resultList.Items.Add(result);
             }
 
+            //Weryfikacja podrobionych podpisow ktore sa w bazie danych
             foreach (Signature s in fake)
             {
                 var finalScores = signVerification.init(s, originalBasic, weights);
