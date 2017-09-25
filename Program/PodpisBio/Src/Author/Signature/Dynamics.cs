@@ -10,36 +10,6 @@ namespace PodpisBio.Src.Author
     // TODO: MK dodaj obliczanie pochodnych tiltów
     class Derivatives
     {
-        private float velocityX = 0;
-        private float velocityY = 0;
-        private float velocity = 0;
-        private float accX = 0;
-        private float accY = 0;
-        private float acc = 0;
-        private float dtiltX = 0;
-        private float dtiltY = 0;
-        private float pressureChange = 0;
-        /*
-         * lista zmian sił nacisku
-         * -1 -- nacisk maleje
-         *  0 -- nacisk się nie zmienia
-         * +1 -- nacisk rośnie
-         */
-
-        public Derivatives() { }
-
-        public Derivatives(float v, float vx, float vy, float acc, float accx, float accy, float dtiltX, float dtiltY, float pc)
-        {
-            velocity = v;
-            velocityX = vx;
-            velocityY = vy;
-            this.acc = acc;
-            accX = accx;
-            accY = accy;
-            this.dtiltX = dtiltX;
-            this.dtiltY = dtiltY;
-            this.pressureChange = pc;
-        }
         public float VelocityX { get; set; }
         public float VelocityY { get; set; }
         public float Velocity { get; set; }
@@ -49,6 +19,38 @@ namespace PodpisBio.Src.Author
         public float DtiltX { get; set; }
         public float DtiltY { get; set; }
         public float PressureChange { get; set; }
+        /*
+         * lista zmian sił nacisku
+         * -1 -- nacisk maleje
+         *  0 -- nacisk się nie zmienia
+         * +1 -- nacisk rośnie
+         */
+
+        public Derivatives()
+        {
+            VelocityX = 0;
+            VelocityY = 0;
+            Velocity = 0;
+            AccX = 0;
+            AccY = 0;
+            Acc = 0;
+            DtiltX = 0;
+            DtiltY = 0;
+            PressureChange = 0;
+        }
+
+        public Derivatives(float v, float vx, float vy, float acc, float accx, float accy, float dtiltX, float dtiltY, float pc)
+        {
+            this.Velocity = v;
+            this.VelocityX = vx;
+            this.VelocityY = vy;
+            this.Acc = acc;
+            this.AccX = accx;
+            this.AccY = accy;
+            this.DtiltX = dtiltX;
+            this.DtiltY = dtiltY;
+            this.PressureChange = pc;
+        }
 
     }
     class Dynamics
