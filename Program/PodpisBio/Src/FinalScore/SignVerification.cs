@@ -35,9 +35,9 @@ namespace PodpisBio.Src.FinalScore
             /*
              */
 
-            //temp = (lengthM + strokesCount + timeSizeRatio + timeSizeRatioForEachStroke + preciseComparison) / 5;
-            temp = lengthM * weights.getLengthMWeight() + strokesCount * weights.getStrokesCountWeight() + timeSizeRatio * weights.getTotalRatioWeight() + timeSizeRatioForEachStroke * weights.getTotalRatioForEachStrokeWeight() + preciseComparison * weights.getPreciseComparisonWeight();
-
+            //temp = preciseComparison;
+            temp = lengthM * weights.getLengthMWeight() + strokesCount * weights.getStrokesCountWeight() + timeSizeRatio * weights.getTotalRatioWeight() /*+ timeSizeRatioForEachStroke * weights.getTotalRatioForEachStrokeWeight() + preciseComparison * weights.getPreciseComparisonWeight()*/;
+            temp = temp * (1 / (weights.getLengthMWeight() + weights.getStrokesCountWeight()+weights.getTotalRatioWeight()));
             return temp;
         }
 
