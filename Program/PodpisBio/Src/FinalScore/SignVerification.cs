@@ -164,7 +164,7 @@ namespace PodpisBio.Src.FinalScore
             double averageOriginal = originalTimeSizeRatioForEachStroke.Average();
             double averageTestSubject = testSubjectTimeSizeRatioForEachStroke.Average();
 
-            score = 1 - ((Math.Abs(averageOriginal - averageTestSubject) / averageOriginal) * 0.40);
+            score = 1 - ((Math.Abs(averageOriginal - averageTestSubject) / averageOriginal) * 0.60);
             if (score <= 0)
             {
                 score = 0;
