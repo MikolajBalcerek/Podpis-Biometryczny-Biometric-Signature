@@ -236,6 +236,7 @@ namespace PodpisBio.Src.FinalScore
             {
                 temp = 1.0 - (Math.Abs((forDTW - result) / forDTW));
             }
+            if (temp < 0) { return 0.0; }
 
             return temp;
         }
