@@ -13,6 +13,7 @@ namespace PodpisBio.Src
         private double strokesCountWeight;
         private double totalRatioWeight;
         private double totalRatioForEachStrokeWeight;
+        private double preciseComparisonWeight;
 
         public Weight(List<Signature> sign)
         {
@@ -40,9 +41,16 @@ namespace PodpisBio.Src
             return this.totalRatioForEachStrokeWeight;
         }
 
+        public double getPreciseComparisonWeight()
+        {
+            return this.preciseComparisonWeight;
+        }
+
         private void init()
         {
             double forWeight = 0.7;
+            this.preciseComparisonWeight = 1 - forWeight;
+
             List<double> lengthMList = new List<double>();
             List<double> strokesCountList = new List<double>();
             List<double> totalRatioList = new List<double>();
