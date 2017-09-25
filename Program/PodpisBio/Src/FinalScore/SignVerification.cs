@@ -51,8 +51,7 @@ namespace PodpisBio.Src.FinalScore
 
         private double checkStrokesCount(Signature original, Signature testSubject)
         {
-            //NIEPRZETESTOWANE!!
-            //sprawdzenie ilości stroków dla nowego podpisu wobec każdego z podpisów oryginalnych z osobna
+            //sprawdzenie checkTimeSizeRatio dla nowego podpisu wobec każdego z podpisów oryginalnych z osobna
             double score = 1; // Zmienna zwracająca jak dobrze metoda uważa podpis jest wiarygodny
 
             int originalCount = original.getStrokesOriginal().Count();
@@ -80,8 +79,7 @@ namespace PodpisBio.Src.FinalScore
 
         private double checkTimeSizeRatio(Signature original, Signature testSubject)
         {
-
-            //NIEPRZETESTOWANE!!
+            //NIEPRZETESTOWANE
             //sprawdzenie checkTimeSizeRatio dla nowego podpisu wobec każdego z podpisów oryginalnych z osobna
             double score = 1; // Zmienna zwracająca jak dobrze metoda uważa podpis jest wiarygodny
             double originalTotalRatio = original.getTimeSizeProbe().getTotalRatioAreaToTime();
@@ -102,11 +100,28 @@ namespace PodpisBio.Src.FinalScore
             return score;
         }
 
-        private double checkTimeSizeRatioForEachStroke(Signature first, Signature second)
+        private double checkTimeSizeRatioForEachStroke(Signature original, Signature testSubject)
         {
-            double temp = 1;
 
-            return temp;
+            //NIEPRZETESTOWANE 
+            //sprawdza dla każdego podpisu z oryginalnych z osobna
+            //porównuje każdy podpis oryginalny z nowym względem timeSizeRatioForEachStroke z każdego pociągnięcia osona
+            double score = 0; // Zmienna zwracająca jak dobrze metoda uważa podpis jest wiarygodny
+            List<Double> originalTimeSizeRatioForEachStroke = original.getTimeSizeProbe().getRatioAreaToTimeForEachStroke();
+            List<Double> testSubjectTimeSizeRatioForEachStroke = testSubject.getTimeSizeProbe().getRatioAreaToTimeForEachStroke();
+
+
+            foreach (var elementOriginal in originalTimeSizeRatioForEachStroke)
+            {
+                foreach (var elementTestSubject in originalTimeSizeRatioForEachStroke)
+                {
+                    (Math.Abs(elementOriginal - elementTestSubject) - 
+                }
+            }
+
+            double __stroke__weight__ = 1 / originalTimeSizeRatio.Count(); // wartość wagi maksymalna dla jednego porównania stroków to 1 (maksymalny wynik dla wszystkich) przez ilość stroków w oryginalne
+            
+            return score;
         }
 
         private double checkPreciseComparison(Signature first, Signature second)
