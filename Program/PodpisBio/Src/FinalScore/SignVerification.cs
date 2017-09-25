@@ -95,6 +95,8 @@ namespace PodpisBio.Src.FinalScore
             {
                 score = 1 - (((originalTotalRatio / testSubjectTotalRatio)) - 1);
             }
+            if(score < 0) { score = 0.0; }
+
 
             Debug.WriteLine("Wynik SignVerification dla checkTimeSizeRatio " + score);
             return score;
