@@ -21,7 +21,7 @@ namespace PodpisBio.Src
             this.sign = sign;
             this.basicCount = 5.0;
             if(this.basicCount > sign.Count) { this.basicCount = Convert.ToDouble(sign.Count); }
-
+            
             init();
         }
 
