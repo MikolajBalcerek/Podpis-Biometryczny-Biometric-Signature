@@ -82,6 +82,9 @@ namespace PodpisBio.Src
             //MIEJSCE NA METODĘ DO POROWNYWANIA PODPISOW
 
 
+            //wyczyszczenie ekranu
+            inkCanvas1.InkPresenter.StrokeContainer.Clear();
+
             //wyświetlenie listy rezultatów
             this.resultList.Items.Clear();
             double bestResult = 0;

@@ -36,7 +36,7 @@ namespace PodpisBio.Src
             return this.totalRatioWeight;
         }
 
-        public double getTotalRatioForEachStrokeWeight()
+        public double getAverageTotalRatioForEachStrokeWeight()
         {
             return this.totalRatioForEachStrokeWeight;
         }
