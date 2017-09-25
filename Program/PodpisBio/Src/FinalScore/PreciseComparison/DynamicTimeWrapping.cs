@@ -2,6 +2,7 @@
 using PodpisBio.Src.FinalScore.PreciseComparison;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace PodpisBio.Src.FinalScore
 {
     class DynamicTimeWrapping
     {
+        const bool REMOVEOUTLYING = true;
         DataPreparation dataPrep = new DataPreparation();
         public DynamicTimeWrapping() { }
 
@@ -90,7 +92,6 @@ namespace PodpisBio.Src.FinalScore
             sum += (d1.PressureChange - d2.PressureChange) * (d1.PressureChange - d2.PressureChange);
 
             // póki tilty nie działają, nie dodaję ich.
-
             return (float)Math.Sqrt(sum);
         }
 
@@ -106,18 +107,52 @@ namespace PodpisBio.Src.FinalScore
 
         public float calcSimilarity(List<float> sgn1Feature, List<float> sgn2Feature)
         {
-            var normalisedSgn1 = dataPrep.prepareFeature(sgn1Feature);
-            var normalisedSgn2 = dataPrep.prepareFeature(sgn2Feature);
+            Debug.WriteLine("Śr feature " + sgn1Feature.Average());
+            var normalisedSgn1 = dataPrep.prepareFeature(sgn1Feature, REMOVEOUTLYING);
+            var normalisedSgn2 = dataPrep.prepareFeature(sgn2Feature, REMOVEOUTLYING);
+
+
+            Debug.WriteLine("Śr feature " + normalisedSgn1.Average());
             return calcSimpleDTW(sgn1Feature, sgn2Feature);
         }
 
-        public float calcSimilatity(Signature sgn1, Signature sgn2)
+        public float calcSimilarity(List<Point> points1, List<Point> points2, 
+            List<Derivatives> derivatives1, List<Derivatives> derivatives2)
         {
-            var points1 = dataPrep.preparePoints(sgn1.getAllOriginalPoints());
-            var points2 = dataPrep.preparePoints(sgn2.getAllOriginalPoints());
-            var derivatives1 = dataPrep.prepareDerivatives(sgn1.getOriginalDerivatives());
-            var derivatives2 = dataPrep.prepareDerivatives(sgn2.getOriginalDerivatives());
+            if (REMOVEOUTLYING)
+            {
+                dataPrep.removeOddsValues(ref points1, ref derivatives1);
+                dataPrep.removeOddsValues(ref points2, ref derivatives2);
+            }
+
+            points1 = dataPrep.preparePoints(points1);
+            points2 = dataPrep.preparePoints(points2);
+            derivatives1 = dataPrep.prepareDerivatives(derivatives1);
+            derivatives2 = dataPrep.prepareDerivatives(derivatives2);
+
+            //Debug.WriteLine("Śr X " + points1.Average(x => x.X));
+            //Debug.WriteLine("Śr Y " + points1.Average(x => x.Y));
+            //Debug.WriteLine("Śr Pressure " + points1.Average(x => x.Pressure));
+            //Debug.WriteLine("Śr Velocity " + derivatives1.Average(x => x.Velocity));
+            //Debug.WriteLine("Śr VelocityX " + derivatives1.Average(x => x.VelocityX));
+            //Debug.WriteLine("Śr VelocityY " + derivatives1.Average(x => x.VelocityY));
+            //Debug.WriteLine("Śr Acc " + derivatives1.Average(x => x.Acc));
+            //Debug.WriteLine("Śr AccX " + derivatives1.Average(x => x.AccX));
+            //Debug.WriteLine("Śr AccY " + derivatives1.Average(x => x.AccY));
+
+
             return calcMetricDTW(points1, points2, derivatives1, derivatives2, EuclidianDistance);
+        }
+
+        public float calcSimilarity(Signature sgn1, Signature sgn2)
+        {
+            var points1 = sgn1.getAllOriginalPoints();
+            var derivatives1 = sgn1.getOriginalDerivatives();
+
+            var points2 = sgn2.getAllOriginalPoints();
+            var derivatives2 = sgn2.getOriginalDerivatives();
+
+            return calcSimilarity(points1, points2, derivatives1, derivatives2);
         }
 
         private float min(float a, float b, float c)

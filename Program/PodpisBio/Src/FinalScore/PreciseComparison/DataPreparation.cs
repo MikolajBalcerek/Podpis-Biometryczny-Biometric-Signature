@@ -91,12 +91,14 @@ namespace PodpisBio.Src.FinalScore.PreciseComparison
             return (from x in feature select (float)((x - avg) / std)).ToList();
         }
 
-        public List<float> prepareFeature(IEnumerable<float> feature)
+        public List<float> prepareFeature(IEnumerable<float> feature, bool removeOutlying)
         {
+            if (removeOutlying)
+                feature = removeOddsFeature(feature);
             if (NORMALISATION == "std")
-                return normaliseFeatureStd(removeOddsFeature(feature));
+                return normaliseFeatureStd(feature);
             if (NORMALISATION == "minmax")
-                return normaliseFeatureMinMax(removeOddsFeature(feature));
+                return normaliseFeatureMinMax(feature);
             Debug.WriteLine("Wybrano złą opcję normalizacji. Nic nie robię.");
             return feature.ToList();
         }
