@@ -58,8 +58,8 @@ namespace PodpisBio.Src.FinalScore
             int originalCount = original.getStrokesOriginal().Count();
             int testSubjectCount = testSubject.getStrokesOriginal().Count();
 
-            Debug.WriteLine((originalCount));
-            Debug.WriteLine((testSubjectCount));
+            //Debug.WriteLine((originalCount));
+            //Debug.WriteLine((testSubjectCount));
 
             if (originalCount == testSubjectCount)
             {
@@ -73,7 +73,7 @@ namespace PodpisBio.Src.FinalScore
                     score = 0;
                 }
             }
-            Debug.WriteLine("Wynik SignVerification dla checkStrokesCount " + score);
+            //Debug.WriteLine("Wynik SignVerification dla checkStrokesCount " + score);
 
             return score;
         }
@@ -98,7 +98,7 @@ namespace PodpisBio.Src.FinalScore
             if(score < 0) { score = 0.0; }
 
 
-            Debug.WriteLine("Wynik SignVerification dla checkTimeSizeRatio " + score);
+            //Debug.WriteLine("Wynik SignVerification dla checkTimeSizeRatio " + score);
             return score;
         }
 

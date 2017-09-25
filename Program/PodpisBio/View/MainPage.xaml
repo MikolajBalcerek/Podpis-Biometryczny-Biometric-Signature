@@ -34,6 +34,7 @@
             <Button Content="Weryfikowanie" Click="Weryfikowanie_Click" HorizontalAlignment="Stretch" Height="70"/>
             <Button Content="Podpisy" Click="Podpisy_Click" HorizontalAlignment="Stretch" Height="70"/>
             <Button Content="Wykresy" Click="Wykresy_Click" HorizontalAlignment="Stretch" Height="70"/>
+            <Button Content="Statystyki" Click="Statystyki_Click" HorizontalAlignment="Stretch" Height="70"/>
             <Button Content="Ustawienia" Click="Ustawienia_Click" HorizontalAlignment="Stretch" Height="70"/>
         </StackPanel>
 

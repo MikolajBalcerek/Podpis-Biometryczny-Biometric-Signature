@@ -88,5 +88,10 @@ namespace PodpisBio
         {
             this.MainPageDisplayFrame.Navigate(typeof(SettingsPage));
         }
+
+        private void Statystyki_Click(object sender, RoutedEventArgs e)
+        {
+            this.MainPageDisplayFrame.Navigate(typeof(StatisticPage), authorController);
+        }
     }
 }
