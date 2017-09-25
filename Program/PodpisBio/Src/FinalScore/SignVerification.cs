@@ -30,14 +30,14 @@ namespace PodpisBio.Src.FinalScore
             }
             double strokesCount = checkStrokesCount(first, second);
             double timeSizeRatio = checkTimeSizeRatio(first, second);
-            double timeSizeRatioForEachStroke = checkTimeSizeRatioForEachStroke(first, second);
+            double timeSizeRatioAverageForEachStroke = checkAverageTimeSizeRatioForEachStroke(first, second);
             double preciseComparison = checkPreciseComparison(first, second);
             /*
              */
 
             //temp = preciseComparison;
-            temp = lengthM * weights.getLengthMWeight() + strokesCount * weights.getStrokesCountWeight() + timeSizeRatio * weights.getTotalRatioWeight() /*+ timeSizeRatioForEachStroke * weights.getTotalRatioForEachStrokeWeight() + preciseComparison * weights.getPreciseComparisonWeight()*/;
-            temp = temp * (1 / (weights.getLengthMWeight() + weights.getStrokesCountWeight()+weights.getTotalRatioWeight()));
+            temp = lengthM * weights.getLengthMWeight() + strokesCount * weights.getStrokesCountWeight() + timeSizeRatio * weights.getTotalRatioWeight() + timeSizeRatioAverageForEachStroke * weights.getAverageTotalRatioForEachStrokeWeight() /* + preciseComparison * weights.getPreciseComparisonWeight()*/;
+            temp = temp * (1 / (weights.getLengthMWeight() + weights.getStrokesCountWeight()+weights.getTotalRatioWeight() + weights.getAverageTotalRatioForEachStrokeWeight()));
             return temp;
         }
 
@@ -66,7 +66,7 @@ namespace PodpisBio.Src.FinalScore
             }
             else
             {
-                score = 1 - (Math.Abs(originalCount - testSubjectCount) * 0.20);
+                score = 1 - (Math.Abs(originalCount - testSubjectCount) * 0.15);
                 if (score <= 0)
                 {
                     score = 0;
@@ -100,27 +100,77 @@ namespace PodpisBio.Src.FinalScore
             return score;
         }
 
-        private double checkTimeSizeRatioForEachStroke(Signature original, Signature testSubject)
+        private double checkAverageTimeSizeRatioForEachStroke(Signature original, Signature testSubject)
         {
 
             //NIEPRZETESTOWANE 
             //sprawdza dla każdego podpisu z oryginalnych z osobna
-            //porównuje każdy podpis oryginalny z nowym względem timeSizeRatioForEachStroke z każdego pociągnięcia osona
-            double score = 0; // Zmienna zwracająca jak dobrze metoda uważa podpis jest wiarygodny
+            //porównuje średnie z TimeSize pociągnięć
+            double score = 1; // Zmienna zwracająca jak dobrze metoda uważa podpis jest wiarygodny
             List<Double> originalTimeSizeRatioForEachStroke = original.getTimeSizeProbe().getRatioAreaToTimeForEachStroke();
             List<Double> testSubjectTimeSizeRatioForEachStroke = testSubject.getTimeSizeProbe().getRatioAreaToTimeForEachStroke();
 
-
-            foreach (var elementOriginal in originalTimeSizeRatioForEachStroke)
+            
+            //miało rozwiązywać problem małpki na listach - przypadkowych kropek oraz nieuporządkowanych list
+            /*
+            if (originalTimeSizeRatioForEachStroke.Count() != testSubjectTimeSizeRatioForEachStroke.Count())
             {
-                foreach (var elementTestSubject in originalTimeSizeRatioForEachStroke)
+                foreach(var elementOriginal in originalTimeSizeRatioForEachStroke)
                 {
-                    (Math.Abs(elementOriginal - elementTestSubject) - 
+
+                }
+
+            }
+           
+            while (testSubjectTimeSizeRatioForEachStroke.Count() > originalTimeSizeRatioForEachStroke.Count())
+            {
+
+                foreach (var elementOriginal in originalTimeSizeRatioForEachStroke)
+                {
+                    foreach (var elementTestSubject in testSubjectTimeSizeRatioForEachStroke)
+                    {
+                        double difference = (Math.Abs(elementOriginal - elementTestSubject)) / elementOriginal;
+                        if (difference > 2) //jeżeli różnica jest większa niż 200% to jasno to nie jest ten element który powinien być
+                        {
+                            testSubjectTimeSizeRatioForEachStroke.Remove(elementTestSubject);
+                        }
+
+                    }
                 }
             }
 
-            double __stroke__weight__ = 1 / originalTimeSizeRatio.Count(); // wartość wagi maksymalna dla jednego porównania stroków to 1 (maksymalny wynik dla wszystkich) przez ilość stroków w oryginalne
-            
+            while (testSubjectTimeSizeRatioForEachStroke.Count() < originalTimeSizeRatioForEachStroke.Count)
+            {
+                foreach (var elementOriginal in originalTimeSizeRatioForEachStroke)
+                {
+                    foreach (var elementTestSubject in testSubjectTimeSizeRatioForEachStroke)
+                    {
+                        double difference = (Math.Abs(elementOriginal - elementTestSubject)) / elementOriginal;
+                        if (difference > 2) //jeżeli różnica jest większa niż 200% to jasno to nie jest ten element który powinien być
+                        {
+                            originalTimeSizeRatioForEachStroke.Remove(elementOriginal);
+                        }
+                    }
+                }
+            } */
+
+
+
+            //double __stroke__weight__ = 1 / originalTimeSizeRatioForEachStroke.Count(); // wartość wagi maksymalna dla jednego porównania stroków to 1 (maksymalny wynik dla wszystkich) przez ilość stroków w oryginalne
+
+            double averageOriginal = originalTimeSizeRatioForEachStroke.Average();
+            double averageTestSubject = testSubjectTimeSizeRatioForEachStroke.Average();
+
+            score = 1 - ((Math.Abs(averageOriginal - averageTestSubject) / averageOriginal) * 0.40);
+            if (score <= 0)
+            {
+                score = 0;
+            }
+
+
+
+            Debug.WriteLine("Wynik z Średni timeSizeStroke " + score);
+
             return score;
         }
 
