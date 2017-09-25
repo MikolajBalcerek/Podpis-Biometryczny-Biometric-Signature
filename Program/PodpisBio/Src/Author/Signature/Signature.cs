@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using Windows.UI.Input.Inking;
 using PodpisBio.Src.Author;
+using System.Runtime.Serialization;
 
 namespace PodpisBio.Src
 {
@@ -45,7 +46,8 @@ namespace PodpisBio.Src
             //Docelowo bêdzie wykonywane z tego poziomu, jednak konstruktor nie inicjalizuje wszystkich potrzebnych zmiennych (brak w modelu bazy danych)
             //init();
         }
-
+        [OnDeserialized]
+        public void init(StreamingContext context){ init(); }
         //Inicjalizacja obliczeñ
         public void init()
         {
@@ -82,12 +84,12 @@ namespace PodpisBio.Src
         
 
 
-        public double getLentghO()
+        public double getLengthO()
         {
             return this.lengthO;
         }
 
-        public double getLentghM()
+        public double getLengthM()
         {
             return this.lengthM;
         }
@@ -300,7 +302,7 @@ namespace PodpisBio.Src
                     p.Add(points[i].getY());
                 }
             }
-            p = p.Distinct().ToList();
+            p=p.Distinct().ToList();
             if (p.Count() > 0)
             {
                 double min = p[0];

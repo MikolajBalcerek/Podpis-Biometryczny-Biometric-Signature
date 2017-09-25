@@ -16,6 +16,7 @@ namespace PodpisBio.Src.Author
         public int Id { get; set; }
         public String Name { get; set; }
         public List<Signature> Signatures { get; set; }
+        public Weight Weights { get; set; }
         //KONIEC//
 
         public Author()
@@ -32,6 +33,11 @@ namespace PodpisBio.Src.Author
         public void addSignature(Signature signature)
         {
             this.Signatures.Add(signature);
+        }
+
+        public void calcWeights()
+        {
+            this.Weights = new Weight(getOriginalSignatures());
         }
 
         public int getId() { return Id; }
@@ -71,12 +77,16 @@ namespace PodpisBio.Src.Author
 
         public Signature getSignature(int index)
         {
-            if (this.Signatures.Count <= index)
+            if (this.getAllSignatures().Any())
             {
-                Debug.WriteLine("indeks większy od liczby podpisów.");
-                //getSignature();
+                return this.getAllSignatures()[index];
             }
-            return this.Signatures[index];
+            return new Signature();
+        }
+
+        public Weight getWeight()
+        {
+            return this.Weights;
         }
 
         public int getSignaturesNumber()

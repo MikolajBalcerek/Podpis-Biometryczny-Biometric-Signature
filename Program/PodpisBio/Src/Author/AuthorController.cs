@@ -11,7 +11,7 @@ namespace PodpisBio.Src.Author
     class AuthorController
     {
         private List<Author> authors = new List<Author>();
-        private SignatureController signatureController;
+        public SignatureController signatureController { get; }
         private AuthorService service;
 
         public AuthorController(SignatureController signatureController)
@@ -38,11 +38,13 @@ namespace PodpisBio.Src.Author
                         {
                             foreach(var stroke in sign.getStrokesOriginal())
                             {
-                                stroke.init();
+                                //stroke.init();
                             }
-                            sign.init();
+                            //sign.init();
                             signatureController.addSignature(sign);
                         }
+                        //Póki nie ma w bazie danych
+                        author.calcWeights();
                     }
                 }  
             }
@@ -78,7 +80,7 @@ namespace PodpisBio.Src.Author
                     return author;
                 }
             }
-            return null;
+            return new Author();
         }
 
         //Sprawdza czy istnieje taki autor

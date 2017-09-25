@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using PodpisBio.Src.Service;
+using System.Runtime.Serialization;
 
 namespace PodpisBio.Src.Author
 {
@@ -51,8 +52,12 @@ namespace PodpisBio.Src.Author
 
         public List<Derivatives> getDerivatives() { return this.derivatives; }
 
+        [OnDeserialized]
+        public void init(StreamingContext context) { init(); }
+        
         public void init()
         {
+            sortPointsByTimestamp();
             List<Point> Points = new List<Point>(this.Points);
             this.Points.Clear();
             foreach(var point in Points)
@@ -73,6 +78,13 @@ namespace PodpisBio.Src.Author
                     //Debug.WriteLine("Adam oblicza pochodne v = " + derivatives.Velocity + " i acc = " + derivatives.Acc);
                 }
             }
+        }
+
+        public void sortPointsByTimestamp()
+        {
+            List<Point> temp = new List<Point>();
+            temp = Points.OrderBy(x => x.Timestamp).ToList();
+            Points = temp;
         }
 
         public float getWidth() { return Points.Max(pt => pt.getX()) - Points.Min(pt => pt.getX()); }
