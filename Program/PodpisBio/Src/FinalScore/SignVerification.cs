@@ -56,7 +56,10 @@ namespace PodpisBio.Src.FinalScore
             double score = 1; // Zmienna zwracająca jak dobrze metoda uważa podpis jest wiarygodny
 
             int originalCount = original.getStrokesOriginal().Count();
-            int testSubjectCount = original.getStrokesOriginal().Count();
+            int testSubjectCount = testSubject.getStrokesOriginal().Count();
+
+            Debug.WriteLine((originalCount));
+            Debug.WriteLine((testSubjectCount));
 
             if (originalCount == testSubjectCount)
             {
