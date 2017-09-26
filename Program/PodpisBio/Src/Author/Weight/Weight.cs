@@ -84,7 +84,7 @@ namespace PodpisBio.Src
             double calcStrokesCount = calcStrokesCount_SD(strokesCountList);
             double calcTotalRatio = calcTotalRatio_SD(totalRatioList) * 2.0;
             double calcTotalRatioForEachStroke = calcTotalRatio / 2.0;
-            double calcPreciseComparison = 1.0; //calcPreciseComparison_SD() * 2.0;
+            double calcPreciseComparison = calcPreciseComparison_SD() * 2.0;
                 // to zabiera strasznie dużo czasu!!!
 
             //double temp = calcLengthM + calcStrokesCount + calcTotalRatio + calcTotalRatioForEachStroke;
