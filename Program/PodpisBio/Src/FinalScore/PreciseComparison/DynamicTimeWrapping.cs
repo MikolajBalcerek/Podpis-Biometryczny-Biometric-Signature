@@ -12,6 +12,7 @@ namespace PodpisBio.Src.FinalScore
     class DynamicTimeWrapping
     {
         const bool REMOVEOUTLYING = true;
+        const bool TIMED_METRIC = false;
         DataPreparation dataPrep = new DataPreparation();
         Metrics metrics = new Metrics();
         public DynamicTimeWrapping() { }
@@ -66,6 +67,33 @@ namespace PodpisBio.Src.FinalScore
             return dtw[n - 1][m - 1];
         }
 
+        private float calcMetricTimeDTW(List<Point> pts1, List<Point> pts2, List<Derivatives> der1, List<Derivatives> der2,
+    Func<Point, Point, Derivatives, Derivatives, int, int, float> d)
+        {
+            var n = pts1.Count + 1;
+            var m = pts2.Count + 1;
+
+            float[][] dtw = new float[n][];
+            //jagged arrays są szybsze od [,]
+            for (int i = 0; i < n; i++)
+                dtw[i] = new float[m];
+
+            for (int i = 0; i < n; i++)
+                dtw[i][0] = float.PositiveInfinity;
+            for (int j = 0; j < m; j++)
+                dtw[0][j] = float.PositiveInfinity;
+            dtw[0][0] = 0;
+
+            for (int i = 1; i < n; i++)
+                for (int j = 1; j < m; j++)
+                {
+                    var distance = d(pts1[i - 1], pts2[j - 1], der1[i - 1], der2[j - 1], i - 1, j - 1);
+                    dtw[i][j] = distance + min(dtw[i - 1][j], dtw[i][j - 1], dtw[i - 1][j - 1]);
+                }
+
+            return dtw[n - 1][m - 1];
+        }
+
 
         public float calcSimilarity(List<float> sgn1Feature, List<float> sgn2Feature)
         {
@@ -102,6 +130,8 @@ namespace PodpisBio.Src.FinalScore
             //Debug.WriteLine("Śr AccX " + derivatives1.Average(x => x.AccX));
             //Debug.WriteLine("Śr AccY " + derivatives1.Average(x => x.AccY));
 
+            if (TIMED_METRIC)
+                return calcMetricTimeDTW(points1, points2, derivatives1, derivatives2, metrics.METRIC_TIMED);
 
             return calcMetricDTW(points1, points2, derivatives1, derivatives2, metrics.METRIC);
         }
