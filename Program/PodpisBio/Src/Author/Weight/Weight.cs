@@ -11,6 +11,8 @@ namespace PodpisBio.Src
     {
         private List<Signature> sign;
         private double basicCount; //Ilosc oryginalnych podpisow z bazy ktore maja byc brane przy ustalaniu wag
+
+        const bool USE_WEIGHTS = false;
         
         private double lengthMWeight;
         private double strokesCountWeight;
@@ -24,7 +26,8 @@ namespace PodpisBio.Src
             this.basicCount = 5.0;
             if(this.basicCount > sign.Count) { this.basicCount = Convert.ToDouble(sign.Count); }
             
-            init();
+            if(USE_WEIGHTS)
+                init();
         }
 
         public double getBasicCount()

@@ -83,14 +83,12 @@ namespace PodpisBio.Src
 
                 StringBuilder result = new StringBuilder();
                 StringBuilder resultTemp = new StringBuilder();
-                double best = 0;
                 result.Append("Basic: ");
                 foreach (var score in finalScores)
                 {
                     resultTemp.Append(Math.Round(score, 3) + " ");
-                    if (score > best) { best = Math.Round(score, 3); }
                 }
-                result.Append("Best = " + best + " | ");
+                result.Append("Best = " + finalScores.Average() + " | ");
                 result.Append(resultTemp);
                 Debug.WriteLine(result);
                 this.resultList.Items.Add(result);
@@ -106,14 +104,12 @@ namespace PodpisBio.Src
 
                 StringBuilder result = new StringBuilder();
                 StringBuilder resultTemp = new StringBuilder();
-                double best = 0;
                 result.Append("Original: ");
                 foreach (var score in finalScores)
                 {
                     resultTemp.Append(Math.Round(score,3) +" ");
-                    if(score > best) { best = Math.Round(score, 3); }
                 }
-                result.Append("Best = " + best +" | ");
+                result.Append("Avg = " + finalScores.Average() + " | ");
                 result.Append(resultTemp);
                 Debug.WriteLine(result);
                 this.resultList.Items.Add(result);
@@ -128,14 +124,12 @@ namespace PodpisBio.Src
 
                 StringBuilder result = new StringBuilder();
                 StringBuilder resultTemp = new StringBuilder();
-                double best = 0;
                 result.Append("Fake: ");
                 foreach (var score in finalScores)
                 {
                     resultTemp.Append(Math.Round(score, 3) + " ");
-                    if (score > best) { best = Math.Round(score, 3); }
                 }
-                result.Append("Best = " + best + " | ");
+                result.Append("Avg = " + finalScores.Average() + " | ");
                 result.Append(resultTemp);
                 Debug.WriteLine(result);
                 this.resultList.Items.Add(result);
@@ -146,25 +140,54 @@ namespace PodpisBio.Src
         {
             this.resultList.Items.Clear();
 
-            var originalSignatures = getOriginalSignaturesFromAuthor();
-            var fakeSignatures = getFakeSignaturesFromAuthor();
-            DynamicTimeWrapping dtw = new DynamicTimeWrapping();
+            var originalAll = getOriginalSignaturesFromAuthor();
+            var fake = getFakeSignaturesFromAuthor();
+            var weights = getAuthorWeights();
+
+            List<Signature> originalTest = new List<Signature>();
+            List<Signature> originalTrain = new List<Signature>();
+
+            //Oddzielenie oryginalnych podpisow bazowych od testowych do sprawdzenia (basicCount ustala sie w klasie Weight)
+            int temp = 0;
+            foreach (Signature s in originalAll)
+            {
+                if (temp < weights.getBasicCount())
+                {
+                    originalTrain.Add(s);
+                }
+                else
+                {
+                    originalTest.Add(s);
+                }
+                temp++;
+            }
+
+
+                DynamicTimeWrapping dtw = new DynamicTimeWrapping();
 
             //foreach (var s in originalSignatures)
             //    System.Diagnostics.Debug.WriteLine("org ma " + s.getAllOriginalPoints().Count + " punktów.");
 
             //foreach (var s in fakeSignatures)
             //    System.Diagnostics.Debug.WriteLine("fake ma " + s.getAllOriginalPoints().Count + " punktów.");
-            System.Diagnostics.Debug.WriteLine("\n\nOryginalne podpisy\n");
-            for (int i = 0; i < originalSignatures.Count; i++)
+            System.Diagnostics.Debug.WriteLine("\n\nOryginalne Training podpisy\n");
+            for (int i = 0; i < originalTrain.Count; i++)
                 for (int j = 0; j < i; j++)
                 {
-                    var result = dtw.calcSimilarity(originalSignatures[i], originalSignatures[j]);
+                    var result = dtw.calcSimilarity(originalTrain[i], originalTrain[j]);
                     System.Diagnostics.Debug.WriteLine("DTW dla orygnalnych to " + result);
                 }
+            System.Diagnostics.Debug.WriteLine("\nOryginalne Test podpisy\n");
+            for (int i = 0; i < originalTest.Count; i++)
+                for (int j = 0; j < i; j++)
+                {
+                    var result = dtw.calcSimilarity(originalTest[i], originalTrain[j]);
+                    System.Diagnostics.Debug.WriteLine("DTW dla orygnalnych to " + result);
+                }
+
             System.Diagnostics.Debug.WriteLine("\nFałszywe podpisy\n");
-            foreach (var orgSgn in originalSignatures)
-                foreach (var fakeSgn in fakeSignatures)
+            foreach (var orgSgn in originalTrain)
+                foreach (var fakeSgn in fake)
                     System.Diagnostics.Debug.WriteLine("DTW dla fejków to " + dtw.calcSimilarity(orgSgn, fakeSgn));
         }
 

@@ -13,7 +13,7 @@ namespace PodpisBio.Src.FinalScore.PreciseComparison
         public Func<Point, Point, Derivatives, Derivatives, int, int, float> METRIC_TIMED;
 
 
-        public Metrics() { METRIC = WeightedL1; METRIC_TIMED = L1Time; }
+        public Metrics() { METRIC = L1; METRIC_TIMED = L1Time; }
         private float EuclidianDistancePoints(Point p1, Point p2, Derivatives d1, Derivatives d2)
         {
             var sum = (p1.X - p2.X) * (p1.X - p2.X);
