@@ -197,7 +197,7 @@ namespace PodpisBio.Src.FinalScore
         private double checkPreciseComparison(Signature first, Signature second, double avg, double min, double max, double std)
         {
             const double TOLLERANCE = 0.05;
-            const double SLOPE = 0.003;
+            const double SLOPE = 0.008;
             DynamicTimeWrapping dtw = new DynamicTimeWrapping();
             var result = dtw.calcSimilarity(first, second);
             var threshold = max + TOLLERANCE * std;
