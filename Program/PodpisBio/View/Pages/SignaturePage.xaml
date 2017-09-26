@@ -6,35 +6,55 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     NavigationCacheMode = "Enabled"
-    mc:Ignorable="d" MinWidth="1000">
+    mc:Ignorable="d">
 
     <Grid Background="White">
-        <StackPanel Margin="20,20,0,0"  Height="100" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-            <TextBlock x:Name="penPosition" Text="Pozycja rysika: " HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" />
-            <TextBlock x:Name="strokesCountLabel" Text="Liczba naciśnięć: " HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top"/>
-            <TextBlock x:Name ="timeLastPressedLabel" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Czas ostatniego naciśnięcia" VerticalAlignment="Top"/>
-            <TextBlock x:Name="countOriginal" Text="Oryginalnych podpisów:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <TextBlock x:Name="countFake" Text="Podrobionych podpisów:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        
+        <StackPanel >
+            <StackPanel Margin="20" HorizontalAlignment="Stretch">
+                <TextBlock x:Name="penPosition" Text="Pozycja rysika: X: 0, Y: 0, Siła nacisku: 0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" />
+                <TextBlock x:Name="strokesCountLabel" Text="Liczba naciśnięć: 0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                <TextBlock x:Name ="timeLastPressedLabel" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Czas ostatniego naciśnięcia w ms: 0" VerticalAlignment="Top"/>
+                <TextBlock x:Name="countOriginal" Text="Oryginalnych podpisów: 0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBlock x:Name="countFake" Text="Podrobionych podpisów: 0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </StackPanel>
+            <StackPanel Margin="0,50,0,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid Margin="0,0,0,5" Height="40">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="authorInputBox" FontSize="18" TextAlignment="DetectFromContent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,2,0" Text="" PlaceholderText="Dodaj Autora"/>
+                    <ComboBox x:Name="authorCombobox" FontSize="18" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="2,0,0,0" SelectionChanged="authorCombobox_SelectionChanged"/>
+            </Grid>
+            
+            <StackPanel Orientation="Horizontal">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Button x:Name="AddAuthor" Margin="1" Content="Dodaj osobę" VerticalAlignment="Stretch" Click="AddAuthor_Click" Width="120"/>
+                    <Button x:Name="saveToFileButton" Margin="1" Grid.Row="1" Content="Zapisz do pliku" VerticalAlignment="Stretch" Click="SaveToFile_Click"/>
+                    <Button x:Name="clearButton" Margin="1" Grid.Column="1" VerticalAlignment="Stretch" Content="Wyczyść" HorizontalAlignment="Stretch" Click="Clear_Click"/>
+                    <Button x:Name="saveButton"  Margin="1" Grid.Column="1" Grid.Row="1" VerticalAlignment="Stretch" Content="Zapisz do bazy" HorizontalAlignment="Stretch" Click="saveButton_Click"/>
+                </Grid>
+                <!--InkCanvas-->
+                <Grid x:Name="inkCanvasHolder" Margin="5,0,0,0" Width="300" Height="100" Background="SkyBlue">
+                    <Rectangle x:Name="background" Fill="#FFF4F4F5" Stroke="Black"/>
+                    <Canvas x:Name="showSignature"/>
+                    <Line x:Name="guideLine" Stroke="Black" StrokeThickness="1" Opacity="0.3"/>
+                    <InkCanvas x:Name="inkCanvas1"/>
+                </Grid>
+            </StackPanel>
+                <CheckBox x:Name="isOriginalCheckBox" Content="Oryginalny podpis" Margin="10,10" IsChecked="True" Click="isOriginalCheckBox_Click"/>
+            </StackPanel>
         </StackPanel>
-        <Button x:Name="AddAuthor" Content="Dodaj osobę" HorizontalAlignment="Left" Margin="30,220,0,0" VerticalAlignment="Top" Click="AddAuthor_Click" Width="120"/>
-        <Button Content="Wyczyść" HorizontalAlignment="Left" Margin="400,290,0,0" VerticalAlignment="Top" Click="Clear_Click" />
-        <Button x:Name="saveToFileButton" Content="Zapisz do pliku" HorizontalAlignment="Left" Margin="30,260,0,0" VerticalAlignment="Top" Click="SaveToFile_Click" Height="32"/>
-        <Button x:Name="saveButton" Content="Zapisz" HorizontalAlignment="Left" Margin="400,250,0,0" VerticalAlignment="Top" Width="76" Click="saveButton_Click"/>
-        <Button Content="Wykresy" HorizontalAlignment="Left" Margin="30,300,0,0" VerticalAlignment="Top" Click="Button_ClickAsync" Width="120" Height="32"/>
-        <ComboBox x:Name="authorCombobox" HorizontalAlignment="Left" Margin="350,180,0,0" VerticalAlignment="Top" Width="306" SelectionChanged="authorCombobox_SelectionChanged"/>
-        <TextBox x:Name="authorInputBox" HorizontalAlignment="Left" Margin="30,180,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="276" PlaceholderText="Autor"/>
-        <Canvas x:Name="canvas1" HorizontalAlignment="Left" Height="0" Margin="12,114,0,0" VerticalAlignment="Top" Width="60"/>
-        <CheckBox x:Name="isOriginalCheckBox" Content="Oryginalny podpis" HorizontalAlignment="Left" Margin="340,330,0,0" VerticalAlignment="Top" Width="174" IsChecked="True" Click="isOriginalCheckBox_Click"/>
 
-        
-        
-
-        <!--InkCanvas-->
-        <Grid x:Name="inkCanvasHolder" Margin="500,250,0,0" Width="300" Height="100" VerticalAlignment="Top" HorizontalAlignment="Left" Background="SkyBlue">
-            <Rectangle x:Name="background" Fill="#FFF4F4F5" Stroke="Black"/>
-            <Canvas x:Name="showSignature"/>
-            <Line x:Name="guideLine" Stroke="Black" StrokeThickness="1" Opacity="0.3"/>
-            <InkCanvas x:Name="inkCanvas1"/>
-        </Grid>
+        <Button Content="Wykresy" HorizontalAlignment="Left" Margin="472,338,0,-10" VerticalAlignment="Top" Click="Button_ClickAsync" Width="120" Height="32"/>
     </Grid>
 </Page>

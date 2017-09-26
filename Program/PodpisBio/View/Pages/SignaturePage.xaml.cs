@@ -36,7 +36,6 @@ namespace PodpisBio.Src
 
             //Start the clock!
             timer = new Stopwatch();
-            timer.Start();
 
             signatureController = new SignatureController();
             this.InitializeComponent();
@@ -90,7 +89,7 @@ namespace PodpisBio.Src
         //Event handler dla rysowania
         private void Core_PointerMoving(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
-            updateInfoInLabel(penPosition, "Adam rysuje X: " + args.CurrentPoint.Position.X + ", Y: " + args.CurrentPoint.Position.Y + ", z mocą: " + args.CurrentPoint.Properties.Pressure + ", " + args.CurrentPoint.Properties.Twist);
+            updateInfoInLabel(penPosition, "Pozycja wskaźnika X: " + Math.Round(args.CurrentPoint.Position.X,2) + ", Y: " + Math.Round(args.CurrentPoint.Position.Y, 2) + ", Siła nacisku: " + Math.Round(args.CurrentPoint.Properties.Pressure, 2));
         }
 
         //Event handler dla rysowania
@@ -101,6 +100,7 @@ namespace PodpisBio.Src
 
         private void Core_PointerPressing(CoreInkIndependentInputSource sender, PointerEventArgs args)
         {
+            timer.Start();
             if (args.CurrentPoint.Properties.IsEraser)
             {
                 Clear_Screen_Add_Strokes();
@@ -109,7 +109,7 @@ namespace PodpisBio.Src
             strokesCount = strokesCount + 1;
 
             updateInfoInLabel(strokesCountLabel, "Ilość naciśnięć: " + strokesCount);
-            updateInfoInLabel(timeLastPressedLabel, "Czas ostatniego naciśnięcia w ms:  " + timer.ElapsedMilliseconds);
+            updateInfoInLabel(timeLastPressedLabel, "Czas ostatniego naciśnięcia w ms: " + timer.ElapsedMilliseconds);
             //Debug.WriteLine("Adam wcisnął " + strokesCount + " razy" + "ostatni raz " + timer.ElapsedMilliseconds);
         }
 
@@ -138,6 +138,8 @@ namespace PodpisBio.Src
             });
 
             strokesCount = 0; //tylko do wyświetlania, Signature class ma realcount
+            timer.Reset();
+            updateInfoInLabel(timeLastPressedLabel, "Czas ostatniego naciśnięcia w ms: 0");
         }
 
 
