@@ -69,6 +69,16 @@ namespace PodpisBio.Src
 
         private void VerifyButton_Click(object sender, RoutedEventArgs e)
         {
+            inkCanvas1.InkPresenter.StrokeContainer.Clear();
+            var sgn = getSignatureFromInkCanvas();
+            var trainingSgns = getOriginalSignaturesFromAuthor();
+            SignVerification sgnVer = new SignVerification();
+            var sentence = "Prawdopodobieństwo, że dany podpis jest prawdziwy wynosi ";
+            this.resultText.Text = sentence + sgnVer.verifyByDtw(sgn, trainingSgns) + ".";
+        }
+
+        private void OLDVerifyButton_Click(object sender, RoutedEventArgs e)
+        {
             //zainicjalizowana sygnatura z inkCanvas
             var signature = getSignatureFromInkCanvas();
             //zainicjalizowane ORYGINALNE sygnatury od wybranego autora z comboBoxa
@@ -105,7 +115,6 @@ namespace PodpisBio.Src
             }
 
             //wyświetlenie rezultatu końcowego
-            String result = "REZULTAT";
             this.resultText.Text = "Najlepszy rezultat: " + bestResult;
         }
 
