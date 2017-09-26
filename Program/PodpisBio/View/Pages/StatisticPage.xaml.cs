@@ -133,6 +133,32 @@ namespace PodpisBio.Src
             }
         }
 
+        private void DTWsButton_Click(Object sender, RoutedEventArgs e)
+        {
+            this.resultList.Items.Clear();
+
+            var originalSignatures = getOriginalSignaturesFromAuthor();
+            var fakeSignatures = getFakeSignaturesFromAuthor();
+            DynamicTimeWrapping dtw = new DynamicTimeWrapping();
+
+            //foreach (var s in originalSignatures)
+            //    System.Diagnostics.Debug.WriteLine("org ma " + s.getAllOriginalPoints().Count + " punktów.");
+
+            //foreach (var s in fakeSignatures)
+            //    System.Diagnostics.Debug.WriteLine("fake ma " + s.getAllOriginalPoints().Count + " punktów.");
+            System.Diagnostics.Debug.WriteLine("\n\nOryginalne podpisy\n");
+            for (int i = 0; i < originalSignatures.Count; i++)
+                for (int j = 0; j < i; j++)
+                {
+                    var result = dtw.calcSimilarity(originalSignatures[i], originalSignatures[j]);
+                    System.Diagnostics.Debug.WriteLine("DTW dla orygnalnych to " + result);
+                }
+            System.Diagnostics.Debug.WriteLine("\nFałszywe podpisy\n");
+            foreach (var orgSgn in originalSignatures)
+                foreach (var fakeSgn in fakeSignatures)
+                    System.Diagnostics.Debug.WriteLine("DTW dla fejków to " + dtw.calcSimilarity(orgSgn, fakeSgn));
+        }
+
         private void updateAuthorCombobox()
         {
             var authorNames = authorController.getAuthorsNames();
