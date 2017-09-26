@@ -69,12 +69,14 @@ namespace PodpisBio.Src
 
         private void VerifyButton_Click(object sender, RoutedEventArgs e)
         {
-            inkCanvas1.InkPresenter.StrokeContainer.Clear();
             var sgn = getSignatureFromInkCanvas();
+            if (sgn.getAllOriginalPoints().Count == 0)
+                return;
             var trainingSgns = getOriginalSignaturesFromAuthor();
             SignVerification sgnVer = new SignVerification();
             var sentence = "Prawdopodobieństwo, że dany podpis jest prawdziwy wynosi ";
-            this.resultText.Text = sentence + sgnVer.verifyByDtw(sgn, trainingSgns) + ".";
+            this.resultText.Text = sentence + Math.Round(sgnVer.verifyByDtw(sgn, trainingSgns), 2) + ".";
+            inkCanvas1.InkPresenter.StrokeContainer.Clear();
         }
 
         private void OLDVerifyButton_Click(object sender, RoutedEventArgs e)
