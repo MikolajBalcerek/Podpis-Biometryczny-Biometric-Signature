@@ -54,7 +54,5 @@
                 <CheckBox x:Name="isOriginalCheckBox" Content="Oryginalny podpis" Margin="10,10" IsChecked="True" Click="isOriginalCheckBox_Click"/>
             </StackPanel>
         </StackPanel>
-
-        <Button Content="Wykresy" HorizontalAlignment="Left" Margin="472,338,0,-10" VerticalAlignment="Top" Click="Button_ClickAsync" Width="120" Height="32"/>
     </Grid>
 </Page>

@@ -30,12 +30,12 @@
 
         <!--(1,0) Menu content-->
         <StackPanel Grid.Column="0" Grid.Row="1">
-            <Button Content="Wyszukiwanie" Click="Wyszukiwanie_Click" HorizontalAlignment="Stretch" Height="70" Margin="0,100,0,0"/>
-            <Button Content="Weryfikowanie" Click="Weryfikowanie_Click" HorizontalAlignment="Stretch" Height="70"/>
-            <Button Content="Podpisy" Click="Podpisy_Click" HorizontalAlignment="Stretch" Height="70"/>
-            <Button Content="Wykresy" Click="Wykresy_Click" HorizontalAlignment="Stretch" Height="70"/>
-            <Button Content="Statystyki" Click="Statystyki_Click" HorizontalAlignment="Stretch" Height="70"/>
-            <Button Content="Ustawienia" Click="Ustawienia_Click" HorizontalAlignment="Stretch" Height="70"/>
+            <Button x:Name="SearchButton" Content="Wyszukiwanie" Click="Wyszukiwanie_Click" HorizontalAlignment="Stretch" Height="70" Margin="0,100,0,0"/>
+            <Button x:Name="VerifyButton" Content="Weryfikowanie" Click="Weryfikowanie_Click" HorizontalAlignment="Stretch" Height="70"/>
+            <Button x:Name="SignatureButton" Content="Podpisy" Click="Podpisy_Click" HorizontalAlignment="Stretch" Height="70"/>
+            <Button x:Name="ChartButton" Content="Wykresy" Click="Wykresy_Click" HorizontalAlignment="Stretch" Height="70"/>
+            <Button x:Name="StatButton" Content="Statystyki" Click="Statystyki_Click" HorizontalAlignment="Stretch" Height="70"/>
+            <Button x:Name="SettingsButton" Content="Ustawienia" Click="Ustawienia_Click" HorizontalAlignment="Stretch" Height="70"/>
         </StackPanel>
 
 

@@ -9,8 +9,12 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Border BorderBrush="{x:Null}" Height="50">
-            <TextBlock TextWrapping="Wrap"  Text="Strona z wykresami" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        </Border>
+        <TextBlock x:Name="InfoBoxTimeSizeProbe" HorizontalAlignment="Left" Margin="10,23,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="61" Width="486" SelectionChanged="InfoBox_SelectionChanged"/>
+        <StackPanel Width="200" HorizontalAlignment="Right">
+            <ComboBox x:Name="plotCombobox" ItemsSource="{x:Bind plotOptions}" Margin="5" VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="40" SelectionChanged="plotCombobox_SelectionChanged"/>
+            <ComboBox x:Name="autCombobox" ItemsSource="{x:Bind authorNames}" Margin="5" VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="40" SelectionChanged="autComboBox_SelectionChanged"/>
+            <ComboBox x:Name="sigCombobox" ItemsSource="{x:Bind signatureIndexes}" Margin="5" VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="40" SelectionChanged="sigComboBox_SelectionChanged"/>
+        </StackPanel>
+        <Canvas x:Name="canvas1" HorizontalAlignment="Left" Width="350" Margin="10,84,0,373"/>
     </Grid>
 </Page>

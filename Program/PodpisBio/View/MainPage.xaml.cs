@@ -6,6 +6,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI;
 using Windows.ApplicationModel.Core;
 using PodpisBio.Src.Author;
+using Windows.UI.Xaml.Media;
 
 //Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x415
 
@@ -66,32 +67,54 @@ namespace PodpisBio
 
         private void Wyszukiwanie_Click(object sender, RoutedEventArgs e)
         {
+            clearSelection();
+            this.SearchButton.Background = new SolidColorBrush(Color.FromArgb(255, 153, 22, 22));
             this.MainPageDisplayFrame.Navigate(typeof(FindAuthorPage));
         }
 
         private void Weryfikowanie_Click(object sender, RoutedEventArgs e)
         {
+            clearSelection();
+            this.VerifyButton.Background = new SolidColorBrush(Color.FromArgb(255, 153, 22, 22));
             this.MainPageDisplayFrame.Navigate(typeof(VerifyAuthorPage), authorController);
         }
 
         private void Podpisy_Click(object sender, RoutedEventArgs e)
         {
+            clearSelection();
+            this.SignatureButton.Background = new SolidColorBrush(Color.FromArgb(255, 153, 22, 22));
             this.MainPageDisplayFrame.Navigate(typeof(SignaturePage), authorController);
         }
 
         private void Wykresy_Click(object sender, RoutedEventArgs e)
         {
-            this.MainPageDisplayFrame.Navigate(typeof(ChartsPage));
+            clearSelection();
+            this.ChartButton.Background = new SolidColorBrush(Color.FromArgb(255, 153, 22, 22));
+            this.MainPageDisplayFrame.Navigate(typeof(ChartsPage), authorController);
         }
 
         private void Ustawienia_Click(object sender, RoutedEventArgs e)
         {
+            clearSelection();
+            this.SettingsButton.Background = new SolidColorBrush(Color.FromArgb(255, 153, 22, 22));
             this.MainPageDisplayFrame.Navigate(typeof(SettingsPage));
         }
 
         private void Statystyki_Click(object sender, RoutedEventArgs e)
         {
+            clearSelection();
+            this.StatButton.Background = new SolidColorBrush(Color.FromArgb(255, 153, 22, 22));
             this.MainPageDisplayFrame.Navigate(typeof(StatisticPage), authorController);
+        }
+
+        private void clearSelection()
+        {
+            this.SearchButton.Background = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
+            this.VerifyButton.Background = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
+            this.SignatureButton.Background = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
+            this.ChartButton.Background = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
+            this.StatButton.Background = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
+            this.SettingsButton.Background = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
         }
     }
 }
