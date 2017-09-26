@@ -62,8 +62,8 @@ namespace PodpisBio.Src.FinalScore
             /*
              */
 
-            //temp = preciseComparison;
-            temp = lengthM * weights.getLengthMWeight() + strokesCount * weights.getStrokesCountWeight() + timeSizeRatio * weights.getTotalRatioWeight() + timeSizeRatioAverageForEachStroke * weights.getAverageTotalRatioForEachStrokeWeight()  + preciseComparison * weights.getPreciseComparisonWeight();
+            temp = preciseComparison;
+            //temp = lengthM * weights.getLengthMWeight() + strokesCount * weights.getStrokesCountWeight() + timeSizeRatio * weights.getTotalRatioWeight() + timeSizeRatioAverageForEachStroke * weights.getAverageTotalRatioForEachStrokeWeight()  + preciseComparison * weights.getPreciseComparisonWeight();
             //temp = temp * (1 / (weights.getLengthMWeight() + weights.getStrokesCountWeight()+weights.getTotalRatioWeight() + weights.getAverageTotalRatioForEachStrokeWeight()));
             return temp;
         }
@@ -124,7 +124,7 @@ namespace PodpisBio.Src.FinalScore
             if(score < 0) { score = 0.0; }
 
 
-            Debug.WriteLine("Wynik SignVerification dla checkTimeSizeRatio " + score);
+            //Debug.WriteLine("Wynik SignVerification dla checkTimeSizeRatio " + score);
             return score;
         }
 
@@ -151,7 +151,7 @@ namespace PodpisBio.Src.FinalScore
 
 
 
-            Debug.WriteLine("Wynik z Średni timeSizeStroke " + score);
+            //Debug.WriteLine("Wynik z Średni timeSizeStroke " + score);
 
             return score;
         }
