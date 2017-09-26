@@ -224,7 +224,7 @@ namespace PodpisBio.Src.FinalScore
         {
             DynamicTimeWrapping dtw = new DynamicTimeWrapping();
             var result = dtw.calcSimilarity(first, second);
-            Debug.WriteLine(result);
+            //Debug.WriteLine(result);
 
             double temp = 0.0;
 
