@@ -19,7 +19,6 @@ namespace PodpisBio.Src.FinalScore
         {
             var n = ts1.Count + 1;
             var m = ts2.Count + 1;
-
             float[][] dtw = new float[n][];
             //jagged arrays są szybsze od [,]
             for (int i = 0; i < n; i++)
