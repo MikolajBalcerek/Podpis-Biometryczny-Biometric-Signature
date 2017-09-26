@@ -124,7 +124,7 @@ namespace PodpisBio.Src.FinalScore
             if(score < 0) { score = 0.0; }
 
 
-            //Debug.WriteLine("Wynik SignVerification dla checkTimeSizeRatio " + score);
+            Debug.WriteLine("Wynik SignVerification dla checkTimeSizeRatio " + score);
             return score;
         }
 
@@ -138,58 +138,12 @@ namespace PodpisBio.Src.FinalScore
             List<Double> originalTimeSizeRatioForEachStroke = original.getTimeSizeProbe().getRatioAreaToTimeForEachStroke();
             List<Double> testSubjectTimeSizeRatioForEachStroke = testSubject.getTimeSizeProbe().getRatioAreaToTimeForEachStroke();
 
-            
-            //miało rozwiązywać problem małpki na listach - przypadkowych kropek oraz nieuporządkowanych list
-            /*
-            if (originalTimeSizeRatioForEachStroke.Count() != testSubjectTimeSizeRatioForEachStroke.Count())
-            {
-                foreach(var elementOriginal in originalTimeSizeRatioForEachStroke)
-                {
-
-                }
-
-            }
-           
-            while (testSubjectTimeSizeRatioForEachStroke.Count() > originalTimeSizeRatioForEachStroke.Count())
-            {
-
-                foreach (var elementOriginal in originalTimeSizeRatioForEachStroke)
-                {
-                    foreach (var elementTestSubject in testSubjectTimeSizeRatioForEachStroke)
-                    {
-                        double difference = (Math.Abs(elementOriginal - elementTestSubject)) / elementOriginal;
-                        if (difference > 2) //jeżeli różnica jest większa niż 200% to jasno to nie jest ten element który powinien być
-                        {
-                            testSubjectTimeSizeRatioForEachStroke.Remove(elementTestSubject);
-                        }
-
-                    }
-                }
-            }
-
-            while (testSubjectTimeSizeRatioForEachStroke.Count() < originalTimeSizeRatioForEachStroke.Count)
-            {
-                foreach (var elementOriginal in originalTimeSizeRatioForEachStroke)
-                {
-                    foreach (var elementTestSubject in testSubjectTimeSizeRatioForEachStroke)
-                    {
-                        double difference = (Math.Abs(elementOriginal - elementTestSubject)) / elementOriginal;
-                        if (difference > 2) //jeżeli różnica jest większa niż 200% to jasno to nie jest ten element który powinien być
-                        {
-                            originalTimeSizeRatioForEachStroke.Remove(elementOriginal);
-                        }
-                    }
-                }
-            } */
-
-
-
             //double __stroke__weight__ = 1 / originalTimeSizeRatioForEachStroke.Count(); // wartość wagi maksymalna dla jednego porównania stroków to 1 (maksymalny wynik dla wszystkich) przez ilość stroków w oryginalne
 
             double averageOriginal = originalTimeSizeRatioForEachStroke.Average();
             double averageTestSubject = testSubjectTimeSizeRatioForEachStroke.Average();
 
-            score = 1 - ((Math.Abs(averageOriginal - averageTestSubject) / averageOriginal) * 0.60);
+            score = 1 - ((Math.Pow((Math.Abs(averageOriginal - averageTestSubject) / averageOriginal), 2)) * 0.8);
             if (score <= 0)
             {
                 score = 0;
@@ -197,7 +151,7 @@ namespace PodpisBio.Src.FinalScore
 
 
 
-            //Debug.WriteLine("Wynik z Średni timeSizeStroke " + score);
+            Debug.WriteLine("Wynik z Średni timeSizeStroke " + score);
 
             return score;
         }
@@ -219,6 +173,7 @@ namespace PodpisBio.Src.FinalScore
                 return 0.2;
             return 0;
         }
+
 
         private double checkPreciseComparisonByJA(Signature first, Signature second, double forDTW)
         {
