@@ -12,17 +12,41 @@ namespace PodpisBio.Src.FinalScore
     {
         public List<double> init(Signature sign, List<Signature> signList, Weight weights)
         {
+            //Debug.WriteLine("Next");
+
+            List<double> forDTW = new List<double>();
+            for (int i = 0; i < signList.Count; i++)
+            {
+                for (int j = i+1; j < signList.Count; j++)
+                {
+                    if (i != j)
+                    {
+                        DynamicTimeWrapping dtw = new DynamicTimeWrapping();
+                        forDTW.Add(dtw.calcSimilarity(signList[j], signList[i]));
+                    }
+                }
+            }
+            //StringBuilder result = new StringBuilder();
+            //result.Append(forDTW.Count + " <> ");
+            //foreach (var d in forDTW)
+            //{
+            //    result.Append(" " + d);
+            //}
+            //Debug.WriteLine(result);
+
+            double averDTW = forDTW.Average();
+
             List<double> ver = new List<double>();
             foreach (Signature first in signList)
             {
-                ver.Add(check(first, sign, weights));
+                ver.Add(check(first, sign, weights,averDTW));
             }
 
             return ver;
         }
         
         //Podobienstwo 2 podpisow (return 1 - identyczne)
-        private double check(Signature first, Signature second, Weight weights)
+        private double check(Signature first, Signature second, Weight weights, double forDTW)
         {
             double temp = 0;
             double lengthM = checkLengthM(first, second);
@@ -33,13 +57,14 @@ namespace PodpisBio.Src.FinalScore
             double strokesCount = checkStrokesCount(first, second);
             double timeSizeRatio = checkTimeSizeRatio(first, second);
             double timeSizeRatioAverageForEachStroke = checkAverageTimeSizeRatioForEachStroke(first, second);
-            double preciseComparison = checkPreciseComparison(first, second);
+            //double preciseComparison = checkPreciseComparison(first, second);
+            double preciseComparison = checkPreciseComparisonByJA(first, second, forDTW);
             /*
              */
 
             //temp = preciseComparison;
-            temp = lengthM * weights.getLengthMWeight() + strokesCount * weights.getStrokesCountWeight() + timeSizeRatio * weights.getTotalRatioWeight() + timeSizeRatioAverageForEachStroke * weights.getAverageTotalRatioForEachStrokeWeight() /* + preciseComparison * weights.getPreciseComparisonWeight()*/;
-            temp = temp * (1 / (weights.getLengthMWeight() + weights.getStrokesCountWeight()+weights.getTotalRatioWeight() + weights.getAverageTotalRatioForEachStrokeWeight()));
+            temp = lengthM * weights.getLengthMWeight() + strokesCount * weights.getStrokesCountWeight() + timeSizeRatio * weights.getTotalRatioWeight() + timeSizeRatioAverageForEachStroke * weights.getAverageTotalRatioForEachStrokeWeight()  + preciseComparison * weights.getPreciseComparisonWeight();
+            //temp = temp * (1 / (weights.getLengthMWeight() + weights.getStrokesCountWeight()+weights.getTotalRatioWeight() + weights.getAverageTotalRatioForEachStrokeWeight()));
             return temp;
         }
 
@@ -164,7 +189,7 @@ namespace PodpisBio.Src.FinalScore
             double averageOriginal = originalTimeSizeRatioForEachStroke.Average();
             double averageTestSubject = testSubjectTimeSizeRatioForEachStroke.Average();
 
-            score = 1 - ((Math.Abs(averageOriginal - averageTestSubject) / averageOriginal) * 0.40);
+            score = 1 - ((Math.Abs(averageOriginal - averageTestSubject) / averageOriginal) * 0.60);
             if (score <= 0)
             {
                 score = 0;
@@ -172,7 +197,7 @@ namespace PodpisBio.Src.FinalScore
 
 
 
-            Debug.WriteLine("Wynik z Średni timeSizeStroke " + score);
+            //Debug.WriteLine("Wynik z Średni timeSizeStroke " + score);
 
             return score;
         }
@@ -181,6 +206,7 @@ namespace PodpisBio.Src.FinalScore
         {
             DynamicTimeWrapping dtw = new DynamicTimeWrapping();
             var result = dtw.calcSimilarity(first, second);
+            Debug.WriteLine(result);
             if (result < 1100)
                 return 0.95;
             if (result < 1200)
@@ -192,6 +218,27 @@ namespace PodpisBio.Src.FinalScore
             if (result < 1500)
                 return 0.2;
             return 0;
+        }
+
+        private double checkPreciseComparisonByJA(Signature first, Signature second, double forDTW)
+        {
+            DynamicTimeWrapping dtw = new DynamicTimeWrapping();
+            var result = dtw.calcSimilarity(first, second);
+            Debug.WriteLine(result);
+
+            double temp = 0.0;
+
+            if(result <= forDTW)
+            {
+                temp = 1.0;
+            }
+            else
+            {
+                temp = 1.0 - (Math.Abs((forDTW - result) / forDTW));
+            }
+            if (temp < 0) { return 0.0; }
+
+            return temp;
         }
     }
 }
