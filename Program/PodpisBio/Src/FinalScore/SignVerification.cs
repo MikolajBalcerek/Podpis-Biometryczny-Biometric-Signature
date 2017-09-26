@@ -47,43 +47,6 @@ namespace PodpisBio.Src.FinalScore
             return ver;
         }
         
-        public double verifyByDtw(Signature sgn, List<Signature> trainSgns)
-        {
-            var trainDtws = calcAllDtws(trainSgns);
-            var max = trainDtws.Max();
-            var min = trainDtws.Min();
-            var avg = trainDtws.Average();
-            var std = calcStd(avg, trainDtws);
-
-            var results = new List<double>();
-            for(int i = 0; i < trainSgns.Count; i++)
-                results.Add( checkPreciseComparison(sgn, trainSgns[i], avg, min, max, std));
-
-            String s = " ";
-            foreach (var res in results)
-                s += (res + "| ");
-            Debug.WriteLine(s);
-
-            return results.Max();
-
-        }
-        private float calcStd(float average, IEnumerable<float> list)
-        {
-            var variance = (from x in list select (x - average) * (x - average)).Sum() / (list.Count() - 1);
-            return (float)Math.Sqrt(variance);
-        }
-
-
-        private List<float> calcAllDtws(List<Signature> sgns)
-        {
-            List<float> dtws = new List<float>();
-            DynamicTimeWrapping dtw = new DynamicTimeWrapping();
-            for (int i = 0; i < sgns.Count; i++)
-                for (int j = 0; j <= i; j++)
-                    dtws.Add(dtw.calcSimilarity(sgns[i], sgns[j]));
-            return dtws;
-        }
-
         //Podobienstwo 2 podpisow (return 1 - identyczne)
         private double check(Signature first, Signature second, Weight weights, double avgDTW, double minDTW, double maxDTW)
         {
@@ -97,7 +60,7 @@ namespace PodpisBio.Src.FinalScore
             //double timeSizeRatio = checkTimeSizeRatio(first, second);
             //double timeSizeRatioAverageForEachStroke = checkAverageTimeSizeRatioForEachStroke(first, second);
             //double preciseComparison = checkPreciseComparison(first, second);
-            double preciseComparison = checkPreciseComparison(first, second, avgDTW, minDTW, maxDTW, avgDTW - minDTW);
+            double preciseComparison = checkPreciseComparison(first, second, avgDTW, minDTW, maxDTW);
 
             //temp = preciseComparison;
             //temp = lengthM * weights.getLengthMWeight() + strokesCount * weights.getStrokesCountWeight() + timeSizeRatio * weights.getTotalRatioWeight() + timeSizeRatioAverageForEachStroke * weights.getAverageTotalRatioForEachStrokeWeight()  + preciseComparison * weights.getPreciseComparisonWeight();
@@ -194,17 +157,23 @@ namespace PodpisBio.Src.FinalScore
             return score;
         }
 
-        private double checkPreciseComparison(Signature first, Signature second, double avg, double min, double max, double std)
+        private double checkPreciseComparison(Signature first, Signature second, double avgDTW, double minDTW, double maxDTW)
         {
-            const double TOLLERANCE = 0.05;
-            const double SLOPE = 0.003;
+            const double TOLLERANCE = 0.8;
+            const double SLOPE = 0.05;
             DynamicTimeWrapping dtw = new DynamicTimeWrapping();
             var result = dtw.calcSimilarity(first, second);
-            var threshold = max + TOLLERANCE * std;
-            var logit = 1.0 / (1.0 + Math.Exp(-SLOPE * (threshold - result)));
+            Debug.WriteLine("forDTw = " + avgDTW);
+            Debug.WriteLine("maxDTW = " + maxDTW);
+            Debug.WriteLine("minDTW = " + minDTW);
 
-            //Debug.WriteLine("Lkogit to " + logit);
+            Debug.WriteLine("result = " + result);
+
+            var logit = 1.0 / (1.0 + Math.Exp(-SLOPE * (maxDTW + TOLLERANCE * (avgDTW - minDTW) - result)));
+
+            Debug.WriteLine("Logit to " + logit);
             return logit;
+            return 0;
         }
 
 
