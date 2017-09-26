@@ -17,6 +17,8 @@ namespace PodpisBio.Src
         private double totalRatioWeight;
         private double totalRatioForEachStrokeWeight;
         private double preciseComparisonWeight;
+        
+        private double preciseComparisonTreshold; //prog dla DTW
 
         public Weight(List<Signature> sign)
         {
@@ -26,6 +28,7 @@ namespace PodpisBio.Src
             
             init();
         }
+        
 
         public double getBasicCount()
         {
@@ -55,6 +58,11 @@ namespace PodpisBio.Src
         public double getPreciseComparisonWeight()
         {
             return this.preciseComparisonWeight;
+        }
+        
+        public double getPreciseComparisonTreshold()
+        {
+            return this.preciseComparisonTreshold;
         }
 
         private void init()
@@ -98,7 +106,7 @@ namespace PodpisBio.Src
         }
 
         //Odchylenie standardowe (dla danego parametru) z podpisow, ktore sa brane jako baza oryginalnych do weryfikacji
-        private double calc_SD(List<double> list)
+        private double calc_SD(List<double> list, bool isDTW)
         {
             double temp = 0;
             float[] array = list.Select(x => (float)x).ToArray();
@@ -109,23 +117,25 @@ namespace PodpisBio.Src
 
             temp = 1 - (sd / Convert.ToDouble(average));
             if (temp < 0) { return 0.0; }
-
+            
+            if(isDTW){ this.preciseComparisonTreshold = Convert.ToDouble(average); }
+            
             return temp;
         }
 
         private double calcLengthM_SD(List<double> list)
         {
-            return calc_SD(list);
+            return calc_SD(list, false);
         }
 
         private double calcStrokesCount_SD(List<double> list)
         {
-            return calc_SD(list);
+            return calc_SD(list, false);
         }
 
         private double calcTotalRatio_SD(List<double> list)
         {
-            return calc_SD(list);
+            return calc_SD(list, false);
         }
 
         //private double calcTotalRatioForEachStroke_SD(List<List<double>> list)
@@ -153,7 +163,7 @@ namespace PodpisBio.Src
                 }
             }
 
-            return calc_SD(forDTW);
+            return calc_SD(forDTW, true);
         }
 
 
