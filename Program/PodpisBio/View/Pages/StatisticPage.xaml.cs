@@ -48,26 +48,6 @@ namespace PodpisBio.Src
         {
             this.resultList.Items.Clear();
 
-            var weights = getAuthorWeights();
-            var originalTrain = getOriginalSignaturesFromAuthor().Take((int)weights.getBasicCount()).ToList();
-            var originalTest = getOriginalSignaturesFromAuthor().Skip((int)weights.getBasicCount());
-            var fake = getFakeSignaturesFromAuthor();
-
-            SignVerification sgnVer = new SignVerification();
-
-            Debug.WriteLine("\n\nKolejna osoba\n");
-            foreach (var s in originalTrain)
-                this.resultList.Items.Add("Training " + sgnVer.verifyByDtw(s, originalTrain));
-            foreach (var s in originalTest)
-                this.resultList.Items.Add("Testing " + sgnVer.verifyByDtw(s, originalTrain));
-            foreach (var s in fake)
-                this.resultList.Items.Add("Fake " + sgnVer.verifyByDtw(s, originalTrain));
-        }
-
-        private void OLDStartButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.resultList.Items.Clear();
-
             var originalAll = getOriginalSignaturesFromAuthor();
             var fake = getFakeSignaturesFromAuthor();
             var weights = getAuthorWeights();
