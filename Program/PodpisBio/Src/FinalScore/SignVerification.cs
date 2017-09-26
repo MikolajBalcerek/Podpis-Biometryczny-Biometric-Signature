@@ -14,18 +14,18 @@ namespace PodpisBio.Src.FinalScore
         {
             //Debug.WriteLine("Next");
 
-            List<double> forDTW = new List<double>();
-            for (int i = 0; i < signList.Count; i++)
-            {
-                for (int j = i+1; j < signList.Count; j++)
-                {
-                    if (i != j)
-                    {
-                        DynamicTimeWrapping dtw = new DynamicTimeWrapping();
-                        forDTW.Add(dtw.calcSimilarity(signList[j], signList[i]));
-                    }
-                }
-            }
+            //List<double> forDTW = new List<double>();
+            //for (int i = 0; i < signList.Count; i++)
+            //{
+            //    for (int j = i+1; j < signList.Count; j++)
+            //    {
+            //        if (i != j)
+            //        {
+            //            DynamicTimeWrapping dtw = new DynamicTimeWrapping();
+            //            forDTW.Add(dtw.calcSimilarity(signList[j], signList[i]));
+            //        }
+            //    }
+            //}
             //StringBuilder result = new StringBuilder();
             //result.Append(forDTW.Count + " <> ");
             //foreach (var d in forDTW)
@@ -34,19 +34,19 @@ namespace PodpisBio.Src.FinalScore
             //}
             //Debug.WriteLine(result);
 
-            double averDTW = forDTW.Average();
+            //double averDTW = forDTW.Average();
 
             List<double> ver = new List<double>();
             foreach (Signature first in signList)
             {
-                ver.Add(check(first, sign, weights,averDTW));
+                ver.Add(check(first, sign, weights));
             }
 
             return ver;
         }
         
         //Podobienstwo 2 podpisow (return 1 - identyczne)
-        private double check(Signature first, Signature second, Weight weights, double forDTW)
+        private double check(Signature first, Signature second, Weight weights)
         {
             double temp = 0;
             double lengthM = checkLengthM(first, second);
@@ -58,7 +58,7 @@ namespace PodpisBio.Src.FinalScore
             double timeSizeRatio = checkTimeSizeRatio(first, second);
             double timeSizeRatioAverageForEachStroke = checkAverageTimeSizeRatioForEachStroke(first, second);
             //double preciseComparison = checkPreciseComparison(first, second);
-            double preciseComparison = checkPreciseComparisonByJA(first, second, forDTW);
+            double preciseComparison = checkPreciseComparisonByJA(first, second, weights.getPreciseComparisonTreshold());
             /*
              */
 
@@ -175,7 +175,7 @@ namespace PodpisBio.Src.FinalScore
         }
 
 
-        private double checkPreciseComparisonByJA(Signature first, Signature second, double forDTW)
+        private double checkPreciseComparisonByJA(Signature first, Signature second, double treshold)
         {
             DynamicTimeWrapping dtw = new DynamicTimeWrapping();
             var result = dtw.calcSimilarity(first, second);
@@ -183,13 +183,13 @@ namespace PodpisBio.Src.FinalScore
 
             double temp = 0.0;
 
-            if(result <= forDTW)
+            if(result <= treshold)
             {
                 temp = 1.0;
             }
             else
             {
-                temp = 1.0 - (Math.Abs((forDTW - result) / forDTW));
+                temp = 1.0 - (Math.Abs((treshold - result) / treshold));
             }
             if (temp < 0) { return 0.0; }
 
