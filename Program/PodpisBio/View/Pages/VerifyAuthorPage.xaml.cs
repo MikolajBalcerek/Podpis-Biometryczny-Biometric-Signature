@@ -72,12 +72,22 @@ namespace PodpisBio.Src
             //zainicjalizowana sygnatura z inkCanvas
             var signature = getSignatureFromInkCanvas();
             //zainicjalizowane ORYGINALNE sygnatury od wybranego autora z comboBoxa
-            var signatureList = getOriginalSignaturesFromAuthor();
+            var signatureListAll = getOriginalSignaturesFromAuthor();
             //wagi  autora
             var weights = getAuthorWeights();
 
+            List<Signature> signatureList = new List<Signature>();
+            int i = 0;
+            foreach (var s in signatureListAll)
+            {
+                if (i >= weights.getBasicCount()) { break; }
+                signatureList.Add(s);
+                i++;
+            }
+
             //MIEJSCE NA METODĘ DO POROWNYWANIA PODPISOW
             SignVerification signVerification = new SignVerification();
+
             var finalScores = signVerification.init(signature, signatureList, weights);
             //MIEJSCE NA METODĘ DO POROWNYWANIA PODPISOW
 

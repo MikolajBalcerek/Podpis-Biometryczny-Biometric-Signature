@@ -2,6 +2,7 @@
 using PodpisBio.Src.FinalScore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -72,9 +73,12 @@ namespace PodpisBio.Src
 
             SignVerification signVerification = new SignVerification();
 
+            //int hmm = 1;
             //Weryfikacja podpisow branych jako baza do liczenia wag i weryfikacji (musi zwracac besta = 1)
             foreach (Signature s in originalBasic)
             {
+                //Debug.WriteLine("Basic "+hmm);
+                //hmm++;
                 var finalScores = signVerification.init(s, originalBasic, weights);
 
                 StringBuilder result = new StringBuilder();
@@ -88,13 +92,16 @@ namespace PodpisBio.Src
                 }
                 result.Append("Best = " + best + " | ");
                 result.Append(resultTemp);
-
+                Debug.WriteLine(result);
                 this.resultList.Items.Add(result);
             }
 
+            //hmm = 1;
             //Weryfikacja oryginalnych podpisow ktore sa w bazie danych (bez tych branych jako baza do wag i weryfikacji)
             foreach (Signature s in originalTest)
             {
+                //Debug.WriteLine("Test "+hmm);
+                //hmm++;
                 var finalScores = signVerification.init(s, originalBasic, weights);
 
                 StringBuilder result = new StringBuilder();
@@ -108,13 +115,15 @@ namespace PodpisBio.Src
                 }
                 result.Append("Best = " + best +" | ");
                 result.Append(resultTemp);
-
+                Debug.WriteLine(result);
                 this.resultList.Items.Add(result);
             }
-
+            //hmm = 1;
             //Weryfikacja podrobionych podpisow ktore sa w bazie danych
             foreach (Signature s in fake)
             {
+                //Debug.WriteLine("Fake "+hmm);
+                //hmm++;
                 var finalScores = signVerification.init(s, originalBasic, weights);
 
                 StringBuilder result = new StringBuilder();
@@ -128,7 +137,7 @@ namespace PodpisBio.Src
                 }
                 result.Append("Best = " + best + " | ");
                 result.Append(resultTemp);
-
+                Debug.WriteLine(result);
                 this.resultList.Items.Add(result);
             }
         }

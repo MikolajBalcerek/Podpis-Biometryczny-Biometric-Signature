@@ -1,7 +1,9 @@
-﻿using System;
+﻿using PodpisBio.Src.FinalScore;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 
 namespace PodpisBio.Src
 {
@@ -21,7 +23,7 @@ namespace PodpisBio.Src
             this.sign = sign;
             this.basicCount = 5.0;
             if(this.basicCount > sign.Count) { this.basicCount = Convert.ToDouble(sign.Count); }
-
+            
             init();
         }
 
@@ -57,8 +59,9 @@ namespace PodpisBio.Src
 
         private void init()
         {
-            double forWeight = 0.7;
-            this.preciseComparisonWeight = 1 - forWeight;
+            //double forWeight = 0.7;
+            //this.preciseComparisonWeight = 1 - forWeight;
+            double forWeight = 1.0;
 
             List<double> lengthMList = new List<double>();
             List<double> strokesCountList = new List<double>();
@@ -81,13 +84,16 @@ namespace PodpisBio.Src
             double calcStrokesCount = calcStrokesCount_SD(strokesCountList);
             double calcTotalRatio = calcTotalRatio_SD(totalRatioList) * 2.0;
             double calcTotalRatioForEachStroke = calcTotalRatio / 2.0;
+            double calcPreciseComparison = calcPreciseComparison_SD() * 2.0;
 
-            double temp = calcLengthM + calcStrokesCount + calcTotalRatio + calcTotalRatioForEachStroke;
+            //double temp = calcLengthM + calcStrokesCount + calcTotalRatio + calcTotalRatioForEachStroke;
+            double temp = calcLengthM + calcStrokesCount + calcTotalRatio + calcTotalRatioForEachStroke + calcPreciseComparison;
 
             this.lengthMWeight = calcLengthM / temp * forWeight;
             this.strokesCountWeight = calcStrokesCount / temp * forWeight;
             this.totalRatioWeight = calcTotalRatio / temp * forWeight;
             this.totalRatioForEachStrokeWeight = calcTotalRatioForEachStroke / temp * forWeight;
+            this.preciseComparisonWeight = calcPreciseComparison / temp * forWeight;
             //Debug.WriteLine("Wagi: "+ this.lengthMWeight +" "+ this.strokesCountWeight+" "+ this.totalRatioWeight+" "+ this.totalRatioForEachStrokeWeight);
         }
 
@@ -131,6 +137,25 @@ namespace PodpisBio.Src
 
         //    return temp;
         //}
-        
+
+        private double calcPreciseComparison_SD()
+        {
+            List<double> forDTW = new List<double>();
+            for (int i = 0; i < sign.Count; i++)
+            {
+                for (int j = i + 1; j < sign.Count; j++)
+                {
+                    if (i != j)
+                    {
+                        DynamicTimeWrapping dtw = new DynamicTimeWrapping();
+                        forDTW.Add(dtw.calcSimilarity(sign[j], sign[i]));
+                    }
+                }
+            }
+
+            return calc_SD(forDTW);
+        }
+
+
     }
 }
