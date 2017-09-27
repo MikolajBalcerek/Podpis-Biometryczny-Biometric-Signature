@@ -10,7 +10,7 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Border BorderBrush="{x:Null}" Height="50">
-            <TextBlock TextWrapping="Wrap"  Text="Strona z ustawieniami" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock TextWrapping="Wrap"  Text="Strona z ustawieniami." VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Border>
     </Grid>
 </Page>
