@@ -14,25 +14,25 @@ namespace PodpisBio.Src.FinalScore
         {
             //Debug.WriteLine("Next");
 
-            //List<double> forDTW = new List<double>();
-            //for (int i = 0; i < signList.Count; i++)
-            //{
-            //    for (int j = i+1; j < signList.Count; j++)
-            //    {
-            //        if (i != j)
-            //        {
-            //            DynamicTimeWrapping dtw = new DynamicTimeWrapping();
-            //            forDTW.Add(dtw.calcSimilarity(signList[j], signList[i]));
-            //        }
-            //    }
-            //}
-            //StringBuilder result = new StringBuilder();
-            //result.Append(forDTW.Count + " <> ");
-            //foreach (var d in forDTW)
-            //{
-            //    result.Append(" " + d);
-            //}
-            //Debug.WriteLine(result);
+            List<double> forDTW = new List<double>();
+            for (int i = 0; i < signList.Count; i++)
+            {
+                for (int j = i + 1; j < signList.Count; j++)
+                {
+                    if (i != j)
+                    {
+                        DynamicTimeWrapping dtw = new DynamicTimeWrapping();
+                        forDTW.Add(dtw.calcSimilarity(signList[j], signList[i]));
+                    }
+                }
+            }
+            StringBuilder result = new StringBuilder();
+            result.Append(forDTW.Count + " <> ");
+            foreach (var d in forDTW)
+            {
+                result.Append(" " + d);
+            }
+            Debug.WriteLine(result);
 
             double averDTW = forDTW.Average();
             double maxDTW = forDTW.Max();
