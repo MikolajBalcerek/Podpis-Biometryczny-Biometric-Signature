@@ -34,19 +34,21 @@ namespace PodpisBio.Src.FinalScore
             //}
             //Debug.WriteLine(result);
 
-            //double averDTW = forDTW.Average();
+            double averDTW = forDTW.Average();
+            double maxDTW = forDTW.Max();
+            double minDTW = forDTW.Min();
 
             List<double> ver = new List<double>();
             foreach (Signature first in signList)
             {
-                ver.Add(check(first, sign, weights));
+                ver.Add(check(first, sign, weights,averDTW, minDTW, maxDTW));
             }
 
             return ver;
         }
         
         //Podobienstwo 2 podpisow (return 1 - identyczne)
-        private double check(Signature first, Signature second, Weight weights)
+        private double check(Signature first, Signature second, Weight weights, double avgDTW, double minDTW, double maxDTW)
         {
             double temp = 0;
             double lengthM = checkLengthM(first, second);
@@ -54,17 +56,16 @@ namespace PodpisBio.Src.FinalScore
             {
                 return 0;
             }
-            double strokesCount = checkStrokesCount(first, second);
-            double timeSizeRatio = checkTimeSizeRatio(first, second);
-            double timeSizeRatioAverageForEachStroke = checkAverageTimeSizeRatioForEachStroke(first, second);
+            //double strokesCount = checkStrokesCount(first, second);
+            //double timeSizeRatio = checkTimeSizeRatio(first, second);
+            //double timeSizeRatioAverageForEachStroke = checkAverageTimeSizeRatioForEachStroke(first, second);
             //double preciseComparison = checkPreciseComparison(first, second);
-            double preciseComparison = checkPreciseComparisonByJA(first, second, weights.getPreciseComparisonTreshold());
-            /*
-             */
+            double preciseComparison = checkPreciseComparison(first, second, avgDTW, minDTW, maxDTW);
 
             //temp = preciseComparison;
-            temp = lengthM * weights.getLengthMWeight() + strokesCount * weights.getStrokesCountWeight() + timeSizeRatio * weights.getTotalRatioWeight() + timeSizeRatioAverageForEachStroke * weights.getAverageTotalRatioForEachStrokeWeight()  + preciseComparison * weights.getPreciseComparisonWeight();
+            //temp = lengthM * weights.getLengthMWeight() + strokesCount * weights.getStrokesCountWeight() + timeSizeRatio * weights.getTotalRatioWeight() + timeSizeRatioAverageForEachStroke * weights.getAverageTotalRatioForEachStrokeWeight()  + preciseComparison * weights.getPreciseComparisonWeight();
             //temp = temp * (1 / (weights.getLengthMWeight() + weights.getStrokesCountWeight()+weights.getTotalRatioWeight() + weights.getAverageTotalRatioForEachStrokeWeight()));
+            temp = preciseComparison;
             return temp;
         }
 
@@ -156,21 +157,22 @@ namespace PodpisBio.Src.FinalScore
             return score;
         }
 
-        private double checkPreciseComparison(Signature first, Signature second)
+        private double checkPreciseComparison(Signature first, Signature second, double avgDTW, double minDTW, double maxDTW)
         {
+            const double TOLLERANCE = 0.8;
+            const double SLOPE = 0.05;
             DynamicTimeWrapping dtw = new DynamicTimeWrapping();
             var result = dtw.calcSimilarity(first, second);
-            Debug.WriteLine(result);
-            if (result < 1100)
-                return 0.95;
-            if (result < 1200)
-                return 0.8;
-            if (result < 1500)
-                return 0.7;
-            if (result < 1450)
-                return 0.6;
-            if (result < 1500)
-                return 0.2;
+            Debug.WriteLine("forDTw = " + avgDTW);
+            Debug.WriteLine("maxDTW = " + maxDTW);
+            Debug.WriteLine("minDTW = " + minDTW);
+
+            Debug.WriteLine("result = " + result);
+
+            var logit = 1.0 / (1.0 + Math.Exp(-SLOPE * (maxDTW + TOLLERANCE * (avgDTW - minDTW) - result)));
+
+            Debug.WriteLine("Logit to " + logit);
+            return logit;
             return 0;
         }
 

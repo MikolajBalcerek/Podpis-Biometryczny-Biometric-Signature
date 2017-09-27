@@ -98,6 +98,7 @@
     <Compile Include="Src\Author\Weight\Weight.cs" />
     <Compile Include="Src\FinalScore\PreciseComparison\DataPreparation.cs" />
     <Compile Include="Src\FinalScore\PreciseComparison\DynamicTimeWrapping.cs" />
+    <Compile Include="Src\FinalScore\PreciseComparison\Metrics.cs" />
     <Compile Include="Src\FinalScore\PreciseComparison\ProbabilisticDTW.cs" />
     <Compile Include="Src\FinalScore\SignVerification.cs" />
     <Compile Include="Src\Service\AuthorService.cs" />

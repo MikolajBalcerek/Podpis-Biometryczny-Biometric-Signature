@@ -14,6 +14,15 @@ namespace PodpisBio.Src.FinalScore.PreciseComparison
 
         const string NORMALISATION = "std"; // druga opcja to "minmax"
 
+        // standaryzacja póki co działa bardzo niefajnie :(
+        // można dodać lepsze metody samplingu niż sampling liniowy
+
+        const int STANDARD_LENGTH = 550;
+
+        const bool STANDARIZE_LENGTH = false;
+
+        const bool STUPID_LENGTH_STANDARIZATION = false;
+
         private float calcStd(float average, IEnumerable<float> list)
         {
             var variance = (from x in list select (x - average) * (x - average)).Sum() / (list.Count() - 1);
@@ -25,6 +34,75 @@ namespace PodpisBio.Src.FinalScore.PreciseComparison
             return (x - avg) > TOLLERANCE_STD * std || (x - avg) < -1 * TOLLERANCE_STD * std;
         }
 
+        private IEnumerable<float> upsampleLineary(IEnumerable<float> ts, int scale, int n)
+        {
+            var result = new float[n * scale];
+
+            int i = 0;
+            foreach (var x in ts)
+            {
+                if (i >= n) break;
+                result[i * scale] = x;
+                i++;
+            }
+
+            for(int j = 0; j < n - 1; j++)
+            {
+                var left = result[j * scale];
+                var right = result[(j + 1) * scale];
+                for (int k = j * scale + 1; k < (j + 1) * scale; k++)
+                    result[k] = (k * left + (scale - k) * right) / scale;
+            }
+            return result;
+        }
+
+        private IEnumerable<float> downsampleLineary(IEnumerable<float> ts, int scale, int n)
+        {
+            // zakładam, że scale dzieli ts.Count()
+            if (n % scale != 0)
+                Debug.WriteLine(" Scale nie dzieli liczby  elementów w downsample!");
+
+            var result = new float[n / scale];
+            for (int i = 0; i < n / scale; i++)
+            {
+                result[i] = ts.Skip(i * scale).Take(scale).Average();
+            }
+            return result;
+        }
+
+         private Tuple<int, int> findShifts(int n, int rangeFeature=5, int rangeStd=50)
+        {
+            int featureShift = 0;
+            int stdShift = 0;
+            int minLcm = lcm(n, STANDARD_LENGTH);
+
+            for (int i = 0; i < rangeFeature; i++)
+                for (int j = -rangeStd; j < rangeStd + 1; j++)
+                    if (lcm(n - i, STANDARD_LENGTH + j) < minLcm)
+                    {
+                        minLcm = lcm(n - i, STANDARD_LENGTH + j);
+                        featureShift = i;
+                        stdShift = j;
+                    }
+            return Tuple.Create(featureShift, stdShift);
+        }
+
+        private IEnumerable<float> fitFeatureToSize(IEnumerable<float> feature, int minLcm, int featureShift, int stdShift)
+        {
+            int n = feature.Count();
+            var result = upsampleLineary(feature, minLcm / (n - featureShift), n - featureShift);
+            //Debug.WriteLine(result.Count());
+            return downsampleLineary(result, minLcm / (STANDARD_LENGTH + stdShift), minLcm);
+        }
+
+        private IEnumerable<float> fitFeatureToSize(IEnumerable<float> feature)
+        {
+            int n = feature.Count();
+            var shifts = findShifts(n, 5, 10);
+            var minLcm = lcm(n - shifts.Item1, STANDARD_LENGTH + shifts.Item2);
+            return fitFeatureToSize(feature, minLcm, shifts.Item1, shifts.Item2);
+        }
+
         private IEnumerable<float> removeOddsFeature(IEnumerable<float> feature)
         {
             var avg = feature.Average();
@@ -33,7 +111,7 @@ namespace PodpisBio.Src.FinalScore.PreciseComparison
         }
 
         private IEnumerable<int> findOutlierIndices(IEnumerable<float> feature)
-            // zwraca indeksy odstających danych, uporządkowane malejąco
+            // zwraca indeksy odstających danych, uporządkowane malejąco 
         {
             var avg = feature.Average();
             var std = calcStd(avg, feature);
@@ -91,10 +169,21 @@ namespace PodpisBio.Src.FinalScore.PreciseComparison
             return (from x in feature select (float)((x - avg) / std)).ToList();
         }
 
+        private IEnumerable<float> stupidFeatureFitToSize(IEnumerable<float> feature)
+        {
+            if (feature.Count() < 420)
+                return upsampleLineary(feature, 2, feature.Count());
+            return feature;
+        }
+
         public List<float> prepareFeature(IEnumerable<float> feature, bool removeOutlying)
         {
             if (removeOutlying)
                 feature = removeOddsFeature(feature);
+            if (STANDARIZE_LENGTH)
+                feature = fitFeatureToSize(feature);
+            else if (STUPID_LENGTH_STANDARIZATION)
+                feature = stupidFeatureFitToSize(feature);
             if (NORMALISATION == "std")
                 return normaliseFeatureStd(feature);
             if (NORMALISATION == "minmax")
@@ -103,8 +192,13 @@ namespace PodpisBio.Src.FinalScore.PreciseComparison
             return feature.ToList();
         }
 
-        private List<float> prepareFeatureGlobal(IEnumerable<float> feature)
+        private List<float> prepareFeatureGlobal(IEnumerable<float> feature, int minLcm, int featureShift, int stdShift)
         {
+            //Debug.WriteLine(feature.Count());
+            if (STANDARIZE_LENGTH)
+                feature = fitFeatureToSize(feature, minLcm, featureShift, stdShift);
+            else if (STUPID_LENGTH_STANDARIZATION)
+                feature = stupidFeatureFitToSize(feature);
             if (NORMALISATION == "std")
                 return normaliseFeatureStd(feature);
             if (NORMALISATION == "minmax")
@@ -116,13 +210,15 @@ namespace PodpisBio.Src.FinalScore.PreciseComparison
         public List<Point> preparePoints(List<Point> points)
         {
             List<Point> result = new List<Point>();
-            var xs = prepareFeatureGlobal(from x in points select x.X);
-            var ys = prepareFeatureGlobal(from x in points select x.Y);
-            var pressures = prepareFeatureGlobal(from x in points select x.Pressure);
+            var shifts = findShifts(points.Count);
+            var minLcm = lcm(points.Count - shifts.Item1, STANDARD_LENGTH + shifts.Item2);
+            var xs = prepareFeatureGlobal((from x in points select x.X), minLcm, shifts.Item1, shifts.Item2);
+            var ys = prepareFeatureGlobal((from x in points select x.Y), minLcm, shifts.Item1, shifts.Item2);
+            var pressures = prepareFeatureGlobal((from x in points select x.Pressure), minLcm, shifts.Item1, shifts.Item2);
             //var tiltXs = prepareFeature(from x in points select x.tiltX);
             //var tiltYs = prepareFeature(from x in points select x.tiltY);
-            for (int i = 0; i < points.Count(); i++)
-                result.Add(new Point(xs[i], ys[i], pressures[i], (ulong)points[i].Timestamp, 0, 0)); // tiltXs[i], tiltYs[i]));
+            for (int i = 0; i < xs.Count(); i++)
+                result.Add(new Point(xs[i], ys[i], pressures[i], 0, 0, 0)); // tiltXs[i], tiltYs[i]));
 
             return result;
         }
@@ -130,19 +226,38 @@ namespace PodpisBio.Src.FinalScore.PreciseComparison
         public List<Derivatives> prepareDerivatives(List<Derivatives> derivatives)
         {
             List<Derivatives> result = new List<Derivatives>();
-            var v = prepareFeatureGlobal(from x in derivatives select x.Velocity);
-            var vx = prepareFeatureGlobal(from x in derivatives select x.VelocityX);
-            var vy = prepareFeatureGlobal(from x in derivatives select x.VelocityY);
-            var a = prepareFeatureGlobal(from x in derivatives select x.Acc);
-            var ax = prepareFeatureGlobal(from x in derivatives select x.AccX);
-            var ay = prepareFeatureGlobal(from x in derivatives select x.AccY);
-            var pc = prepareFeatureGlobal(from x in derivatives select x.PressureChange);
+            var shifts = findShifts(derivatives.Count);
+            var minLcm = lcm(derivatives.Count - shifts.Item1, STANDARD_LENGTH + shifts.Item2);
+            var v = prepareFeatureGlobal((from x in derivatives select x.Velocity), minLcm, shifts.Item1, shifts.Item2);
+            var vx = prepareFeatureGlobal((from x in derivatives select x.VelocityX), minLcm, shifts.Item1, shifts.Item2);
+            var vy = prepareFeatureGlobal((from x in derivatives select x.VelocityY), minLcm, shifts.Item1, shifts.Item2);
+            var a = prepareFeatureGlobal((from x in derivatives select x.Acc), minLcm, shifts.Item1, shifts.Item2);
+            var ax = prepareFeatureGlobal((from x in derivatives select x.AccX), minLcm, shifts.Item1, shifts.Item2);
+            var ay = prepareFeatureGlobal((from x in derivatives select x.AccY), minLcm, shifts.Item1, shifts.Item2);
+            var pc = prepareFeatureGlobal((from x in derivatives select x.PressureChange), minLcm, shifts.Item1, shifts.Item2);
             //Debug.WriteLine("Max v to " + v.Max() + " ");
-            for (int i = 0; i < derivatives.Count(); i++)
+            for (int i = 0; i < v.Count(); i++)
                 result.Add(new Derivatives(v[i], vx[i], vy[i], a[i], ax[i], ay[i], 0, 0, pc[i]));
             // nie uwzględniam tiltów, póki nie działają.
             //Debug.WriteLine("Max result to " + result.Max(x => x.Velocity) + " ");
             return result;
+        }
+
+        private int gcd(int a, int b)
+        {
+            int tmp;
+            while (b != 0)
+            {
+                tmp = a % b;
+                a = b;
+                b = tmp;
+            }
+            return a;
+        }
+
+        private int lcm(int a, int b)
+        {
+            return a * b / gcd(a, b);
         }
     }
 }

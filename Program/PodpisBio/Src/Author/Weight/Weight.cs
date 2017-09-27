@@ -11,6 +11,8 @@ namespace PodpisBio.Src
     {
         private List<Signature> sign;
         private double basicCount; //Ilosc oryginalnych podpisow z bazy ktore maja byc brane przy ustalaniu wag
+
+        const bool USE_WEIGHTS = false;
         
         private double lengthMWeight;
         private double strokesCountWeight;
@@ -26,7 +28,8 @@ namespace PodpisBio.Src
             this.basicCount = 5.0;
             if(this.basicCount > sign.Count) { this.basicCount = Convert.ToDouble(sign.Count); }
             
-            init();
+            if(USE_WEIGHTS)
+                init();
         }
         
 
@@ -93,6 +96,7 @@ namespace PodpisBio.Src
             double calcTotalRatio = calcTotalRatio_SD(totalRatioList) * 2.0;
             double calcTotalRatioForEachStroke = calcTotalRatio / 2.0;
             double calcPreciseComparison = calcPreciseComparison_SD() * 2.0;
+                // to zabiera strasznie dużo czasu!!!
 
             //double temp = calcLengthM + calcStrokesCount + calcTotalRatio + calcTotalRatioForEachStroke;
             double temp = calcLengthM + calcStrokesCount + calcTotalRatio + calcTotalRatioForEachStroke + calcPreciseComparison;
