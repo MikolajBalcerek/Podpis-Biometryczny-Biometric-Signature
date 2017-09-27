@@ -56,16 +56,16 @@ namespace PodpisBio.Src.FinalScore
             {
                 return 0;
             }
-            //double strokesCount = checkStrokesCount(first, second);
-            //double timeSizeRatio = checkTimeSizeRatio(first, second);
-            //double timeSizeRatioAverageForEachStroke = checkAverageTimeSizeRatioForEachStroke(first, second);
+            double strokesCount = checkStrokesCount(first, second);
+            double timeSizeRatio = checkTimeSizeRatio(first, second);
+            double timeSizeRatioAverageForEachStroke = checkAverageTimeSizeRatioForEachStroke(first, second);
             //double preciseComparison = checkPreciseComparison(first, second);
             double preciseComparison = checkPreciseComparison(first, second, avgDTW, minDTW, maxDTW);
 
             //temp = preciseComparison;
-            //temp = lengthM * weights.getLengthMWeight() + strokesCount * weights.getStrokesCountWeight() + timeSizeRatio * weights.getTotalRatioWeight() + timeSizeRatioAverageForEachStroke * weights.getAverageTotalRatioForEachStrokeWeight()  + preciseComparison * weights.getPreciseComparisonWeight();
+            temp = lengthM * weights.getLengthMWeight() + strokesCount * weights.getStrokesCountWeight() + timeSizeRatio * weights.getTotalRatioWeight() + timeSizeRatioAverageForEachStroke * weights.getAverageTotalRatioForEachStrokeWeight()  + preciseComparison * weights.getPreciseComparisonWeight();
             //temp = temp * (1 / (weights.getLengthMWeight() + weights.getStrokesCountWeight()+weights.getTotalRatioWeight() + weights.getAverageTotalRatioForEachStrokeWeight()));
-            temp = preciseComparison;
+            //temp = preciseComparison;
             return temp;
         }
 
