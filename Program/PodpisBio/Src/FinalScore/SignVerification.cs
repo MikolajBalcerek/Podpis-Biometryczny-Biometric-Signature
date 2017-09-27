@@ -54,18 +54,18 @@ namespace PodpisBio.Src.FinalScore
             {
                 return 0;
             }
-            double strokesCount = checkStrokesCount(first, second);
-            double timeSizeRatio = checkTimeSizeRatio(first, second);
-            double timeSizeRatioAverageForEachStroke = checkAverageTimeSizeRatioForEachStroke(first, second);
-            //double preciseComparison = checkPreciseComparison(first, second);
-            double preciseComparison = checkPreciseComparisonByJA(first, second, weights.getPreciseComparisonTreshold());
+            //double strokesCount = checkStrokesCount(first, second);
+            //double timeSizeRatio = checkTimeSizeRatio(first, second);
+            //double timeSizeRatioAverageForEachStroke = checkAverageTimeSizeRatioForEachStroke(first, second);
+            double preciseComparison = checkPreciseComparison(first, second, weights.DtwMax, weights.DtwStd);
+            //double preciseComparison = checkPreciseComparisonByJA(first, second, weights.getPreciseComparisonTreshold());
             /*
              */
 
             //temp = preciseComparison;
-            temp = lengthM * weights.getLengthMWeight() + strokesCount * weights.getStrokesCountWeight() + timeSizeRatio * weights.getTotalRatioWeight() + timeSizeRatioAverageForEachStroke * weights.getAverageTotalRatioForEachStrokeWeight()  + preciseComparison * weights.getPreciseComparisonWeight();
+            //temp = lengthM * weights.getLengthMWeight() + strokesCount * weights.getStrokesCountWeight() + timeSizeRatio * weights.getTotalRatioWeight() + timeSizeRatioAverageForEachStroke * weights.getAverageTotalRatioForEachStrokeWeight()  + preciseComparison * weights.getPreciseComparisonWeight();
             //temp = temp * (1 / (weights.getLengthMWeight() + weights.getStrokesCountWeight()+weights.getTotalRatioWeight() + weights.getAverageTotalRatioForEachStrokeWeight()));
-            return temp;
+            return preciseComparison;
         }
 
         //Podobienstwo dlugosci sygnatur (return 1 - identyczne)
@@ -156,22 +156,17 @@ namespace PodpisBio.Src.FinalScore
             return score;
         }
 
-        private double checkPreciseComparison(Signature first, Signature second)
+        private double checkPreciseComparison(Signature first, Signature second, double max, double std)
         {
+            const double TOLLERANCE = 0.05;
+            const double SLOPE = 0.008;
             DynamicTimeWrapping dtw = new DynamicTimeWrapping();
             var result = dtw.calcSimilarity(first, second);
-            Debug.WriteLine(result);
-            if (result < 1100)
-                return 0.95;
-            if (result < 1200)
-                return 0.8;
-            if (result < 1500)
-                return 0.7;
-            if (result < 1450)
-                return 0.6;
-            if (result < 1500)
-                return 0.2;
-            return 0;
+            var threshold = max + TOLLERANCE * std;
+            var logit = 1.0 / (1.0 + Math.Exp(-SLOPE * (threshold - result)));
+
+            //Debug.WriteLine("Lkogit to " + logit);
+            return logit;
         }
 
 

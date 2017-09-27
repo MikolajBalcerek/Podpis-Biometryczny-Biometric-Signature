@@ -11,22 +11,28 @@ namespace PodpisBio.Src
     {
         private List<Signature> sign;
         private double basicCount; //Ilosc oryginalnych podpisow z bazy ktore maja byc brane przy ustalaniu wag
-        
+
         private double lengthMWeight;
         private double strokesCountWeight;
         private double totalRatioWeight;
         private double totalRatioForEachStrokeWeight;
         private double preciseComparisonWeight;
-        
+
         private double preciseComparisonTreshold; //prog dla DTW
+
+        private const bool USE_WEIGHTS = false;
+        public double DtwMax { get; private set; }
+        public double DtwStd { get; private set; }
 
         public Weight(List<Signature> sign)
         {
             this.sign = sign;
             this.basicCount = 5.0;
             if(this.basicCount > sign.Count) { this.basicCount = Convert.ToDouble(sign.Count); }
-            
-            init();
+
+            prepareDtw();
+            if(USE_WEIGHTS)
+                init();
         }
         
 
@@ -164,6 +170,24 @@ namespace PodpisBio.Src
             }
 
             return calc_SD(forDTW, true);
+        }
+
+        private double calcStd(double average, IEnumerable<double> list)
+        {
+            var variance = (from x in list select (x - average) * (x - average)).Sum() / (list.Count() - 1);
+            return Math.Sqrt(variance);
+        }
+
+        private void prepareDtw()
+        {
+            List<double> dtws = new List<double>();
+            DynamicTimeWrapping dtwCalculator = new DynamicTimeWrapping();
+            for (int i = 0; i < this.sign.Count; i++)
+                for (int j = 0; j <= i; j++)
+                    dtws.Add(dtwCalculator.calcSimilarity(this.sign[i], this.sign[j]));
+
+            this.DtwMax = dtws.Max();
+            this.DtwStd = calcStd(dtws.Average(), dtws);
         }
 
 
