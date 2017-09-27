@@ -66,7 +66,7 @@ namespace PodpisBio
 
         private void Wyszukiwanie_Click(object sender, RoutedEventArgs e)
         {
-            this.MainPageDisplayFrame.Navigate(typeof(FindAuthorPage));
+            this.MainPageDisplayFrame.Navigate(typeof(FindAuthorPage), authorController);
         }
 
         private void Weryfikowanie_Click(object sender, RoutedEventArgs e)

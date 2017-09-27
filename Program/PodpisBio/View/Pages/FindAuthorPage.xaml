@@ -17,7 +17,7 @@
 
             <!--InkCanvas-->
             <RelativePanel>
-                <Button x:Name="SearchButton" Height="100" Width="100" Content="Szukaj" Margin="5"/>
+                <Button x:Name="SearchButton" Height="100" Width="100" Content="Szukaj" Margin="5" Click="VerifyButton_Click"/>
                 <Grid RelativePanel.RightOf="SearchButton"  x:Name="inkCanvasHolder" Width="300" Height="100" Margin="5" Background="SkyBlue" Grid.Column="1">
                     <Rectangle x:Name="background" Fill="#FFF4F4F5" Stroke="Black"/>
                     <Line x:Name="guideLine" VerticalAlignment="Top" Stroke="Black" StrokeThickness="1" Opacity="0.3"/>
