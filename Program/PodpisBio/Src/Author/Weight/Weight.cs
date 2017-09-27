@@ -1,7 +1,9 @@
-﻿using System;
+﻿using PodpisBio.Src.FinalScore;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 
 namespace PodpisBio.Src
 {
@@ -15,6 +17,8 @@ namespace PodpisBio.Src
         private double totalRatioWeight;
         private double totalRatioForEachStrokeWeight;
         private double preciseComparisonWeight;
+        
+        private double preciseComparisonTreshold; //prog dla DTW
 
         public Weight(List<Signature> sign)
         {
@@ -24,6 +28,7 @@ namespace PodpisBio.Src
             
             init();
         }
+        
 
         public double getBasicCount()
         {
@@ -54,11 +59,17 @@ namespace PodpisBio.Src
         {
             return this.preciseComparisonWeight;
         }
+        
+        public double getPreciseComparisonTreshold()
+        {
+            return this.preciseComparisonTreshold;
+        }
 
         private void init()
         {
-            double forWeight = 0.7;
-            this.preciseComparisonWeight = 1 - forWeight;
+            //double forWeight = 0.7;
+            //this.preciseComparisonWeight = 1 - forWeight;
+            double forWeight = 1.0;
 
             List<double> lengthMList = new List<double>();
             List<double> strokesCountList = new List<double>();
@@ -81,18 +92,21 @@ namespace PodpisBio.Src
             double calcStrokesCount = calcStrokesCount_SD(strokesCountList);
             double calcTotalRatio = calcTotalRatio_SD(totalRatioList) * 2.0;
             double calcTotalRatioForEachStroke = calcTotalRatio / 2.0;
+            double calcPreciseComparison = calcPreciseComparison_SD() * 2.0;
 
-            double temp = calcLengthM + calcStrokesCount + calcTotalRatio + calcTotalRatioForEachStroke;
+            //double temp = calcLengthM + calcStrokesCount + calcTotalRatio + calcTotalRatioForEachStroke;
+            double temp = calcLengthM + calcStrokesCount + calcTotalRatio + calcTotalRatioForEachStroke + calcPreciseComparison;
 
             this.lengthMWeight = calcLengthM / temp * forWeight;
             this.strokesCountWeight = calcStrokesCount / temp * forWeight;
             this.totalRatioWeight = calcTotalRatio / temp * forWeight;
             this.totalRatioForEachStrokeWeight = calcTotalRatioForEachStroke / temp * forWeight;
+            this.preciseComparisonWeight = calcPreciseComparison / temp * forWeight;
             //Debug.WriteLine("Wagi: "+ this.lengthMWeight +" "+ this.strokesCountWeight+" "+ this.totalRatioWeight+" "+ this.totalRatioForEachStrokeWeight);
         }
 
         //Odchylenie standardowe (dla danego parametru) z podpisow, ktore sa brane jako baza oryginalnych do weryfikacji
-        private double calc_SD(List<double> list)
+        private double calc_SD(List<double> list, bool isDTW)
         {
             double temp = 0;
             float[] array = list.Select(x => (float)x).ToArray();
@@ -103,23 +117,25 @@ namespace PodpisBio.Src
 
             temp = 1 - (sd / Convert.ToDouble(average));
             if (temp < 0) { return 0.0; }
-
+            
+            if(isDTW){ this.preciseComparisonTreshold = Convert.ToDouble(average); }
+            
             return temp;
         }
 
         private double calcLengthM_SD(List<double> list)
         {
-            return calc_SD(list);
+            return calc_SD(list, false);
         }
 
         private double calcStrokesCount_SD(List<double> list)
         {
-            return calc_SD(list);
+            return calc_SD(list, false);
         }
 
         private double calcTotalRatio_SD(List<double> list)
         {
-            return calc_SD(list);
+            return calc_SD(list, false);
         }
 
         //private double calcTotalRatioForEachStroke_SD(List<List<double>> list)
@@ -131,6 +147,25 @@ namespace PodpisBio.Src
 
         //    return temp;
         //}
-        
+
+        private double calcPreciseComparison_SD()
+        {
+            List<double> forDTW = new List<double>();
+            for (int i = 0; i < sign.Count; i++)
+            {
+                for (int j = i + 1; j < sign.Count; j++)
+                {
+                    if (i != j)
+                    {
+                        DynamicTimeWrapping dtw = new DynamicTimeWrapping();
+                        forDTW.Add(dtw.calcSimilarity(sign[j], sign[i]));
+                    }
+                }
+            }
+
+            return calc_SD(forDTW, true);
+        }
+
+
     }
 }
