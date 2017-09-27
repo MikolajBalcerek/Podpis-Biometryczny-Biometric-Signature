@@ -99,6 +99,7 @@ namespace PodpisBio.Src
             double calcTotalRatio = calcTotalRatio_SD(totalRatioList) * 2.0;
             double calcTotalRatioForEachStroke = calcTotalRatio / 2.0;
             double calcPreciseComparison = calcPreciseComparison_SD() * 2.0;
+                // to zabiera strasznie dużo czasu!!!
 
             //double temp = calcLengthM + calcStrokesCount + calcTotalRatio + calcTotalRatioForEachStroke;
             double temp = calcLengthM + calcStrokesCount + calcTotalRatio + calcTotalRatioForEachStroke + calcPreciseComparison;

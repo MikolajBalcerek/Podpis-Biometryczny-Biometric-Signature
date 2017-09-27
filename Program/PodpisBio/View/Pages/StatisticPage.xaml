@@ -17,7 +17,8 @@
             <RelativePanel>
                 <StackPanel x:Name="StackPanel2">
                     <Button x:Name="Start" Height="50" Width="100" Content="Start" Margin="0,0,0,1" Click="StartButton_Click"/>
-                    </StackPanel>
+                </StackPanel>
+                <Button x:Name="DTWs" Height="50" Width="100" Content="Miara DTW" Margin="500,0,-489.6,1" Click="DTWsButton_Click" RenderTransformOrigin="2.048,-0.24"/>
             </RelativePanel>
         </StackPanel>
     </Grid>
