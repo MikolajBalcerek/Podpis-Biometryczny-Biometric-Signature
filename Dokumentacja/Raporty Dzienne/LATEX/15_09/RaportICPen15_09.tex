@@ -1,0 +1,66 @@
+\documentclass{mwrep}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage{amsmath}
+
+\title{Podpisy biometryczne na tablecie \\ i ich porównanie z podpisami na papierze\\ 
+Raport 8}
+\author{Mikołaj Balcerek, Bartosz Hejduk, Mieczysław Krawiarz, \and Adam Kulczycki, Mikołaj Pabiszczak, Michał Szczepanowski, \and Dawid Twardowski, Adrianna Załęska}
+\date{15 września 2017}
+
+\begin{document}
+\maketitle
+{\let\clearpage\relax 
+\chapter{Obecne osoby}}
+\begin{enumerate}
+    \item Mikołaj Balcerek
+    \item Mieczysław Krawiarz
+    \item Adam Kulczycki
+    \item Mikołaj Pabiszczak
+    \item Michał Szczepanowski
+    \item Dawid Twardowski
+\end{enumerate}
+
+
+{\let\clearpage\relax 
+\chapter{Zadania zaplanowane na dzień 15 września}}
+\begin{enumerate}
+	\item Zaprojektowanie bazy danych i implementacja.
+	\item Wprowadzenie Scrumu.
+	\item Dalszy research dot. ukrytych łańcuchów Markowa i Dynamic Time Warping.
+	\item Implementacja opcji wyboru właściciela podpisu, który będzie wprowadzany.
+	\item Przypisanie czynności "wyczyść" do przycisku gumki.
+	\item Integracja badania stosunku rozmiaru i czasu pisania dla każdego z pociągnieć.
+	\item Zakończenie prac nad stałą wielkością pola.
+\end{enumerate}
+
+
+{\let\clearpage\relax 
+\chapter{Zrealizowane zadania}}
+\begin{enumerate}
+	\item Wpropwadzeniu Scrumu.
+	\item Trwa integracja (mergowanie) badania stosunku rozmiaru i czasu pisania dla każdego z pociągnieć.
+	\item Korekty i dalsze prace nad bazą danych.
+	\item Wyświetlanie komunikatu o błędzie przy próbie wyświetlania podpisu, który nie istnieje
+	\item Praca nad przypisaniem czynności "wyczyść" do przycisku gumki.
+	\item Dalszy ciąg researchu dot. ukrytych łańcuchów Markowa i Dynamic Time Warping.
+	 
+	\end{enumerate}
+
+{\let\clearpage\relax \chapter{Zadania na najbliższe dni}}
+\begin{enumerate}
+	\item Sprawdzanie skuteczności działania algorytmów kNN, naive Bayes w celurozpoznania autora podpisu.
+	\item Implementacja metryki DTW. 
+    \item Ponowna próba zapisywania danych o kącie nachylenia długopisu względem ekranu. Za pierwszą próbą API firmy Microsoft zwracał stały kąt 0, co zniechęciło nas do pracy nad tym czynnikiem. Przedstawiciele IC Solutions wskazują, że może być to ważna funkcjonalność.
+    \item Wykluczenie podpisów, które złożone są poza polem wprowadzania (obecnie rejestracji podlegają również pociągnięcia, które wybiegają poza to pole - docelowo takie wydarzenie ma powodować komunikat o nieważności podpisu i braku jego zapisu).
+    \item Połączenie metod weryfikacji w celu utworzenia tzw. Trustworthiness score. Będzie to wynik przybierający wartości 1-100 określający naszą pewność w autentyczność podpisu. Należy również wziąć uwagę sztucznie idealne podpisy (idealnie skopiowane lub prawie) i je odrzucać.
+    To zadanie będzie składać się z krótkiej pracy programistycznej oraz prawdopodobnie bardzo długiego iterowania i zmieniania wag poszczególnych metod badania autentyczności.
+    \item Implementacja graficznego porówywnia podpisów jako ostatniego etapu oceny autentyczności.
+    \item Przypisanie indywidualnych wag cech podpisu do poszczególnych właścicieli podpisów.   
+    \item Prowadzanie eksperymentów w celu sprawdzenia słuszności wszystkich naszych poprzednich założeń na gronie innych uczestników Poznańskich Praktych Badawczych.
+    
+\end{enumerate}
+
+
+
+\end{document}
